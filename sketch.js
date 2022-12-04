@@ -10,11 +10,14 @@ function preload() {
 
 
 function setup() {
-    var cnv = createCanvas(windowHeight , windowHeight * 0.8)
+    var cnv = createCanvas(windowHeight * 0.8, windowHeight * 0.8)
     cnv.parent('#canvasWrapper')
     background(255)
     
-    image(landmass, 0,0);
+    let scale = 1.3;
+
+    imageMode(CENTER)
+    image(landmass, width * 0.5, height * 0.5, landmass.width * scale, scale * landmass.height);
 
 
     // fill('#242124');
@@ -24,6 +27,14 @@ function setup() {
 }
 
 function draw() {
+    if (mouseY >= 0 && mouseY <= height && mouseX >= 0 && mouseX <= width) {
+        fill(0, 255, 0);
+        ellipse(50, 50, 50, 50);
+    } else {
+        fill(255, 255, 255);
+        ellipse(50, 50, 50, 50);
+    }
+
 }
 
 function mouseMoved() {

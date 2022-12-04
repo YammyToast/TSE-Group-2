@@ -5,15 +5,18 @@
 body {
     background-color: #fefefe;
     font-family: 'Atkinson Hyperlegible', sans-serif;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
 }
 
 
 #grid {
     position: relative;
     display: grid;
-    width: 100%;
-    height: 100%;
-    grid: 10% fit-content 1fr;
+    width: 100vw;
+    height: 100vh;
+    grid-template-columns: 1fr fit-content 1fr;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -22,6 +25,8 @@ body {
 #title {
     position: relative;
     display: flex;
+    height: fit-content;
+    width: fit-content;
     font-size: 1.7em;
     color: #242124;
     display: flex;
@@ -32,7 +37,6 @@ body {
     position: relative;
     display: flex;
     border: 2px solid #242124;
-    width: fit-content;
     height: fit-content;
     margin: 0;
     align-items: center;
@@ -42,6 +46,8 @@ body {
 .footer-Text {
     display: inline-flex;
     position: relative;
+    width: fit-content;
+    height: fit-content;
     font-size: 1.2em;
     margin-right: 1em;
 
