@@ -46,9 +46,16 @@ function setup() {
     // text('Label', width * 0.5, height * 0.5);
 }
 
-function drawMap(_fillBool, _fillR, _fillG, _fillB, _borderBool, _borderR, _borderG, _borderB) {
-    let pointScale = 1.35;
+function windowResized() {
+    var cnv = resizeCanvas(windowHeight * 0.8, windowHeight * 0.8)
 
+}
+
+
+function drawMap(_fillBool, _fillR, _fillG, _fillB, _borderBool, _borderR, _borderG, _borderB) {
+    // let pointScale = 1.35;
+    //heightwidth716
+    let pointScale = (height * width) / 400000;
 
     // ===== CLEAR MAP =====
     fill(71, 105, 204);
@@ -88,6 +95,7 @@ function drawMap(_fillBool, _fillR, _fillG, _fillB, _borderBool, _borderR, _bord
 
     }
 
+    translate(width * 0.5, height * 0.5)
 
     // ===========================
     // ===== ENGLAND CONTOUR =====
@@ -96,17 +104,19 @@ function drawMap(_fillBool, _fillR, _fillG, _fillB, _borderBool, _borderR, _bord
 
     // Translation, don't touch constant values.
     // Origin Translation, constants affect where all the components are rendered.
-    translate(width * 0.2 * pointScale, height * 0.23 * pointScale);
+    // translate(width * 0.2 * pointScale, height * 0.23 * pointScale);
+
     if (enContourPoints.points.length > 0) {
         beginShape();
+        // vertex(enContourPoints.points[0][0], enContourPoints.points[0][1]);
         for (let i = 0; i < enContourPoints.points.length; i++) {
             vertex(enContourPoints.points[i][0] * pointScale, enContourPoints.points[i][1] * pointScale);
         }
         endShape();
     }
     // Undo Translation, Reset back to "Anchor".
-    translate(-(width * 0.2 * pointScale), -(height * 0.23 * pointScale));
-
+    // translate(-(width * 0.2 * pointScale), -(height * 0.23 * pointScale));
+    pop();
 
     // =========================
     // ===== WALES CONTOUR =====
@@ -114,17 +124,18 @@ function drawMap(_fillBool, _fillR, _fillG, _fillB, _borderBool, _borderR, _bord
 
     // Translation, don't touch constant values.
     // Translations are persistent, so this moves a certain distance from the "Anchor".
-    translate(width * 0.22 * pointScale, height * 0.43 * pointScale);
+
     if (waContourPoints.points.length > 0) {
         beginShape();
         for (let i = 0; i < waContourPoints.points.length; i++) {
-            vertex(waContourPoints.points[i][0] * pointScale, waContourPoints.points[i][1] * pointScale);
+            vertex((waContourPoints.points[i][0] - 72) * pointScale, (waContourPoints.points[i][1] + 8) * pointScale);
         }
         endShape();
     }
     // Undo Translation, Reset back to "Anchor".
-    translate(-(width * 0.22 * pointScale), -(height * 0.43 * pointScale));
+    // translate(-(width * 0.22 * pointScale), -(height * 0.43 * pointScale));
 
+    translate(width, height);
 
     // ===========================
     // ===== SCOTLAND CONTOUR ====
@@ -132,17 +143,18 @@ function drawMap(_fillBool, _fillR, _fillG, _fillB, _borderBool, _borderR, _bord
 
     // Translation, don't touch constant values.
     // Translations are persistent, so this moves a certain distance from the "Anchor".
-    translate(-(width * 0.054 * pointScale), -(height * 0.248 * pointScale));
+    // translate(-(width * 0.054 * pointScale), -(height * 0.248 * pointScale));
     if (scContourPoints.points.length > 0) {
         beginShape();
         for (let i = 0; i < scContourPoints.points.length; i++) {
+            
             vertex(scContourPoints.points[i][0] * pointScale, scContourPoints.points[i][1] * pointScale);
         }
         endShape();
 
     }
     // Undo Translation, Reset back to "Anchor".
-    translate(width * 0.054 * pointScale, height * 0.248 * pointScale);
+    // translate(width * 0.054 * pointScale, height * 0.248 * pointScale);
 
 
     // ===================================
@@ -151,7 +163,7 @@ function drawMap(_fillBool, _fillR, _fillG, _fillB, _borderBool, _borderR, _bord
 
     // Translation, don't touch constant values.
     // Translations are persistent, so this moves a certain distance from the "Anchor".
-    translate(-(width * 0.12 * pointScale), height * 0.05 * pointScale);
+    // translate(-(width * 0.12 * pointScale), height * 0.05 * pointScale);
     if (niContourPoints.points.length > 0) {
         beginShape();
         for (let i = 0; i < niContourPoints.points.length; i++) {
@@ -161,7 +173,7 @@ function drawMap(_fillBool, _fillR, _fillG, _fillB, _borderBool, _borderR, _bord
 
     }
     // Undo Translation, Reset back to "Anchor".
-    translate(width * 0.12 * pointScale, -(height * 0.05 * pointScale));
+    // translate(width * 0.12 * pointScale, -(height * 0.05 * pointScale));
 
 
 
