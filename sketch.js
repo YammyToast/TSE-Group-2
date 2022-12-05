@@ -18,12 +18,43 @@ let waBoundaryPoints = [0, 0, 0, 0];
 let scBoundaryPoints = [0, 0, 0, 0];
 let niBoundaryPoints = [0, 0, 0, 0];
 
+// LeftX, Top-Y, Right-X, Bottom-Y
+let enDetectPoints = [0, 0, 0, 0];
+let waDetectPoints = [0, 0, 0, 0];
+let scDetectPoints = [0, 0, 0, 0];
+let niDetectPoints = [0, 0, 0, 0];
+
+
 let widthTranslation;
 let heightTranslation;
 
 function contourPointsLoad() {
     console.log("[✓] Loaded Contour Points");
 }
+
+function setDetectPoints() {
+    enDetectPoints[0] = widthTranslation + enBoundaryPoints[0];
+    enDetectPoints[1] = heightTranslation + enBoundaryPoints[1];
+    enDetectPoints[2] = enDetectPoints[0] + (enBoundaryPoints[2] - enBoundaryPoints[0]);
+    enDetectPoints[3] = enDetectPoints[1] + (enBoundaryPoints[3] - enBoundaryPoints[1]);
+
+
+    waDetectPoints[0] = widthTranslation + waBoundaryPoints[0] - (pointScale * 72);
+    waDetectPoints[1] = heightTranslation + waBoundaryPoints[1] + (pointScale * 8);
+    waDetectPoints[2] = waDetectPoints[0] + (waBoundaryPoints[2] - waBoundaryPoints[0]);
+    waDetectPoints[3] = waDetectPoints[1] + (waBoundaryPoints[3] - waBoundaryPoints[1]);
+
+    scDetectPoints[0] = widthTranslation + scBoundaryPoints[0] - (pointScale * 98);
+    scDetectPoints[1] = heightTranslation + scBoundaryPoints[1] - (pointScale * 246);
+    scDetectPoints[2] = scDetectPoints[0] + (scBoundaryPoints[2] - scBoundaryPoints[0]);
+    scDetectPoints[3] = scDetectPoints[1] + (scBoundaryPoints[3] - scBoundaryPoints[1]);
+    
+    niDetectPoints[0] = widthTranslation + niBoundaryPoints[0] - (pointScale * 170);
+    niDetectPoints[1] = heightTranslation + niBoundaryPoints[1] - (pointScale * 118);
+    niDetectPoints[2] = niDetectPoints[0] + (niBoundaryPoints[2] - niBoundaryPoints[0]);
+    niDetectPoints[3] = niDetectPoints[1] + (niBoundaryPoints[3] - niBoundaryPoints[1]);
+}
+
 
 function setBoundaryPoints(_boundaryPointsContainer, _points) {
     for (let i = 0; i < _points.length; i++) {
@@ -42,7 +73,7 @@ function setBoundaryPoints(_boundaryPointsContainer, _points) {
         }
 
     }
-    console.log("Boundary Points: ", _boundaryPointsContainer);
+
 }
 
 function preload() {
@@ -82,6 +113,8 @@ function setup() {
     setBoundaryPoints(scBoundaryPoints, scContourPoints.points);
     setBoundaryPoints(niBoundaryPoints, niContourPoints.points);
 
+    setDetectPoints();
+
     // imageMode(CENTER)
     // image(landmass, width * 0.5, height * 0.5, landmass.width * scale, scale * landmass.height);
 
@@ -105,13 +138,11 @@ function setup() {
 function windowResize() {
     cnv = resizeCanvas(windowHeight * 0.8, windowHeight * 0.8);
 
-    pointScale = (height * width) / 400000 - 0.1;
 
+    pointScale = (height * width) / 400000 - 0.1;
 
     widthTranslation = width * 0.6;
     heightTranslation = height * 0.7;
-
-
 }
 
 
@@ -134,9 +165,6 @@ function drawMap(_fillBool, _fillR, _fillG, _fillB, _borderBool, _borderR, _bord
     //     vertex((contourPoints.points[i][0] + 148) * pointScale, (contourPoints.points[i][1] + 32) * pointScale);
     // }
     // endShape();
-
-
-
 
     if (_fillBool == true) {
         fill(_fillR, _fillG, _fillB);
@@ -222,23 +250,38 @@ function drawMap(_fillBool, _fillR, _fillG, _fillB, _borderBool, _borderR, _bord
 
 function drawBoundaries() {
     push();
-    translate(widthTranslation, heightTranslation);
+
+    beginShape();
     fill(255, 0, 0);
-    // England Boundary
-    rect((enBoundaryPoints[0]), (enBoundaryPoints[1]), -(enBoundaryPoints[0] - enBoundaryPoints[2]), -(enBoundaryPoints[1] - enBoundaryPoints[3]))
-    
-    // Wales Boundary
+    vertex(enDetectPoints[0], enDetectPoints[1]);
+    vertex(enDetectPoints[2], enDetectPoints[1]);
+    vertex(enDetectPoints[2], enDetectPoints[3]);
+    vertex(enDetectPoints[0], enDetectPoints[3]);
+    endShape();
+
+    beginShape();
     fill(0, 255, 0);
-    rect((waBoundaryPoints[0] - (72 * pointScale)), (waBoundaryPoints[1] + (8 * pointScale)), -(waBoundaryPoints[0] - waBoundaryPoints[2]), -(waBoundaryPoints[1] - waBoundaryPoints[3]))
+    vertex(waDetectPoints[0], waDetectPoints[1]);
+    vertex(waDetectPoints[2], waDetectPoints[1]);
+    vertex(waDetectPoints[2], waDetectPoints[3]);
+    vertex(waDetectPoints[0], waDetectPoints[3]);
+    endShape();
 
-    // Scotland Boundary
+    beginShape();
     fill(0, 0, 255);
-    rect((scBoundaryPoints[0] - (97 * pointScale)), (scBoundaryPoints[1] - (246 * pointScale)), -(scBoundaryPoints[0] - scBoundaryPoints[2]), -(scBoundaryPoints[1] - scBoundaryPoints[3]))
+    vertex(scDetectPoints[0], scDetectPoints[1]);
+    vertex(scDetectPoints[2], scDetectPoints[1]);
+    vertex(scDetectPoints[2], scDetectPoints[3]);
+    vertex(scDetectPoints[0], scDetectPoints[3]);
+    endShape();
 
-    // Northern Ireland Boundary
+    beginShape();
     fill(255, 255, 0);
-    rect((niBoundaryPoints[0] - (170 * pointScale)), (niBoundaryPoints[1] - (118 * pointScale)), -(niBoundaryPoints[0] - niBoundaryPoints[2]), -(niBoundaryPoints[1] - niBoundaryPoints[3]))
-
+    vertex(niDetectPoints[0], niDetectPoints[1]);
+    vertex(niDetectPoints[2], niDetectPoints[1]);
+    vertex(niDetectPoints[2], niDetectPoints[3]);
+    vertex(niDetectPoints[0], niDetectPoints[3]);
+    endShape();
 
     pop();
 
@@ -280,5 +323,26 @@ function mouseMoved() {
     mouseXDiv.innerHTML = ` ${mouseX.toFixed(1)}`;
     mouseYDiv.innerHTML = ` ${mouseY.toFixed(1)}`;
 
+    let detectOutput = " ";
+
+    if (mouseX >= enDetectPoints[0] && mouseX <= enDetectPoints[2] && mouseY >= enDetectPoints[1] && mouseY <= enDetectPoints[3]) {
+        detectOutput = detectOutput.concat("en")
+    }
+
+    if (mouseX >= waDetectPoints[0] && mouseX <= waDetectPoints[2] && mouseY >= waDetectPoints[1] && mouseY <= waDetectPoints[3]) {
+        detectOutput = detectOutput.concat(" wa")
+    }
+
+    if (mouseX >= scDetectPoints[0] && mouseX <= scDetectPoints[2] && mouseY >= scDetectPoints[1] && mouseY <= scDetectPoints[3]) {
+        detectOutput = detectOutput.concat(" sc");
+    }
+
+    if (mouseX >= niDetectPoints[0] && mouseX <= niDetectPoints[2] && mouseY >= niDetectPoints[1] && mouseY <= niDetectPoints[3]) {
+        detectOutput = detectOutput.concat(" ni");
+    }
+
+    console.log(detectOutput);
+    const detect = document.getElementById('detect');
+    detect.innerHTML = detectOutput;
 }
 
