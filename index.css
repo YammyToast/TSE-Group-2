@@ -46,7 +46,7 @@ body {
 .footer-Text {
     display: inline-flex;
     position: relative;
-    width: fit-content;
+    width: 15%;
     height: fit-content;
     font-size: 1.2em;
     margin-right: 1em;
