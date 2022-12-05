@@ -36,7 +36,7 @@ function setup() {
 
     // imageMode(CENTER)
     // image(landmass, width * 0.5, height * 0.5, landmass.width * scale, scale * landmass.height);
-    
+
 
 
     // fill('#242124');
@@ -79,7 +79,7 @@ function drawMap(_fillBool, _fillR, _fillG, _fillB, _borderBool, _borderR, _bord
         fill(255, 255, 255);
     }
 
-    if (_borderBool == true) {    
+    if (_borderBool == true) {
         stroke(_borderR, _borderG, _borderB);
         strokeWeight(2);
     } else {
@@ -93,17 +93,19 @@ function drawMap(_fillBool, _fillR, _fillG, _fillB, _borderBool, _borderR, _bord
     // ===== ENGLAND CONTOUR =====
     // ===========================
 
+
+    // Translation, don't touch constant values.
     // Origin Translation, constants affect where all the components are rendered.
-    // "England" is treated as the "Anchor"
-    // This is undone at the end of drawMap
     translate(width * 0.2 * pointScale, height * 0.23 * pointScale);
     if (enContourPoints.points.length > 0) {
-        beginShape();    
+        beginShape();
         for (let i = 0; i < enContourPoints.points.length; i++) {
             vertex(enContourPoints.points[i][0] * pointScale, enContourPoints.points[i][1] * pointScale);
         }
         endShape();
     }
+    // Undo Translation, Reset back to "Anchor".
+    translate(-(width * 0.2 * pointScale), -(height * 0.23 * pointScale));
 
 
     // =========================
@@ -112,7 +114,7 @@ function drawMap(_fillBool, _fillR, _fillG, _fillB, _borderBool, _borderR, _bord
 
     // Translation, don't touch constant values.
     // Translations are persistent, so this moves a certain distance from the "Anchor".
-    translate(width * 0.02 * pointScale, height * 0.2 * pointScale);
+    translate(width * 0.22 * pointScale, height * 0.43 * pointScale);
     if (waContourPoints.points.length > 0) {
         beginShape();
         for (let i = 0; i < waContourPoints.points.length; i++) {
@@ -121,8 +123,8 @@ function drawMap(_fillBool, _fillR, _fillG, _fillB, _borderBool, _borderR, _bord
         endShape();
     }
     // Undo Translation, Reset back to "Anchor".
-    translate(-(width * 0.02 * pointScale), -(height * 0.2 * pointScale));
-    
+    translate(-(width * 0.22 * pointScale), -(height * 0.43 * pointScale));
+
 
     // ===========================
     // ===== SCOTLAND CONTOUR ====
@@ -161,8 +163,7 @@ function drawMap(_fillBool, _fillR, _fillG, _fillB, _borderBool, _borderR, _bord
     // Undo Translation, Reset back to "Anchor".
     translate(width * 0.12 * pointScale, -(height * 0.05 * pointScale));
 
-    // Original Translation Undo.
-    translate(-(width * 0.2 * pointScale), -(height * 0.23 * pointScale));
+
 
 }
 
@@ -172,13 +173,13 @@ function draw() {
 
 
         drawMap(true, 255, 255, 255, true, 204, 71, 71);
-        
+
     } else {
 
         drawMap(false, 255, 255, 255, false, 68, 61, 71);
     }
 
-    
+
 
 }
 
