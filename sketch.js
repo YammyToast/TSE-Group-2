@@ -149,7 +149,7 @@ function windowResize() {
 
 
 
-function drawMap(_fillBool, _fillR, _fillG, _fillB, _borderBool, _borderR, _borderG, _borderB) {
+function drawMap(_enActive, _waActive, _scActive, _niActive) {
     // let pointScale = 1.35;
     //heightwidth716
 
@@ -166,20 +166,8 @@ function drawMap(_fillBool, _fillR, _fillG, _fillB, _borderBool, _borderR, _bord
     // }
     // endShape();
 
-    if (_fillBool == true) {
-        fill(_fillR, _fillG, _fillB);
-    } else {
-        fill(255, 255, 255);
-    }
+ 
 
-    if (_borderBool == true) {
-        stroke(_borderR, _borderG, _borderB);
-        strokeWeight(3);
-    } else {
-        stroke(0, 0, 0);
-        strokeWeight(0);
-
-    }
 
     // ============================
     // ===== MAIN TRANSLATION =====
@@ -190,6 +178,16 @@ function drawMap(_fillBool, _fillR, _fillG, _fillB, _borderBool, _borderR, _bord
     // ===========================
     // ===== ENGLAND CONTOUR =====
     // ===========================
+
+    if (_enActive == true) { 
+        // stroke(68, 61, 71);
+        // strokeWeight(3);
+        fill(201, 202, 217);
+    } else {
+        // stroke(0, 0, 0);
+        // strokeWeight(0);
+        fill(255, 255, 255);
+    }
 
     if (enContourPoints.points.length > 0) {
         beginShape();
@@ -204,6 +202,15 @@ function drawMap(_fillBool, _fillR, _fillG, _fillB, _borderBool, _borderR, _bord
     // ===== WALES CONTOUR =====
     // =========================
 
+    if (_waActive == true) { 
+        // stroke(68, 61, 71);
+        // strokeWeight(3);
+        fill(201, 202, 217);
+    } else {
+        // stroke(0, 0, 0);
+        // strokeWeight(0);
+        fill(255, 255, 255);
+    }
     if (waContourPoints.points.length > 0) {
         beginShape();
         for (let i = 0; i < waContourPoints.points.length; i++) {
@@ -218,6 +225,15 @@ function drawMap(_fillBool, _fillR, _fillG, _fillB, _borderBool, _borderR, _bord
     // ===== SCOTLAND CONTOUR ====
     // ===========================
 
+    if (_scActive == true) { 
+        // stroke(68, 61, 71);
+        // strokeWeight(3);
+        fill(201, 202, 217);
+    } else {
+        // stroke(0, 0, 0);
+        // strokeWeight(0);
+        fill(255, 255, 255);
+    }
     if (scContourPoints.points.length > 0) {
         beginShape();
         for (let i = 0; i < scContourPoints.points.length; i++) {
@@ -234,7 +250,15 @@ function drawMap(_fillBool, _fillR, _fillG, _fillB, _borderBool, _borderR, _bord
     // ===== NORTHERN IRELAND CONTOUR ====
     // ===================================
 
-
+    if (_niActive == true) { 
+        // stroke(68, 61, 71);
+        // strokeWeight(1);
+        fill(201, 202, 217);
+    } else {
+        // stroke(0, 0, 0);
+        // strokeWeight(1);
+        fill(255, 255, 255);
+    }
     if (niContourPoints.points.length > 0) {
         beginShape();
         for (let i = 0; i < niContourPoints.points.length; i++) {
@@ -251,39 +275,39 @@ function drawMap(_fillBool, _fillR, _fillG, _fillB, _borderBool, _borderR, _bord
 function drawBoundaries() {
     push();
 
-    beginShape();
-    fill(255, 0, 0);
-    vertex(enDetectPoints[0], enDetectPoints[1]);
-    vertex(enDetectPoints[2], enDetectPoints[1]);
-    vertex(enDetectPoints[2], enDetectPoints[3]);
-    vertex(enDetectPoints[0], enDetectPoints[3]);
-    endShape();
+    // beginShape();
+    // fill(255, 0, 0);
+    // vertex(enDetectPoints[0], enDetectPoints[1]);
+    // vertex(enDetectPoints[2], enDetectPoints[1]);
+    // vertex(enDetectPoints[2], enDetectPoints[3]);
+    // vertex(enDetectPoints[0], enDetectPoints[3]);
+    // endShape();
 
-    beginShape();
-    fill(0, 255, 0);
-    vertex(waDetectPoints[0], waDetectPoints[1]);
-    vertex(waDetectPoints[2], waDetectPoints[1]);
-    vertex(waDetectPoints[2], waDetectPoints[3]);
-    vertex(waDetectPoints[0], waDetectPoints[3]);
-    endShape();
+    // beginShape();
+    // fill(0, 255, 0);
+    // vertex(waDetectPoints[0], waDetectPoints[1]);
+    // vertex(waDetectPoints[2], waDetectPoints[1]);
+    // vertex(waDetectPoints[2], waDetectPoints[3]);
+    // vertex(waDetectPoints[0], waDetectPoints[3]);
+    // endShape();
 
-    beginShape();
-    fill(0, 0, 255);
-    vertex(scDetectPoints[0], scDetectPoints[1]);
-    vertex(scDetectPoints[2], scDetectPoints[1]);
-    vertex(scDetectPoints[2], scDetectPoints[3]);
-    vertex(scDetectPoints[0], scDetectPoints[3]);
-    endShape();
+    // beginShape();
+    // fill(0, 0, 255);
+    // vertex(scDetectPoints[0], scDetectPoints[1]);
+    // vertex(scDetectPoints[2], scDetectPoints[1]);
+    // vertex(scDetectPoints[2], scDetectPoints[3]);
+    // vertex(scDetectPoints[0], scDetectPoints[3]);
+    // endShape();
 
-    beginShape();
-    fill(255, 255, 0);
-    vertex(niDetectPoints[0], niDetectPoints[1]);
-    vertex(niDetectPoints[2], niDetectPoints[1]);
-    vertex(niDetectPoints[2], niDetectPoints[3]);
-    vertex(niDetectPoints[0], niDetectPoints[3]);
-    endShape();
+    // beginShape();
+    // fill(255, 255, 0);
+    // vertex(niDetectPoints[0], niDetectPoints[1]);
+    // vertex(niDetectPoints[2], niDetectPoints[1]);
+    // vertex(niDetectPoints[2], niDetectPoints[3]);
+    // vertex(niDetectPoints[0], niDetectPoints[3]);
+    // endShape();
 
-    pop();
+    // pop();
 
 }
 
@@ -301,14 +325,35 @@ function draw() {
     stroke(0, 0, 0);
     if (mouseY >= 0 && mouseY <= height && mouseX >= 0 && mouseX <= width) {
 
-        drawBoundaries();
-        // drawMap(true, 255, 255, 255, true, 204, 71, 71);
-        drawMap(true, 255, 255, 255, true, 68, 61, 71);
+        let enActive = false;
+        let waActive = false;
+        let scActive = false;
+        let niActive = false;
 
+
+
+        if (mouseX >= niDetectPoints[0] && mouseX <= niDetectPoints[2] && mouseY >= niDetectPoints[1] && mouseY <= niDetectPoints[3]) {
+            niActive = true;
+
+        }
+        else if (mouseX >= waDetectPoints[0] && mouseX <= waDetectPoints[2] && mouseY >= waDetectPoints[1] && mouseY <= waDetectPoints[3]) {
+            waActive = true;
+        }
+    
+        else if (mouseX >= scDetectPoints[0] && mouseX <= scDetectPoints[2] && mouseY >= scDetectPoints[1] && mouseY <= scDetectPoints[3]) {
+            scActive = true;
+        }
+        else if (mouseX >= enDetectPoints[0] && mouseX <= enDetectPoints[2] && mouseY >= enDetectPoints[1] && mouseY <= enDetectPoints[3]) {
+            enActive = true;
+        }
+    
+        drawBoundaries();
+
+        drawMap(enActive, waActive, scActive, niActive);
+        
 
     } else {
-
-        drawMap(false, 255, 255, 255, false, 68, 61, 71);
+        drawMap(false, false, false, false);
     }
 
     let drawEnd = Date.now();
@@ -322,6 +367,9 @@ function mouseMoved() {
     const mouseYDiv = document.getElementById('mouseY');
     mouseXDiv.innerHTML = ` ${mouseX.toFixed(1)}`;
     mouseYDiv.innerHTML = ` ${mouseY.toFixed(1)}`;
+
+
+
 
     let detectOutput = " ";
 
