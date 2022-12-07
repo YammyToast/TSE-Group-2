@@ -1,4 +1,4 @@
-f = open("./input.txt", "r");
+f = open("./meanInput.txt", "r");
 
 xMean = 0;
 yMean = 0;
@@ -18,7 +18,7 @@ xMean = int(xMean / count)
 yMean = int(yMean / count)
 print("xMean: " + str(xMean) + " yMean: " + str(yMean));
 
-w = open("./output.txt", "w");
+w = open("./meanOutput.txt", "w");
 for line in splitArr:
-    w.write("[" + str(int(line[0]) - xMean) + "," + str(int(line[1]) - yMean) + "],");
+    w.write("[" + str(int(line[0]) - xMean) + "," + str(int(line[1]) - yMean) + "],\n");
 print("[✓] Done")

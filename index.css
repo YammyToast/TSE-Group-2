@@ -43,6 +43,20 @@ body {
     justify-content: center;
 }
 
+#detect {
+    position: absolute;
+    display:flex;
+    bottom: 0%;
+    right: 0%;
+    height: 24px;
+    width: fit-content;
+    justify-items: right;
+    padding: 8px;
+    color: #fefefe;
+    font-weight: 800;
+    background-color: #242124;
+}
+
 .footer-Text {
     display: inline-flex;
     position: relative;

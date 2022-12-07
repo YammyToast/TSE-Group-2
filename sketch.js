@@ -7,6 +7,9 @@ let font;
 let contourPoints;
 let pointScale;
 
+let gbContourPoints;
+let irContourPoints;
+
 let enContourPoints;
 let waContourPoints;
 let scContourPoints;
@@ -83,6 +86,10 @@ function preload() {
     landmass = loadImage('./assets/img/landmass.svg');
     font = loadFont('./assets/font/AtkinsonHyperlegible-Regular.ttf');
 
+    gbContourPoints = loadJSON('./assets/contours/gb.json', contourPointsLoad);
+    irContourPoints = loadJSON('./assets/contours/ireland.json', contourPointsLoad);
+
+
     // contourPoints = loadJSON('./assets/img/landmass.json', contourPointsLoad);
     enContourPoints = loadJSON('./assets/contours/england.json', contourPointsLoad);
     waContourPoints = loadJSON('./assets/contours/wales.json', contourPointsLoad);
@@ -146,10 +153,45 @@ function windowResize() {
 }
 
 
+function drawMap() {
+    push();
+
+    translate(widthTranslation, heightTranslation);
+    fill(255, 255, 255);
+
+    if (gbContourPoints.points.length > 0) {
+        beginShape();
+        for (let i = 0; i < gbContourPoints.points.length; i++) {
+            vertex(gbContourPoints.points[i][0] * pointScale - (59 * pointScale), gbContourPoints.points[i][1] * pointScale - (122 * pointScale));
+        }
+        endShape();
+    }
+
+    fill(220);
+    if (irContourPoints.points.length > 0) {
+        beginShape();
+        for (let i = 0; i < irContourPoints.points.length; i++) {
+            vertex(irContourPoints.points[i][0] * pointScale - (212 * pointScale), irContourPoints.points[i][1] * pointScale - (45 * pointScale));
+        }
+        endShape();
+    }
+
+    fill(255, 255, 255)
+    if (niContourPoints.points.length > 0) {
+        beginShape();
+        for (let i = 0; i < niContourPoints.points.length; i++) {
+            vertex((niContourPoints.points[i][0] - 170) * pointScale, (niContourPoints.points[i][1] - 118) * pointScale);
+        }
+        endShape();
+    }
 
 
 
-function drawMap(_enActive, _waActive, _scActive, _niActive) {
+    pop();
+}
+
+
+function drawOutlines(_enActive, _waActive, _scActive, _niActive) {
     // let pointScale = 1.35;
     //heightwidth716
 
@@ -179,14 +221,15 @@ function drawMap(_enActive, _waActive, _scActive, _niActive) {
     // ===== ENGLAND CONTOUR =====
     // ===========================
 
+
     if (_enActive == true) { 
-        // stroke(68, 61, 71);
-        // strokeWeight(3);
-        fill(201, 202, 217);
+        stroke(255, 77, 109);
+        strokeWeight(4);
+        fill(255, 77, 109, 100);
     } else {
-        // stroke(0, 0, 0);
-        // strokeWeight(0);
-        fill(255, 255, 255);
+        stroke(0, 0, 0);
+        strokeWeight(0);
+        noFill();
     }
 
     if (enContourPoints.points.length > 0) {
@@ -202,14 +245,15 @@ function drawMap(_enActive, _waActive, _scActive, _niActive) {
     // ===== WALES CONTOUR =====
     // =========================
 
+    noFill();
     if (_waActive == true) { 
-        // stroke(68, 61, 71);
-        // strokeWeight(3);
-        fill(201, 202, 217);
+        stroke(83, 255, 77);
+        strokeWeight(4);
+        fill(83, 255, 77, 100);
     } else {
-        // stroke(0, 0, 0);
-        // strokeWeight(0);
-        fill(255, 255, 255);
+        stroke(0, 0, 0);
+        strokeWeight(0);
+        // fill(255, 255, 255);
     }
     if (waContourPoints.points.length > 0) {
         beginShape();
@@ -224,15 +268,15 @@ function drawMap(_enActive, _waActive, _scActive, _niActive) {
     // ===========================
     // ===== SCOTLAND CONTOUR ====
     // ===========================
-
+    noFill();
     if (_scActive == true) { 
-        // stroke(68, 61, 71);
-        // strokeWeight(3);
-        fill(201, 202, 217);
+        stroke(86, 77, 255);
+        strokeWeight(4);
+        fill(86, 77, 255, 100);
     } else {
-        // stroke(0, 0, 0);
-        // strokeWeight(0);
-        fill(255, 255, 255);
+        stroke(0, 0, 0);
+        strokeWeight(0);
+        // fill(255, 255, 255);
     }
     if (scContourPoints.points.length > 0) {
         beginShape();
@@ -250,14 +294,15 @@ function drawMap(_enActive, _waActive, _scActive, _niActive) {
     // ===== NORTHERN IRELAND CONTOUR ====
     // ===================================
 
+    noFill();
     if (_niActive == true) { 
-        // stroke(68, 61, 71);
-        // strokeWeight(1);
-        fill(201, 202, 217);
+        stroke(255, 237, 77);
+        strokeWeight(4);
+        fill(255, 237, 77, 100);
     } else {
-        // stroke(0, 0, 0);
-        // strokeWeight(1);
-        fill(255, 255, 255);
+        stroke(0, 0, 0);
+        strokeWeight(0);
+        // fill(255, 255, 255);
     }
     if (niContourPoints.points.length > 0) {
         beginShape();
@@ -275,39 +320,39 @@ function drawMap(_enActive, _waActive, _scActive, _niActive) {
 function drawBoundaries() {
     push();
 
-    // beginShape();
-    // fill(255, 0, 0);
-    // vertex(enDetectPoints[0], enDetectPoints[1]);
-    // vertex(enDetectPoints[2], enDetectPoints[1]);
-    // vertex(enDetectPoints[2], enDetectPoints[3]);
-    // vertex(enDetectPoints[0], enDetectPoints[3]);
-    // endShape();
+    beginShape();
+    fill(255, 0, 0);
+    vertex(enDetectPoints[0], enDetectPoints[1]);
+    vertex(enDetectPoints[2], enDetectPoints[1]);
+    vertex(enDetectPoints[2], enDetectPoints[3]);
+    vertex(enDetectPoints[0], enDetectPoints[3]);
+    endShape();
 
-    // beginShape();
-    // fill(0, 255, 0);
-    // vertex(waDetectPoints[0], waDetectPoints[1]);
-    // vertex(waDetectPoints[2], waDetectPoints[1]);
-    // vertex(waDetectPoints[2], waDetectPoints[3]);
-    // vertex(waDetectPoints[0], waDetectPoints[3]);
-    // endShape();
+    beginShape();
+    fill(0, 255, 0);
+    vertex(waDetectPoints[0], waDetectPoints[1]);
+    vertex(waDetectPoints[2], waDetectPoints[1]);
+    vertex(waDetectPoints[2], waDetectPoints[3]);
+    vertex(waDetectPoints[0], waDetectPoints[3]);
+    endShape();
 
-    // beginShape();
-    // fill(0, 0, 255);
-    // vertex(scDetectPoints[0], scDetectPoints[1]);
-    // vertex(scDetectPoints[2], scDetectPoints[1]);
-    // vertex(scDetectPoints[2], scDetectPoints[3]);
-    // vertex(scDetectPoints[0], scDetectPoints[3]);
-    // endShape();
+    beginShape();
+    fill(0, 0, 255);
+    vertex(scDetectPoints[0], scDetectPoints[1]);
+    vertex(scDetectPoints[2], scDetectPoints[1]);
+    vertex(scDetectPoints[2], scDetectPoints[3]);
+    vertex(scDetectPoints[0], scDetectPoints[3]);
+    endShape();
 
-    // beginShape();
-    // fill(255, 255, 0);
-    // vertex(niDetectPoints[0], niDetectPoints[1]);
-    // vertex(niDetectPoints[2], niDetectPoints[1]);
-    // vertex(niDetectPoints[2], niDetectPoints[3]);
-    // vertex(niDetectPoints[0], niDetectPoints[3]);
-    // endShape();
+    beginShape();
+    fill(255, 255, 0);
+    vertex(niDetectPoints[0], niDetectPoints[1]);
+    vertex(niDetectPoints[2], niDetectPoints[1]);
+    vertex(niDetectPoints[2], niDetectPoints[3]);
+    vertex(niDetectPoints[0], niDetectPoints[3]);
+    endShape();
 
-    // pop();
+    pop();
 
 }
 
@@ -321,6 +366,7 @@ function draw() {
     strokeWeight(0);
     rect(0, 0, width, height);
 
+    drawMap();
 
     stroke(0, 0, 0);
     if (mouseY >= 0 && mouseY <= height && mouseX >= 0 && mouseX <= width) {
@@ -347,13 +393,13 @@ function draw() {
             enActive = true;
         }
     
-        drawBoundaries();
+        // drawBoundaries();
 
-        drawMap(enActive, waActive, scActive, niActive);
+        drawOutlines(enActive, waActive, scActive, niActive);
         
 
     } else {
-        drawMap(false, false, false, false);
+        drawOutlines(false, false, false, false);
     }
 
     let drawEnd = Date.now();
@@ -371,25 +417,25 @@ function mouseMoved() {
 
 
 
-    let detectOutput = " ";
-
-    if (mouseX >= enDetectPoints[0] && mouseX <= enDetectPoints[2] && mouseY >= enDetectPoints[1] && mouseY <= enDetectPoints[3]) {
-        detectOutput = detectOutput.concat("en")
-    }
-
-    if (mouseX >= waDetectPoints[0] && mouseX <= waDetectPoints[2] && mouseY >= waDetectPoints[1] && mouseY <= waDetectPoints[3]) {
-        detectOutput = detectOutput.concat(" wa")
-    }
-
-    if (mouseX >= scDetectPoints[0] && mouseX <= scDetectPoints[2] && mouseY >= scDetectPoints[1] && mouseY <= scDetectPoints[3]) {
-        detectOutput = detectOutput.concat(" sc");
-    }
+    let detectOutput;
 
     if (mouseX >= niDetectPoints[0] && mouseX <= niDetectPoints[2] && mouseY >= niDetectPoints[1] && mouseY <= niDetectPoints[3]) {
-        detectOutput = detectOutput.concat(" ni");
+        detectOutput = "Northern Ireland";
+    }
+    else if (mouseX >= waDetectPoints[0] && mouseX <= waDetectPoints[2] && mouseY >= waDetectPoints[1] && mouseY <= waDetectPoints[3]) {
+        detectOutput = "Wales";
     }
 
-    console.log(detectOutput);
+    else if (mouseX >= scDetectPoints[0] && mouseX <= scDetectPoints[2] && mouseY >= scDetectPoints[1] && mouseY <= scDetectPoints[3]) {
+        detectOutput = "Scotland";
+    }
+    else if (mouseX >= enDetectPoints[0] && mouseX <= enDetectPoints[2] && mouseY >= enDetectPoints[1] && mouseY <= enDetectPoints[3]) {
+        detectOutput = "England";
+    }
+    else {
+        detectOutput = "";
+    }
+
     const detect = document.getElementById('detect');
     detect.innerHTML = detectOutput;
 }
