@@ -1,0 +1,13 @@
+{
+
+    "compilerOptions": {
+        "module": "none",
+        "moduleResolution": "node",
+        "noImplicitAny": true,
+        "outDir": "./src/",
+        "preserveConstEnums": true,
+        "rootDir": "./scripts/",
+        "target": "es5"
+    },
+    "compileOnSave": true
+}
