@@ -7,6 +7,7 @@ var scBlue = { R: 86, G: 77, B: 255 };
 var waGreen = { R: 83, G: 255, B: 77 };
 var sketch = function (P5) {
     // let durationTimers: string[];
+    var closestOutput;
     var landmass;
     var font;
     var alignContourPoints;
@@ -42,9 +43,9 @@ var sketch = function (P5) {
         console.log("[✓] Loaded Contour Points");
     }
     function getPointDistance(_point) {
-        return (Math.sqrt(Math.pow(_point[0] - P5.mouseX, 2)
+        return (Math.floor(Math.sqrt(Math.pow(_point[0] - P5.mouseX, 2)
             +
-                Math.pow(_point[1] - P5.mouseY, 2)));
+                Math.pow(_point[1] - P5.mouseY, 2))));
     }
     function getClosestPoints(_points) {
         var upper = _points.length - 1;
@@ -52,7 +53,7 @@ var sketch = function (P5) {
         var mid;
         while (upper - lower > 1) {
             mid = Math.floor((upper + lower) / 2);
-            if (getPointDistance(_points[mid]) > getPointDistance(_points[lower])) {
+            if (getPointDistance(_points[mid]) < getPointDistance(_points[lower])) {
                 lower = mid + 1;
             }
             else {
@@ -63,8 +64,8 @@ var sketch = function (P5) {
     }
     function scaleContourPoints(_points, _offset) {
         for (var pointNum = 0; pointNum < _points.length; pointNum++) {
-            _points[pointNum][0] = _points[pointNum][0] * pointScale + (pointScale * _offset[0]);
-            _points[pointNum][1] = _points[pointNum][1] * pointScale + (pointScale * _offset[1]);
+            _points[pointNum][0] = _points[pointNum][0] * pointScale + (pointScale * _offset[0]) + widthTranslation;
+            _points[pointNum][1] = _points[pointNum][1] * pointScale + (pointScale * _offset[1]) + heightTranslation;
         }
     }
     /**
@@ -147,6 +148,7 @@ var sketch = function (P5) {
         // console.log(durationTimers[i]);
         // }
     };
+    // TODO: IMPLEMENT RESIZE FUNCTION.
     function windowResize() {
     }
     function drawShapeFromContours(_points, _fillRGB, _strokeRGB, _fillAlpha) {
@@ -179,7 +181,7 @@ var sketch = function (P5) {
         P5.rect(0, 0, P5.width, P5.height);
         P5.stroke(0, 0, 0);
         P5.push();
-        P5.translate(widthTranslation, heightTranslation);
+        // P5.translate(widthTranslation, heightTranslation);
         drawShapeFromContours(gbContourPoints.points, white);
         drawShapeFromContours(irContourPoints.points, gray);
         drawShapeFromContours(niContourPoints.points, white);
@@ -196,13 +198,19 @@ var sketch = function (P5) {
             drawShapeFromContours(enContourPoints.points, enRed, enRed, 100);
         }
         P5.pop();
+        if (closestOutput) {
+            P5.strokeWeight(1);
+            P5.stroke(255, 0, 0);
+            P5.line(P5.mouseX, P5.mouseY, closestOutput[0][0], closestOutput[0][1]);
+            P5.stroke(0, 255, 0);
+            P5.line(P5.mouseX, P5.mouseY, closestOutput[1][0], closestOutput[1][1]);
+        }
     };
     P5.mouseMoved = function () {
         var mouseXDiv = document.getElementById('mouseX');
         var mouseYDiv = document.getElementById('mouseY');
         mouseXDiv.innerHTML = " ".concat(P5.mouseX.toFixed(1));
         mouseYDiv.innerHTML = " ".concat(P5.mouseY.toFixed(1));
-        var closestOutput;
         var detectOutput;
         if (P5.mouseX >= niDetectPoints[0] && P5.mouseX <= niDetectPoints[2] && P5.mouseY >= niDetectPoints[1] && P5.mouseY <= niDetectPoints[3]) {
             detectOutput = "Northern Ireland";
@@ -222,12 +230,13 @@ var sketch = function (P5) {
         }
         else {
             detectOutput = "";
+            closestOutput = null;
         }
         var detect = document.getElementById('detect');
         detect.innerHTML = detectOutput;
         if (closestOutput) {
             var closestPoints = document.getElementById('closestPoints');
-            closestPoints.innerHTML = " ".concat(closestOutput[0][0], ":").concat(closestOutput[0][1], " ").concat(closestOutput[1][0], ":").concat(closestOutput[1][1], " ");
+            closestPoints.innerHTML = " ".concat(Math.floor(closestOutput[0][0]), ":").concat(Math.floor(closestOutput[0][1]), " ").concat(Math.floor(closestOutput[1][0]), ":").concat(Math.floor(closestOutput[1][1]), " ");
         }
     };
 };

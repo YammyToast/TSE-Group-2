@@ -23,6 +23,8 @@ var sketch = (P5: p5) => {
 
     // let durationTimers: string[];
 
+    let closestOutput: number[][];
+
     let landmass: any;
     let font: any;
     let alignContourPoints: ContourPoints;
@@ -69,11 +71,11 @@ var sketch = (P5: p5) => {
     function getPointDistance(_point: number[]): number {
 
         return (
-            Math.sqrt(
-                Math.pow(_point[0] - P5.mouseX, 2) 
+            Math.floor(Math.sqrt(
+                Math.pow(_point[0]- P5.mouseX, 2) 
                 +
                 Math.pow(_point[1] - P5.mouseY, 2)
-            )
+            ))
         )
 
     }
@@ -86,7 +88,7 @@ var sketch = (P5: p5) => {
         
         while(upper - lower > 1) {
             mid = Math.floor((upper + lower) / 2);
-            if (getPointDistance(_points[mid]) > getPointDistance(_points[lower])) {
+            if (getPointDistance(_points[mid]) < getPointDistance(_points[lower])) {
                 lower = mid + 1;
             } else {
                 upper = mid;
@@ -99,8 +101,8 @@ var sketch = (P5: p5) => {
 
     function scaleContourPoints(_points: number[][], _offset: number[]) {
         for (let pointNum = 0; pointNum < _points.length; pointNum++) {
-            _points[pointNum][0] = _points[pointNum][0] * pointScale + (pointScale * _offset[0]);
-            _points[pointNum][1] = _points[pointNum][1] * pointScale + (pointScale * _offset[1]);
+            _points[pointNum][0] = _points[pointNum][0] * pointScale + (pointScale * _offset[0]) + widthTranslation;
+            _points[pointNum][1] = _points[pointNum][1] * pointScale + (pointScale * _offset[1]) + heightTranslation;
         }
 
     }
@@ -218,6 +220,7 @@ var sketch = (P5: p5) => {
         // }
     }
 
+    // TODO: IMPLEMENT RESIZE FUNCTION.
     function windowResize() {
 
     }
@@ -249,6 +252,8 @@ var sketch = (P5: p5) => {
 
 
 
+
+
     P5.draw = () => {
 
         // ===== CLEAR MAP =====
@@ -260,7 +265,7 @@ var sketch = (P5: p5) => {
         P5.stroke(0, 0, 0);
 
         P5.push();
-        P5.translate(widthTranslation, heightTranslation);
+        // P5.translate(widthTranslation, heightTranslation);
 
         drawShapeFromContours(gbContourPoints.points, white);
         drawShapeFromContours(irContourPoints.points, gray)
@@ -279,6 +284,17 @@ var sketch = (P5: p5) => {
             drawShapeFromContours(enContourPoints.points, enRed, enRed, 100);
         }
         P5.pop();
+
+        if (closestOutput) {
+            P5.strokeWeight(1);
+            P5.stroke(255, 0, 0);
+            P5.line(P5.mouseX, P5.mouseY, closestOutput[0][0], closestOutput[0][1]);
+            P5.stroke(0, 255, 0);
+            P5.line(P5.mouseX, P5.mouseY, closestOutput[1][0], closestOutput[1][1]);
+
+            
+        }
+
     }
 
     P5.mouseMoved = () => {
@@ -287,8 +303,6 @@ var sketch = (P5: p5) => {
         mouseXDiv.innerHTML = ` ${P5.mouseX.toFixed(1)}`;
         mouseYDiv.innerHTML = ` ${P5.mouseY.toFixed(1)}`;
 
-
-        let closestOutput: number[][];
 
 
         let detectOutput;
@@ -312,6 +326,7 @@ var sketch = (P5: p5) => {
         }
         else {
             detectOutput = "";
+            closestOutput = null;
         }
 
         const detect = document.getElementById('detect');
@@ -320,7 +335,7 @@ var sketch = (P5: p5) => {
 
         if (closestOutput) {
             const closestPoints = document.getElementById('closestPoints');
-            closestPoints.innerHTML = ` ${closestOutput[0][0]}:${closestOutput[0][1]} ${closestOutput[1][0]}:${closestOutput[1][1]} `;
+            closestPoints.innerHTML = ` ${Math.floor(closestOutput[0][0])}:${Math.floor(closestOutput[0][1])} ${Math.floor(closestOutput[1][0])}:${Math.floor(closestOutput[1][1])} `;
 
         }
 
