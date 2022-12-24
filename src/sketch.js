@@ -27,6 +27,8 @@ var sketch = function (P5) {
     var waDetectPoints = [0, 0, 0, 0];
     var scDetectPoints = [0, 0, 0, 0];
     var niDetectPoints = [0, 0, 0, 0];
+    var gbOffset = [-59, -122];
+    var irOffset = [-212, -45];
     var enOffset = [0, 0];
     var waOffset = [-72, 8];
     var scOffset = [-98, -246];
@@ -38,6 +40,32 @@ var sketch = function (P5) {
      */
     function contourPointsLoad() {
         console.log("[✓] Loaded Contour Points");
+    }
+    function getPointDistance(_point) {
+        return (Math.sqrt(Math.pow(_point[0] - P5.mouseX, 2)
+            +
+                Math.pow(_point[1] - P5.mouseY, 2)));
+    }
+    function getClosestPoints(_points) {
+        var upper = _points.length - 1;
+        var lower = 0;
+        var mid;
+        while (upper - lower > 1) {
+            mid = Math.floor((upper + lower) / 2);
+            if (getPointDistance(_points[mid]) > getPointDistance(_points[lower])) {
+                lower = mid + 1;
+            }
+            else {
+                upper = mid;
+            }
+        }
+        return [_points[upper], _points[lower]];
+    }
+    function scaleContourPoints(_points, _offset) {
+        for (var pointNum = 0; pointNum < _points.length; pointNum++) {
+            _points[pointNum][0] = _points[pointNum][0] * pointScale + (pointScale * _offset[0]);
+            _points[pointNum][1] = _points[pointNum][1] * pointScale + (pointScale * _offset[1]);
+        }
     }
     /**
      * @brief Sets the scaled coordinates for one entity, to be used as the outer detection zone for that entity.
@@ -102,6 +130,12 @@ var sketch = function (P5) {
         setDetectPoints(waDetectPoints, waBoundaryPoints, waOffset);
         setDetectPoints(scDetectPoints, scBoundaryPoints, scOffset);
         setDetectPoints(niDetectPoints, niBoundaryPoints, niOffset);
+        scaleContourPoints(gbContourPoints.points, gbOffset);
+        scaleContourPoints(irContourPoints.points, irOffset);
+        scaleContourPoints(enContourPoints.points, enOffset);
+        scaleContourPoints(waContourPoints.points, waOffset);
+        scaleContourPoints(scContourPoints.points, scOffset);
+        scaleContourPoints(niContourPoints.points, niOffset);
         // fill('#242124');
         // textFont(font);
         // textSize(16);
@@ -115,9 +149,9 @@ var sketch = function (P5) {
     };
     function windowResize() {
     }
-    function drawShapeFromContours(_points, _offset, _fillRGB, _strokeRGB) {
+    function drawShapeFromContours(_points, _fillRGB, _strokeRGB, _fillAlpha) {
         if (_fillRGB) {
-            P5.fill(_fillRGB.R, _fillRGB.G, _fillRGB.B, 100);
+            P5.fill(_fillRGB.R, _fillRGB.G, _fillRGB.B, _fillAlpha ? _fillAlpha : 230);
         }
         else {
             P5.noFill();
@@ -131,19 +165,11 @@ var sketch = function (P5) {
         }
         if (_points.length > 0) {
             P5.beginShape();
-            for (var pointNum = 0; pointNum < _points.length; pointNum++) {
-                P5.vertex(_points[pointNum][0] * pointScale + (pointScale * _offset[0]), _points[pointNum][1] * pointScale + (pointScale * _offset[1]));
+            for (var it = 0; it < _points.length; it++) {
+                P5.vertex(_points[it][0], _points[it][1]);
             }
             P5.endShape();
         }
-    }
-    function drawMap() {
-        P5.push();
-        P5.translate(widthTranslation, heightTranslation);
-        drawShapeFromContours(gbContourPoints.points, [-59, -122], white);
-        drawShapeFromContours(irContourPoints.points, [-212, -45], gray);
-        drawShapeFromContours(niContourPoints.points, [-170, -118], white);
-        P5.pop();
     }
     P5.draw = function () {
         // ===== CLEAR MAP =====
@@ -151,21 +177,23 @@ var sketch = function (P5) {
         P5.stroke(255, 255, 255);
         P5.strokeWeight(0);
         P5.rect(0, 0, P5.width, P5.height);
-        drawMap();
         P5.stroke(0, 0, 0);
         P5.push();
         P5.translate(widthTranslation, heightTranslation);
+        drawShapeFromContours(gbContourPoints.points, white);
+        drawShapeFromContours(irContourPoints.points, gray);
+        drawShapeFromContours(niContourPoints.points, white);
         if (P5.mouseX >= niDetectPoints[0] && P5.mouseX <= niDetectPoints[2] && P5.mouseY >= niDetectPoints[1] && P5.mouseY <= niDetectPoints[3]) {
-            drawShapeFromContours(niContourPoints.points, niOffset, enRed, enRed);
+            drawShapeFromContours(niContourPoints.points, niYellow, niYellow, 100);
         }
         else if (P5.mouseX >= waDetectPoints[0] && P5.mouseX <= waDetectPoints[2] && P5.mouseY >= waDetectPoints[1] && P5.mouseY <= waDetectPoints[3]) {
-            drawShapeFromContours(waContourPoints.points, waOffset, waGreen, waGreen);
+            drawShapeFromContours(waContourPoints.points, waGreen, waGreen, 100);
         }
         else if (P5.mouseX >= scDetectPoints[0] && P5.mouseX <= scDetectPoints[2] && P5.mouseY >= scDetectPoints[1] && P5.mouseY <= scDetectPoints[3]) {
-            drawShapeFromContours(scContourPoints.points, scOffset, scBlue, scBlue);
+            drawShapeFromContours(scContourPoints.points, scBlue, scBlue, 100);
         }
         else if (P5.mouseX >= enDetectPoints[0] && P5.mouseX <= enDetectPoints[2] && P5.mouseY >= enDetectPoints[1] && P5.mouseY <= enDetectPoints[3]) {
-            drawShapeFromContours(enContourPoints.points, enOffset, enRed, enRed);
+            drawShapeFromContours(enContourPoints.points, enRed, enRed, 100);
         }
         P5.pop();
     };
@@ -174,24 +202,33 @@ var sketch = function (P5) {
         var mouseYDiv = document.getElementById('mouseY');
         mouseXDiv.innerHTML = " ".concat(P5.mouseX.toFixed(1));
         mouseYDiv.innerHTML = " ".concat(P5.mouseY.toFixed(1));
+        var closestOutput;
         var detectOutput;
         if (P5.mouseX >= niDetectPoints[0] && P5.mouseX <= niDetectPoints[2] && P5.mouseY >= niDetectPoints[1] && P5.mouseY <= niDetectPoints[3]) {
             detectOutput = "Northern Ireland";
+            closestOutput = getClosestPoints(niContourPoints.points);
         }
         else if (P5.mouseX >= waDetectPoints[0] && P5.mouseX <= waDetectPoints[2] && P5.mouseY >= waDetectPoints[1] && P5.mouseY <= waDetectPoints[3]) {
             detectOutput = "Wales";
+            closestOutput = getClosestPoints(waContourPoints.points);
         }
         else if (P5.mouseX >= scDetectPoints[0] && P5.mouseX <= scDetectPoints[2] && P5.mouseY >= scDetectPoints[1] && P5.mouseY <= scDetectPoints[3]) {
             detectOutput = "Scotland";
+            closestOutput = getClosestPoints(scContourPoints.points);
         }
         else if (P5.mouseX >= enDetectPoints[0] && P5.mouseX <= enDetectPoints[2] && P5.mouseY >= enDetectPoints[1] && P5.mouseY <= enDetectPoints[3]) {
             detectOutput = "England";
+            closestOutput = getClosestPoints(enContourPoints.points);
         }
         else {
             detectOutput = "";
         }
         var detect = document.getElementById('detect');
         detect.innerHTML = detectOutput;
+        if (closestOutput) {
+            var closestPoints = document.getElementById('closestPoints');
+            closestPoints.innerHTML = " ".concat(closestOutput[0][0], ":").concat(closestOutput[0][1], " ").concat(closestOutput[1][0], ":").concat(closestOutput[1][1], " ");
+        }
     };
 };
 new p5(sketch);

@@ -48,6 +48,9 @@ var sketch = (P5: p5) => {
     let scDetectPoints: number[] = [0, 0, 0, 0];
     let niDetectPoints: number[] = [0, 0, 0, 0];
 
+    let gbOffset: number[] = [-59, -122];
+    let irOffset: number[] = [-212, -45];
+
     let enOffset: number[] = [0, 0];
     let waOffset: number[] = [-72, 8];
     let scOffset: number[] = [-98, -246];
@@ -63,6 +66,44 @@ var sketch = (P5: p5) => {
         console.log("[✓] Loaded Contour Points");
     }
 
+    function getPointDistance(_point: number[]): number {
+
+        return (
+            Math.sqrt(
+                Math.pow(_point[0] - P5.mouseX, 2) 
+                +
+                Math.pow(_point[1] - P5.mouseY, 2)
+            )
+        )
+
+    }
+
+    function getClosestPoints(_points: number[][]): number[][] {
+
+        let upper: number = _points.length - 1;
+        let lower: number = 0;
+        let mid: number;
+        
+        while(upper - lower > 1) {
+            mid = Math.floor((upper + lower) / 2);
+            if (getPointDistance(_points[mid]) > getPointDistance(_points[lower])) {
+                lower = mid + 1;
+            } else {
+                upper = mid;
+            }
+        }
+
+        return [_points[upper], _points[lower]];
+
+    }
+
+    function scaleContourPoints(_points: number[][], _offset: number[]) {
+        for (let pointNum = 0; pointNum < _points.length; pointNum++) {
+            _points[pointNum][0] = _points[pointNum][0] * pointScale + (pointScale * _offset[0]);
+            _points[pointNum][1] = _points[pointNum][1] * pointScale + (pointScale * _offset[1]);
+        }
+
+    }
 
 
     /**
@@ -142,16 +183,24 @@ var sketch = (P5: p5) => {
 
         pointScale = (P5.height * P5.width) / 400000 - 0.1;
 
+        
         setBoundaryPoints(enBoundaryPoints, enContourPoints.points);
         setBoundaryPoints(waBoundaryPoints, waContourPoints.points);
         setBoundaryPoints(scBoundaryPoints, scContourPoints.points);
         setBoundaryPoints(niBoundaryPoints, niContourPoints.points);
-
+        
         setDetectPoints(enDetectPoints, enBoundaryPoints, enOffset);
         setDetectPoints(waDetectPoints, waBoundaryPoints, waOffset);
         setDetectPoints(scDetectPoints, scBoundaryPoints, scOffset);
         setDetectPoints(niDetectPoints, niBoundaryPoints, niOffset);
 
+        scaleContourPoints(gbContourPoints.points, gbOffset);
+        scaleContourPoints(irContourPoints.points, irOffset);
+        
+        scaleContourPoints(enContourPoints.points, enOffset);
+        scaleContourPoints(waContourPoints.points, waOffset);
+        scaleContourPoints(scContourPoints.points, scOffset);
+        scaleContourPoints(niContourPoints.points, niOffset);
 
 
         // fill('#242124');
@@ -173,10 +222,10 @@ var sketch = (P5: p5) => {
 
     }
 
-    function drawShapeFromContours(_points: number[][], _offset: number[], _fillRGB: RGBColour | void, _strokeRGB: RGBColour | void) {
+    function drawShapeFromContours(_points: number[][], _fillRGB: RGBColour | void, _strokeRGB: RGBColour | void, _fillAlpha: number | void) {
 
         if (_fillRGB) {
-            P5.fill(_fillRGB.R, _fillRGB.G, _fillRGB.B, 100);
+            P5.fill(_fillRGB.R, _fillRGB.G, _fillRGB.B, _fillAlpha ? _fillAlpha : 230);
         } else {
             P5.noFill();
         }
@@ -190,27 +239,15 @@ var sketch = (P5: p5) => {
 
         if (_points.length > 0) {
             P5.beginShape();
-            for (let pointNum = 0; pointNum < _points.length; pointNum++) {
-                P5.vertex(_points[pointNum][0] * pointScale + (pointScale * _offset[0]),
-                    _points[pointNum][1] * pointScale + (pointScale * _offset[1]))
-
+            for (let it = 0; it < _points.length; it++) {
+                P5.vertex(_points[it][0], _points[it][1])
             }
             P5.endShape();
         }
 
     }
 
-    function drawMap() {
-        P5.push();
 
-        P5.translate(widthTranslation, heightTranslation);
-
-        drawShapeFromContours(gbContourPoints.points, [-59, -122], white);
-        drawShapeFromContours(irContourPoints.points, [-212, -45], gray)
-        drawShapeFromContours(niContourPoints.points, [-170, -118], white);
-
-        P5.pop();
-    }
 
     P5.draw = () => {
 
@@ -220,24 +257,26 @@ var sketch = (P5: p5) => {
         P5.strokeWeight(0);
         P5.rect(0, 0, P5.width, P5.height);
 
-        drawMap();
-
         P5.stroke(0, 0, 0);
 
         P5.push();
         P5.translate(widthTranslation, heightTranslation);
 
+        drawShapeFromContours(gbContourPoints.points, white);
+        drawShapeFromContours(irContourPoints.points, gray)
+        drawShapeFromContours(niContourPoints.points, white);
+
         if (P5.mouseX >= niDetectPoints[0] && P5.mouseX <= niDetectPoints[2] && P5.mouseY >= niDetectPoints[1] && P5.mouseY <= niDetectPoints[3]) {
-            drawShapeFromContours(niContourPoints.points, niOffset, enRed, enRed);
+            drawShapeFromContours(niContourPoints.points, niYellow, niYellow, 100);
         }
         else if (P5.mouseX >= waDetectPoints[0] && P5.mouseX <= waDetectPoints[2] && P5.mouseY >= waDetectPoints[1] && P5.mouseY <= waDetectPoints[3]) {
-            drawShapeFromContours(waContourPoints.points, waOffset, waGreen, waGreen);
+            drawShapeFromContours(waContourPoints.points, waGreen, waGreen, 100);
         }
         else if (P5.mouseX >= scDetectPoints[0] && P5.mouseX <= scDetectPoints[2] && P5.mouseY >= scDetectPoints[1] && P5.mouseY <= scDetectPoints[3]) {
-            drawShapeFromContours(scContourPoints.points, scOffset, scBlue, scBlue);
+            drawShapeFromContours(scContourPoints.points, scBlue, scBlue, 100);
         }
         else if (P5.mouseX >= enDetectPoints[0] && P5.mouseX <= enDetectPoints[2] && P5.mouseY >= enDetectPoints[1] && P5.mouseY <= enDetectPoints[3]) {
-            drawShapeFromContours(enContourPoints.points, enOffset, enRed, enRed);
+            drawShapeFromContours(enContourPoints.points, enRed, enRed, 100);
         }
         P5.pop();
     }
@@ -249,22 +288,27 @@ var sketch = (P5: p5) => {
         mouseYDiv.innerHTML = ` ${P5.mouseY.toFixed(1)}`;
 
 
+        let closestOutput: number[][];
 
 
         let detectOutput;
 
         if (P5.mouseX >= niDetectPoints[0] && P5.mouseX <= niDetectPoints[2] && P5.mouseY >= niDetectPoints[1] && P5.mouseY <= niDetectPoints[3]) {
             detectOutput = "Northern Ireland";
+            closestOutput = getClosestPoints(niContourPoints.points);
         }
         else if (P5.mouseX >= waDetectPoints[0] && P5.mouseX <= waDetectPoints[2] && P5.mouseY >= waDetectPoints[1] && P5.mouseY <= waDetectPoints[3]) {
             detectOutput = "Wales";
+            closestOutput = getClosestPoints(waContourPoints.points);
         }
 
         else if (P5.mouseX >= scDetectPoints[0] && P5.mouseX <= scDetectPoints[2] && P5.mouseY >= scDetectPoints[1] && P5.mouseY <= scDetectPoints[3]) {
             detectOutput = "Scotland";
+            closestOutput = getClosestPoints(scContourPoints.points);
         }
         else if (P5.mouseX >= enDetectPoints[0] && P5.mouseX <= enDetectPoints[2] && P5.mouseY >= enDetectPoints[1] && P5.mouseY <= enDetectPoints[3]) {
             detectOutput = "England";
+            closestOutput = getClosestPoints(enContourPoints.points);
         }
         else {
             detectOutput = "";
@@ -272,6 +316,13 @@ var sketch = (P5: p5) => {
 
         const detect = document.getElementById('detect');
         detect.innerHTML = detectOutput;
+
+
+        if (closestOutput) {
+            const closestPoints = document.getElementById('closestPoints');
+            closestPoints.innerHTML = ` ${closestOutput[0][0]}:${closestOutput[0][1]} ${closestOutput[1][0]}:${closestOutput[1][1]} `;
+
+        }
 
     }
 
