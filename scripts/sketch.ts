@@ -25,6 +25,7 @@ var sketch = (P5: p5) => {
 
     let closestOutput: number[][];
 
+
     let landmass: any;
     let font: any;
     let alignContourPoints: ContourPoints;
@@ -71,12 +72,31 @@ var sketch = (P5: p5) => {
     function getPointDistance(_point: number[]): number {
 
         return (
-            Math.floor(Math.sqrt(
-                Math.pow(_point[0]- P5.mouseX, 2) 
+            Math.sqrt(
+                Math.pow(_point[0] - P5.mouseX, 2) 
                 +
                 Math.pow(_point[1] - P5.mouseY, 2)
-            ))
+            )
         )
+
+    }
+
+    function getClosestLinear(_points: number[][]): number[][] {
+        let closest: number = 0;
+        let secondClosest: number =  0;
+
+        for(let it = 0; it < _points.length - 1; it++) {
+
+            if (getPointDistance(_points[it]) < getPointDistance(_points[closest])) {
+                secondClosest = closest;
+                closest = it;
+                
+
+            }
+
+        }
+
+        return [_points[closest], _points[secondClosest]];
 
     }
 
@@ -85,16 +105,18 @@ var sketch = (P5: p5) => {
         let upper: number = _points.length - 1;
         let lower: number = 0;
         let mid: number;
-        
+        // console.log("Mouse X: ", P5.mouseX, " Mouse Y: ", P5.mouseY );
         while(upper - lower > 1) {
             mid = Math.floor((upper + lower) / 2);
+            // console.log("Distance to Mid: ", getPointDistance(_points[mid]), ". Distance to Lower: ", getPointDistance(_points[lower]), ". Distance to Upper: ", getPointDistance(_points[upper]));
+            // console.log("Lower: ", lower, " Mid: ", mid, " Upper: ", upper);
             if (getPointDistance(_points[mid]) < getPointDistance(_points[lower])) {
                 lower = mid + 1;
             } else {
                 upper = mid;
             }
         }
-
+        console.log(`Upper: ${upper} | Lower: ${lower}`);
         return [_points[upper], _points[lower]];
 
     }
@@ -297,6 +319,13 @@ var sketch = (P5: p5) => {
 
     }
 
+    P5.mouseClicked = () => {
+        
+
+
+
+    }
+
     P5.mouseMoved = () => {
         const mouseXDiv = document.getElementById('mouseX');
         const mouseYDiv = document.getElementById('mouseY');
@@ -309,20 +338,20 @@ var sketch = (P5: p5) => {
 
         if (P5.mouseX >= niDetectPoints[0] && P5.mouseX <= niDetectPoints[2] && P5.mouseY >= niDetectPoints[1] && P5.mouseY <= niDetectPoints[3]) {
             detectOutput = "Northern Ireland";
-            closestOutput = getClosestPoints(niContourPoints.points);
+            closestOutput = getClosestLinear(niContourPoints.points);
         }
         else if (P5.mouseX >= waDetectPoints[0] && P5.mouseX <= waDetectPoints[2] && P5.mouseY >= waDetectPoints[1] && P5.mouseY <= waDetectPoints[3]) {
             detectOutput = "Wales";
-            closestOutput = getClosestPoints(waContourPoints.points);
+            closestOutput = getClosestLinear(waContourPoints.points);
         }
 
         else if (P5.mouseX >= scDetectPoints[0] && P5.mouseX <= scDetectPoints[2] && P5.mouseY >= scDetectPoints[1] && P5.mouseY <= scDetectPoints[3]) {
             detectOutput = "Scotland";
-            closestOutput = getClosestPoints(scContourPoints.points);
+            closestOutput = getClosestLinear(scContourPoints.points);
         }
         else if (P5.mouseX >= enDetectPoints[0] && P5.mouseX <= enDetectPoints[2] && P5.mouseY >= enDetectPoints[1] && P5.mouseY <= enDetectPoints[3]) {
             detectOutput = "England";
-            closestOutput = getClosestPoints(enContourPoints.points);
+            closestOutput = getClosestLinear(enContourPoints.points);
         }
         else {
             detectOutput = "";
