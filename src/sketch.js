@@ -1,3 +1,11 @@
+var landmassEntity;
+(function (landmassEntity) {
+    landmassEntity[landmassEntity["None"] = 0] = "None";
+    landmassEntity[landmassEntity["NorthernIreland"] = 1] = "NorthernIreland";
+    landmassEntity[landmassEntity["Scotland"] = 2] = "Scotland";
+    landmassEntity[landmassEntity["Wales"] = 3] = "Wales";
+    landmassEntity[landmassEntity["England"] = 4] = "England";
+})(landmassEntity || (landmassEntity = {}));
 var white = { R: 255, G: 255, B: 255 };
 var gray = { R: 220, G: 220, B: 220 };
 var black = { R: 0, G: 0, B: 0 };
@@ -7,10 +15,9 @@ var scBlue = { R: 86, G: 77, B: 255 };
 var waGreen = { R: 83, G: 255, B: 77 };
 var sketch = function (P5) {
     // let durationTimers: string[];
-    var closestOutput;
+    var activeEntity;
     var landmass;
     var font;
-    var alignContourPoints;
     var pointScale;
     var gbContourPoints;
     var irContourPoints;
@@ -42,40 +49,58 @@ var sketch = function (P5) {
     function contourPointsLoad() {
         console.log("[✓] Loaded Contour Points");
     }
-    function getPointDistance(_point) {
-        return (Math.sqrt(Math.pow(_point[0] - P5.mouseX, 2)
-            +
-                Math.pow(_point[1] - P5.mouseY, 2)));
+    function angle2D(_x1, _y1, _x2, _y2) {
+        var dtheta, theta1, theta2;
+        theta1 = Math.atan2(_y1, _x1);
+        theta2 = Math.atan2(_y2, _x2);
+        dtheta = theta2 - theta1;
+        while (dtheta > Math.PI) {
+            dtheta -= 2 * Math.PI;
+        }
+        while (dtheta < -Math.PI) {
+            dtheta += 2 * Math.PI;
+        }
+        return (dtheta);
     }
-    function getClosestLinear(_points) {
-        var closest = 0;
-        var secondClosest = 0;
-        for (var it = 0; it < _points.length - 1; it++) {
-            if (getPointDistance(_points[it]) < getPointDistance(_points[closest])) {
-                secondClosest = closest;
-                closest = it;
+    //https://www.eecs.umich.edu/courses/eecs380/HANDOUTS/PROJ2/InsidePoly.html
+    // IMPLEMENTATION OF ALGORITHM 2
+    function detectInside(_polygon, _mouse) {
+        var angle = 0;
+        for (var i = 0; i < _polygon.length - 1; i++) {
+            var p1 = [_polygon[i][0] - P5.mouseX, _polygon[i][1] - P5.mouseY];
+            var p2 = [_polygon[(i + 1) % _polygon.length][0] - P5.mouseX, _polygon[(i + 1) % _polygon.length][1] - P5.mouseY];
+            angle += angle2D(p1[0], p1[1], p2[0], p2[1]);
+        }
+        if (Math.abs(angle) < Math.PI) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    function detectActiveEntity() {
+        // APPLY HEURISTIC BOUNDARIES TO REMOVE UNNECCESSARY CALCULATIONS.
+        if (P5.mouseX >= niDetectPoints[0] && P5.mouseX <= niDetectPoints[2] && P5.mouseY >= niDetectPoints[1] && P5.mouseY <= niDetectPoints[3]) {
+            if (detectInside(niContourPoints.points, [P5.mouseX, P5.mouseY]) == true) {
+                return landmassEntity.NorthernIreland;
             }
         }
-        return [_points[closest], _points[secondClosest]];
-    }
-    function getClosestPoints(_points) {
-        var upper = _points.length - 1;
-        var lower = 0;
-        var mid;
-        // console.log("Mouse X: ", P5.mouseX, " Mouse Y: ", P5.mouseY );
-        while (upper - lower > 1) {
-            mid = Math.floor((upper + lower) / 2);
-            // console.log("Distance to Mid: ", getPointDistance(_points[mid]), ". Distance to Lower: ", getPointDistance(_points[lower]), ". Distance to Upper: ", getPointDistance(_points[upper]));
-            // console.log("Lower: ", lower, " Mid: ", mid, " Upper: ", upper);
-            if (getPointDistance(_points[mid]) < getPointDistance(_points[lower])) {
-                lower = mid + 1;
-            }
-            else {
-                upper = mid;
+        if (P5.mouseX >= waDetectPoints[0] && P5.mouseX <= waDetectPoints[2] && P5.mouseY >= waDetectPoints[1] && P5.mouseY <= waDetectPoints[3]) {
+            if (detectInside(waContourPoints.points, [P5.mouseX, P5.mouseY])) {
+                return landmassEntity.Wales;
             }
         }
-        console.log("Upper: ".concat(upper, " | Lower: ").concat(lower));
-        return [_points[upper], _points[lower]];
+        if (P5.mouseX >= scDetectPoints[0] && P5.mouseX <= scDetectPoints[2] && P5.mouseY >= scDetectPoints[1] && P5.mouseY <= scDetectPoints[3]) {
+            if (detectInside(scContourPoints.points, [P5.mouseX, P5.mouseY])) {
+                return landmassEntity.Scotland;
+            }
+        }
+        if (P5.mouseX >= enDetectPoints[0] && P5.mouseX <= enDetectPoints[2] && P5.mouseY >= enDetectPoints[1] && P5.mouseY <= enDetectPoints[3]) {
+            if (detectInside(enContourPoints.points, [P5.mouseX, P5.mouseY])) {
+                return landmassEntity.England;
+            }
+        }
+        return landmassEntity.None;
     }
     function scaleContourPoints(_points, _offset) {
         for (var pointNum = 0; pointNum < _points.length; pointNum++) {
@@ -200,26 +225,23 @@ var sketch = function (P5) {
         drawShapeFromContours(gbContourPoints.points, white);
         drawShapeFromContours(irContourPoints.points, gray);
         drawShapeFromContours(niContourPoints.points, white);
-        if (P5.mouseX >= niDetectPoints[0] && P5.mouseX <= niDetectPoints[2] && P5.mouseY >= niDetectPoints[1] && P5.mouseY <= niDetectPoints[3]) {
-            drawShapeFromContours(niContourPoints.points, niYellow, niYellow, 100);
-        }
-        else if (P5.mouseX >= waDetectPoints[0] && P5.mouseX <= waDetectPoints[2] && P5.mouseY >= waDetectPoints[1] && P5.mouseY <= waDetectPoints[3]) {
-            drawShapeFromContours(waContourPoints.points, waGreen, waGreen, 100);
-        }
-        else if (P5.mouseX >= scDetectPoints[0] && P5.mouseX <= scDetectPoints[2] && P5.mouseY >= scDetectPoints[1] && P5.mouseY <= scDetectPoints[3]) {
-            drawShapeFromContours(scContourPoints.points, scBlue, scBlue, 100);
-        }
-        else if (P5.mouseX >= enDetectPoints[0] && P5.mouseX <= enDetectPoints[2] && P5.mouseY >= enDetectPoints[1] && P5.mouseY <= enDetectPoints[3]) {
-            drawShapeFromContours(enContourPoints.points, enRed, enRed, 100);
+        switch (activeEntity) {
+            case landmassEntity.NorthernIreland:
+                drawShapeFromContours(niContourPoints.points, niYellow, niYellow, 100);
+                break;
+            case landmassEntity.Wales:
+                drawShapeFromContours(waContourPoints.points, waGreen, waGreen, 100);
+                break;
+            case landmassEntity.Scotland:
+                drawShapeFromContours(scContourPoints.points, scBlue, scBlue, 100);
+                break;
+            case landmassEntity.England:
+                drawShapeFromContours(enContourPoints.points, enRed, enRed, 100);
+                break;
+            default:
+                break;
         }
         P5.pop();
-        if (closestOutput) {
-            P5.strokeWeight(1);
-            P5.stroke(255, 0, 0);
-            P5.line(P5.mouseX, P5.mouseY, closestOutput[0][0], closestOutput[0][1]);
-            P5.stroke(0, 255, 0);
-            P5.line(P5.mouseX, P5.mouseY, closestOutput[1][0], closestOutput[1][1]);
-        }
     };
     P5.mouseClicked = function () {
     };
@@ -229,31 +251,14 @@ var sketch = function (P5) {
         mouseXDiv.innerHTML = " ".concat(P5.mouseX.toFixed(1));
         mouseYDiv.innerHTML = " ".concat(P5.mouseY.toFixed(1));
         var detectOutput;
-        if (P5.mouseX >= niDetectPoints[0] && P5.mouseX <= niDetectPoints[2] && P5.mouseY >= niDetectPoints[1] && P5.mouseY <= niDetectPoints[3]) {
-            detectOutput = "Northern Ireland";
-            closestOutput = getClosestLinear(niContourPoints.points);
+        activeEntity = detectActiveEntity();
+        var detectDiv = document.getElementById('detect');
+        if (detectOutput) {
+            detectDiv.innerHTML = "".concat(detectOutput);
         }
-        else if (P5.mouseX >= waDetectPoints[0] && P5.mouseX <= waDetectPoints[2] && P5.mouseY >= waDetectPoints[1] && P5.mouseY <= waDetectPoints[3]) {
-            detectOutput = "Wales";
-            closestOutput = getClosestLinear(waContourPoints.points);
-        }
-        else if (P5.mouseX >= scDetectPoints[0] && P5.mouseX <= scDetectPoints[2] && P5.mouseY >= scDetectPoints[1] && P5.mouseY <= scDetectPoints[3]) {
-            detectOutput = "Scotland";
-            closestOutput = getClosestLinear(scContourPoints.points);
-        }
-        else if (P5.mouseX >= enDetectPoints[0] && P5.mouseX <= enDetectPoints[2] && P5.mouseY >= enDetectPoints[1] && P5.mouseY <= enDetectPoints[3]) {
-            detectOutput = "England";
-            closestOutput = getClosestLinear(enContourPoints.points);
-        }
-        else {
-            detectOutput = "";
-            closestOutput = null;
-        }
-        var detect = document.getElementById('detect');
-        detect.innerHTML = detectOutput;
-        if (closestOutput) {
-            var closestPoints = document.getElementById('closestPoints');
-            closestPoints.innerHTML = " ".concat(Math.floor(closestOutput[0][0]), ":").concat(Math.floor(closestOutput[0][1]), " ").concat(Math.floor(closestOutput[1][0]), ":").concat(Math.floor(closestOutput[1][1]), " ");
+        var activeDiv = document.getElementById('activeEntity');
+        if (activeEntity) {
+            activeDiv.innerHTML = " ".concat(activeEntity);
         }
     };
 };
