@@ -1,10 +1,10 @@
 var landmassEntity;
 (function (landmassEntity) {
-    landmassEntity[landmassEntity["None"] = 0] = "None";
-    landmassEntity[landmassEntity["NorthernIreland"] = 1] = "NorthernIreland";
-    landmassEntity[landmassEntity["Scotland"] = 2] = "Scotland";
-    landmassEntity[landmassEntity["Wales"] = 3] = "Wales";
-    landmassEntity[landmassEntity["England"] = 4] = "England";
+    landmassEntity[landmassEntity["None"] = 1] = "None";
+    landmassEntity[landmassEntity["NorthernIreland"] = 2] = "NorthernIreland";
+    landmassEntity[landmassEntity["Scotland"] = 3] = "Scotland";
+    landmassEntity[landmassEntity["Wales"] = 4] = "Wales";
+    landmassEntity[landmassEntity["England"] = 5] = "England";
 })(landmassEntity || (landmassEntity = {}));
 var white = { R: 255, G: 255, B: 255 };
 var gray = { R: 220, G: 220, B: 220 };
@@ -13,18 +13,26 @@ var enRed = { R: 255, G: 77, B: 109 };
 var niYellow = { R: 255, G: 237, B: 77 };
 var scBlue = { R: 86, G: 77, B: 255 };
 var waGreen = { R: 83, G: 255, B: 77 };
+var hoverGray = { R: 142, G: 153, B: 141 };
 var sketch = function (P5) {
     // let durationTimers: string[];
     var activeEntity;
+    var hoverEntity;
     var landmass;
     var font;
     var pointScale;
-    var gbContourPoints;
-    var irContourPoints;
-    var enContourPoints;
-    var waContourPoints;
-    var scContourPoints;
-    var niContourPoints;
+    var gbContourPoints = [];
+    var irContourPoints = [];
+    var gbStaticObject;
+    var irStaticObject;
+    var enContourPoints = [];
+    var waContourPoints = [];
+    var scContourPoints = [];
+    var niContourPoints = [];
+    var enStaticObject;
+    var waStaticObject;
+    var scStaticObject;
+    var niStaticObject;
     // TopLeft-X, TopLeft-Y, BottomRight-X, BottomRight-Y
     var enBoundaryPoints = [0, 0, 0, 0];
     var waBoundaryPoints = [0, 0, 0, 0];
@@ -81,22 +89,22 @@ var sketch = function (P5) {
     function detectActiveEntity() {
         // APPLY HEURISTIC BOUNDARIES TO REMOVE UNNECCESSARY CALCULATIONS.
         if (P5.mouseX >= niDetectPoints[0] && P5.mouseX <= niDetectPoints[2] && P5.mouseY >= niDetectPoints[1] && P5.mouseY <= niDetectPoints[3]) {
-            if (detectInside(niContourPoints.points, [P5.mouseX, P5.mouseY]) == true) {
+            if (detectInside(niContourPoints, [P5.mouseX, P5.mouseY]) == true) {
                 return landmassEntity.NorthernIreland;
             }
         }
         if (P5.mouseX >= waDetectPoints[0] && P5.mouseX <= waDetectPoints[2] && P5.mouseY >= waDetectPoints[1] && P5.mouseY <= waDetectPoints[3]) {
-            if (detectInside(waContourPoints.points, [P5.mouseX, P5.mouseY])) {
+            if (detectInside(waContourPoints, [P5.mouseX, P5.mouseY])) {
                 return landmassEntity.Wales;
             }
         }
         if (P5.mouseX >= scDetectPoints[0] && P5.mouseX <= scDetectPoints[2] && P5.mouseY >= scDetectPoints[1] && P5.mouseY <= scDetectPoints[3]) {
-            if (detectInside(scContourPoints.points, [P5.mouseX, P5.mouseY])) {
+            if (detectInside(scContourPoints, [P5.mouseX, P5.mouseY])) {
                 return landmassEntity.Scotland;
             }
         }
         if (P5.mouseX >= enDetectPoints[0] && P5.mouseX <= enDetectPoints[2] && P5.mouseY >= enDetectPoints[1] && P5.mouseY <= enDetectPoints[3]) {
-            if (detectInside(enContourPoints.points, [P5.mouseX, P5.mouseY])) {
+            if (detectInside(enContourPoints, [P5.mouseX, P5.mouseY])) {
                 return landmassEntity.England;
             }
         }
@@ -141,17 +149,52 @@ var sketch = function (P5) {
             }
         }
     }
-    P5.preload = function () {
-        var preloadStart = Date.now();
+    function loadPoints() {
         landmass = P5.loadImage('../assets/img/landmass.svg');
         font = P5.loadFont('../assets/font/AtkinsonHyperlegible-Regular.ttf');
-        gbContourPoints = P5.loadJSON('../assets/contours/gb.json', contourPointsLoad);
-        irContourPoints = P5.loadJSON('../assets/contours/ireland.json', contourPointsLoad);
+        gbStaticObject = P5.loadJSON('../assets/contours/gb.json', contourPointsLoad);
+        irStaticObject = P5.loadJSON('../assets/contours/ireland.json', contourPointsLoad);
         // contourPoints = loadJSON('./assets/img/landmass.json', contourPointsLoad);
-        enContourPoints = P5.loadJSON('../assets/contours/england.json', contourPointsLoad);
-        waContourPoints = P5.loadJSON('../assets/contours/wales.json', contourPointsLoad);
-        scContourPoints = P5.loadJSON('../assets/contours/scotland.json', contourPointsLoad);
-        niContourPoints = P5.loadJSON('../assets/contours/northernireland.json', contourPointsLoad);
+        enStaticObject = P5.loadJSON('../assets/contours/england.json', contourPointsLoad);
+        waStaticObject = P5.loadJSON('../assets/contours/wales.json', contourPointsLoad);
+        scStaticObject = P5.loadJSON('../assets/contours/scotland.json', contourPointsLoad);
+        niStaticObject = P5.loadJSON('../assets/contours/northernireland.json', contourPointsLoad);
+    }
+    function rescaleValues() {
+        widthTranslation = P5.width * 0.6;
+        heightTranslation = P5.height * 0.7;
+        // Some value around 1.3
+        pointScale = P5.height * 0.0015;
+        console.log("Height: ", heightTranslation, " Width: ", widthTranslation, " Pointscale: ", pointScale);
+        // pointScale = P5.height * 0.00015;
+        // Fuck javascript for making this the only way to deepcopy!!!!
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        gbContourPoints = JSON.parse(JSON.stringify(gbStaticObject.points));
+        irContourPoints = JSON.parse(JSON.stringify(irStaticObject.points));
+        enContourPoints = JSON.parse(JSON.stringify(enStaticObject.points));
+        waContourPoints = JSON.parse(JSON.stringify(waStaticObject.points));
+        scContourPoints = JSON.parse(JSON.stringify(scStaticObject.points));
+        niContourPoints = JSON.parse(JSON.stringify(niStaticObject.points));
+        // console.log(enStaticObject);
+        // console.log(enContourPoints);
+        setBoundaryPoints(enBoundaryPoints, enContourPoints);
+        setBoundaryPoints(waBoundaryPoints, waContourPoints);
+        setBoundaryPoints(scBoundaryPoints, scContourPoints);
+        setBoundaryPoints(niBoundaryPoints, niContourPoints);
+        setDetectPoints(enDetectPoints, enBoundaryPoints, enOffset);
+        setDetectPoints(waDetectPoints, waBoundaryPoints, waOffset);
+        setDetectPoints(scDetectPoints, scBoundaryPoints, scOffset);
+        setDetectPoints(niDetectPoints, niBoundaryPoints, niOffset);
+        scaleContourPoints(gbContourPoints, gbOffset);
+        scaleContourPoints(irContourPoints, irOffset);
+        scaleContourPoints(enContourPoints, enOffset);
+        scaleContourPoints(waContourPoints, waOffset);
+        scaleContourPoints(scContourPoints, scOffset);
+        scaleContourPoints(niContourPoints, niOffset);
+    }
+    P5.preload = function () {
+        var preloadStart = Date.now();
+        loadPoints();
         var preloadEnd = Date.now();
         // durationTimers.push(`[⧖] Preload Duration : ${preloadEnd - preloadStart}ms`)
     };
@@ -159,24 +202,8 @@ var sketch = function (P5) {
         var setupStart = Date.now();
         var cnv = P5.createCanvas(P5.windowHeight * 0.8, P5.windowHeight * 0.8);
         cnv.parent('#canvasWrapper');
-        P5.background(255);
-        widthTranslation = P5.width * 0.6;
-        heightTranslation = P5.height * 0.7;
-        pointScale = (P5.height * P5.width) / 400000 - 0.1;
-        setBoundaryPoints(enBoundaryPoints, enContourPoints.points);
-        setBoundaryPoints(waBoundaryPoints, waContourPoints.points);
-        setBoundaryPoints(scBoundaryPoints, scContourPoints.points);
-        setBoundaryPoints(niBoundaryPoints, niContourPoints.points);
-        setDetectPoints(enDetectPoints, enBoundaryPoints, enOffset);
-        setDetectPoints(waDetectPoints, waBoundaryPoints, waOffset);
-        setDetectPoints(scDetectPoints, scBoundaryPoints, scOffset);
-        setDetectPoints(niDetectPoints, niBoundaryPoints, niOffset);
-        scaleContourPoints(gbContourPoints.points, gbOffset);
-        scaleContourPoints(irContourPoints.points, irOffset);
-        scaleContourPoints(enContourPoints.points, enOffset);
-        scaleContourPoints(waContourPoints.points, waOffset);
-        scaleContourPoints(scContourPoints.points, scOffset);
-        scaleContourPoints(niContourPoints.points, niOffset);
+        rescaleValues();
+        console.log(enContourPoints);
         // fill('#242124');
         // textFont(font);
         // textSize(16);
@@ -189,8 +216,11 @@ var sketch = function (P5) {
         // }
     };
     // TODO: IMPLEMENT RESIZE FUNCTION.
-    function windowResize() {
-    }
+    P5.windowResized = function () {
+        P5.resizeCanvas(P5.windowHeight * 0.8, P5.windowHeight * 0.8, true);
+        console.log("Window Resized");
+        rescaleValues();
+    };
     function drawShapeFromContours(_points, _fillRGB, _strokeRGB, _fillAlpha) {
         if (_fillRGB) {
             P5.fill(_fillRGB.R, _fillRGB.G, _fillRGB.B, _fillAlpha ? _fillAlpha : 230);
@@ -220,46 +250,58 @@ var sketch = function (P5) {
         P5.strokeWeight(0);
         P5.rect(0, 0, P5.width, P5.height);
         P5.stroke(0, 0, 0);
-        P5.push();
         // P5.translate(widthTranslation, heightTranslation);
-        drawShapeFromContours(gbContourPoints.points, white);
-        drawShapeFromContours(irContourPoints.points, gray);
-        drawShapeFromContours(niContourPoints.points, white);
-        switch (activeEntity) {
+        drawShapeFromContours(gbContourPoints, white);
+        drawShapeFromContours(irContourPoints, gray);
+        drawShapeFromContours(niContourPoints, white);
+        switch (hoverEntity) {
             case landmassEntity.NorthernIreland:
-                drawShapeFromContours(niContourPoints.points, niYellow, niYellow, 100);
+                drawShapeFromContours(niContourPoints, hoverGray, hoverGray, 100);
                 break;
             case landmassEntity.Wales:
-                drawShapeFromContours(waContourPoints.points, waGreen, waGreen, 100);
+                drawShapeFromContours(waContourPoints, hoverGray, hoverGray, 100);
                 break;
             case landmassEntity.Scotland:
-                drawShapeFromContours(scContourPoints.points, scBlue, scBlue, 100);
+                drawShapeFromContours(scContourPoints, hoverGray, hoverGray, 100);
                 break;
             case landmassEntity.England:
-                drawShapeFromContours(enContourPoints.points, enRed, enRed, 100);
+                drawShapeFromContours(enContourPoints, hoverGray, hoverGray, 100);
                 break;
             default:
                 break;
         }
-        P5.pop();
+        switch (activeEntity) {
+            case landmassEntity.NorthernIreland:
+                drawShapeFromContours(niContourPoints, niYellow, niYellow, 100);
+                break;
+            case landmassEntity.Wales:
+                drawShapeFromContours(waContourPoints, waGreen, waGreen, 100);
+                break;
+            case landmassEntity.Scotland:
+                drawShapeFromContours(scContourPoints, scBlue, scBlue, 100);
+                break;
+            case landmassEntity.England:
+                drawShapeFromContours(enContourPoints, enRed, enRed, 100);
+                break;
+            default:
+                break;
+        }
     };
     P5.mouseClicked = function () {
+        activeEntity = hoverEntity;
+        var detectDiv = document.getElementById('detect');
+        var activeDiv = document.getElementById('activeEntity');
+        if (activeEntity) {
+            detectDiv.innerHTML = " ".concat((activeEntity == landmassEntity.None) ? "" : landmassEntity[activeEntity]);
+            activeDiv.innerHTML = " ".concat(activeEntity);
+        }
     };
     P5.mouseMoved = function () {
+        hoverEntity = detectActiveEntity();
         var mouseXDiv = document.getElementById('mouseX');
         var mouseYDiv = document.getElementById('mouseY');
         mouseXDiv.innerHTML = " ".concat(P5.mouseX.toFixed(1));
         mouseYDiv.innerHTML = " ".concat(P5.mouseY.toFixed(1));
-        var detectOutput;
-        activeEntity = detectActiveEntity();
-        var detectDiv = document.getElementById('detect');
-        if (detectOutput) {
-            detectDiv.innerHTML = "".concat(detectOutput);
-        }
-        var activeDiv = document.getElementById('activeEntity');
-        if (activeEntity) {
-            activeDiv.innerHTML = " ".concat(activeEntity);
-        }
     };
 };
 new p5(sketch);

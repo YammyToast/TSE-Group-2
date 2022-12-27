@@ -5,7 +5,7 @@ type RGBColour = {
 }
 
 enum landmassEntity {
-    None,
+    None = 1,
     NorthernIreland,
     Scotland,
     Wales,
@@ -14,13 +14,14 @@ enum landmassEntity {
 
 
 
-let white: RGBColour = { R: 255, G: 255, B: 255 };
-let gray: RGBColour = { R: 220, G: 220, B: 220 };
-let black: RGBColour = { R: 0, G: 0, B: 0 };
-let enRed: RGBColour = { R: 255, G: 77, B: 109 };
-let niYellow: RGBColour = { R: 255, G: 237, B: 77 };
-let scBlue: RGBColour = { R: 86, G: 77, B: 255 };
-let waGreen: RGBColour = { R: 83, G: 255, B: 77 };
+const white: RGBColour = { R: 255, G: 255, B: 255 };
+const gray: RGBColour = { R: 220, G: 220, B: 220 };
+const black: RGBColour = { R: 0, G: 0, B: 0 };
+const enRed: RGBColour = { R: 255, G: 77, B: 109 };
+const niYellow: RGBColour = { R: 255, G: 237, B: 77 };
+const scBlue: RGBColour = { R: 86, G: 77, B: 255 };
+const waGreen: RGBColour = { R: 83, G: 255, B: 77 };
+const hoverGray: RGBColour = { R: 142, G: 153, B: 141 };
 
 var sketch = (P5: p5) => {
 
@@ -28,18 +29,28 @@ var sketch = (P5: p5) => {
 
     
     let activeEntity: landmassEntity; 
+    let hoverEntity: landmassEntity;
+
 
     let landmass: any;
     let font: any;
     let pointScale: number;
 
-    let gbContourPoints: any;
-    let irContourPoints: any;
+    let gbContourPoints: number[][] = [];
+    let irContourPoints: number[][] = [];
 
-    let enContourPoints: any;
-    let waContourPoints: any;
-    let scContourPoints: any;
-    let niContourPoints: any;
+    let gbStaticObject: any;
+    let irStaticObject: any;
+
+    let enContourPoints: number[][] = [];
+    let waContourPoints: number[][] = [];
+    let scContourPoints: number[][] = [];
+    let niContourPoints: number[][] = [];
+
+    let enStaticObject: any;
+    let waStaticObject: any;
+    let scStaticObject: any;
+    let niStaticObject: any;
 
     // TopLeft-X, TopLeft-Y, BottomRight-X, BottomRight-Y
     let enBoundaryPoints: number[] = [0, 0, 0, 0];
@@ -113,22 +124,22 @@ var sketch = (P5: p5) => {
         // APPLY HEURISTIC BOUNDARIES TO REMOVE UNNECCESSARY CALCULATIONS.
         if (P5.mouseX >= niDetectPoints[0] && P5.mouseX <= niDetectPoints[2] && P5.mouseY >= niDetectPoints[1] && P5.mouseY <= niDetectPoints[3]) {
 
-            if(detectInside(niContourPoints.points, [P5.mouseX, P5.mouseY]) == true) {
+            if(detectInside(niContourPoints, [P5.mouseX, P5.mouseY]) == true) {
                 return landmassEntity.NorthernIreland;
             }
         }
         if (P5.mouseX >= waDetectPoints[0] && P5.mouseX <= waDetectPoints[2] && P5.mouseY >= waDetectPoints[1] && P5.mouseY <= waDetectPoints[3]) {
-            if(detectInside(waContourPoints.points, [P5.mouseX, P5.mouseY])) {
+            if(detectInside(waContourPoints, [P5.mouseX, P5.mouseY])) {
                 return landmassEntity.Wales;
             }
         }
         if (P5.mouseX >= scDetectPoints[0] && P5.mouseX <= scDetectPoints[2] && P5.mouseY >= scDetectPoints[1] && P5.mouseY <= scDetectPoints[3]) {
-            if(detectInside(scContourPoints.points, [P5.mouseX, P5.mouseY])) {
+            if(detectInside(scContourPoints, [P5.mouseX, P5.mouseY])) {
                 return landmassEntity.Scotland;
             }
         }
         if (P5.mouseX >= enDetectPoints[0] && P5.mouseX <= enDetectPoints[2] && P5.mouseY >= enDetectPoints[1] && P5.mouseY <= enDetectPoints[3]) {
-            if(detectInside(enContourPoints.points, [P5.mouseX, P5.mouseY])) {
+            if(detectInside(enContourPoints, [P5.mouseX, P5.mouseY])) {
                 return landmassEntity.England;
             }
         }
@@ -139,6 +150,7 @@ var sketch = (P5: p5) => {
    
 
     function scaleContourPoints(_points: number[][], _offset: number[]) {
+        
         for (let pointNum = 0; pointNum < _points.length; pointNum++) {
             _points[pointNum][0] = _points[pointNum][0] * pointScale + (pointScale * _offset[0]) + widthTranslation;
             _points[pointNum][1] = _points[pointNum][1] * pointScale + (pointScale * _offset[1]) + heightTranslation;
@@ -187,24 +199,75 @@ var sketch = (P5: p5) => {
 
     }
 
+    function loadPoints() {
+
+        landmass = P5.loadImage('../assets/img/landmass.svg');
+        font = P5.loadFont('../assets/font/AtkinsonHyperlegible-Regular.ttf');
+
+        gbStaticObject = P5.loadJSON('../assets/contours/gb.json', contourPointsLoad);
+        irStaticObject = P5.loadJSON('../assets/contours/ireland.json', contourPointsLoad);
+
+
+        // contourPoints = loadJSON('./assets/img/landmass.json', contourPointsLoad);
+        enStaticObject = P5.loadJSON('../assets/contours/england.json', contourPointsLoad);
+        waStaticObject = P5.loadJSON('../assets/contours/wales.json', contourPointsLoad);
+        scStaticObject = P5.loadJSON('../assets/contours/scotland.json', contourPointsLoad);
+        niStaticObject = P5.loadJSON('../assets/contours/northernireland.json', contourPointsLoad);
+    }
+
+
+    function rescaleValues() {
+        widthTranslation = P5.width * 0.6;
+        heightTranslation = P5.height * 0.7;
+
+
+        // Some value around 1.3
+        pointScale = P5.height * 0.0015;
+        console.log("Height: ", heightTranslation, " Width: ", widthTranslation, " Pointscale: ", pointScale);
+        // pointScale = P5.height * 0.00015;
+
+        // Fuck javascript for making this the only way to deepcopy!!!!
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        gbContourPoints = JSON.parse(JSON.stringify(gbStaticObject.points));
+        irContourPoints = JSON.parse(JSON.stringify(irStaticObject.points));
+
+        enContourPoints = JSON.parse(JSON.stringify(enStaticObject.points));
+        waContourPoints = JSON.parse(JSON.stringify(waStaticObject.points));
+        scContourPoints = JSON.parse(JSON.stringify(scStaticObject.points));
+        niContourPoints = JSON.parse(JSON.stringify(niStaticObject.points));
+
+        // console.log(enStaticObject);
+        // console.log(enContourPoints);
+        
+        setBoundaryPoints(enBoundaryPoints, enContourPoints);
+        setBoundaryPoints(waBoundaryPoints, waContourPoints);
+        setBoundaryPoints(scBoundaryPoints, scContourPoints);
+        setBoundaryPoints(niBoundaryPoints, niContourPoints);
+        
+        setDetectPoints(enDetectPoints, enBoundaryPoints, enOffset);
+        setDetectPoints(waDetectPoints, waBoundaryPoints, waOffset);
+        setDetectPoints(scDetectPoints, scBoundaryPoints, scOffset);
+        setDetectPoints(niDetectPoints, niBoundaryPoints, niOffset);
+
+        scaleContourPoints(gbContourPoints, gbOffset);
+        scaleContourPoints(irContourPoints, irOffset);
+        
+        scaleContourPoints(enContourPoints, enOffset);
+        scaleContourPoints(waContourPoints, waOffset);
+        scaleContourPoints(scContourPoints, scOffset);
+        scaleContourPoints(niContourPoints, niOffset);
+
+
+
+        
+    }
+
 
     P5.preload = () => {
 
         let preloadStart = Date.now();
 
-        landmass = P5.loadImage('../assets/img/landmass.svg');
-        font = P5.loadFont('../assets/font/AtkinsonHyperlegible-Regular.ttf');
-
-        gbContourPoints = P5.loadJSON('../assets/contours/gb.json', contourPointsLoad);
-        irContourPoints = P5.loadJSON('../assets/contours/ireland.json', contourPointsLoad);
-
-
-        // contourPoints = loadJSON('./assets/img/landmass.json', contourPointsLoad);
-        enContourPoints = P5.loadJSON('../assets/contours/england.json', contourPointsLoad);
-        waContourPoints = P5.loadJSON('../assets/contours/wales.json', contourPointsLoad);
-        scContourPoints = P5.loadJSON('../assets/contours/scotland.json', contourPointsLoad);
-        niContourPoints = P5.loadJSON('../assets/contours/northernireland.json', contourPointsLoad);
-
+        loadPoints();
         let preloadEnd = Date.now();
         // durationTimers.push(`[⧖] Preload Duration : ${preloadEnd - preloadStart}ms`)
 
@@ -217,33 +280,9 @@ var sketch = (P5: p5) => {
 
         var cnv = P5.createCanvas(P5.windowHeight * 0.8, P5.windowHeight * 0.8)
         cnv.parent('#canvasWrapper')
-        P5.background(255)
 
-        widthTranslation = P5.width * 0.6;
-        heightTranslation = P5.height * 0.7;
-
-        pointScale = (P5.height * P5.width) / 400000 - 0.1;
-
-        
-        setBoundaryPoints(enBoundaryPoints, enContourPoints.points);
-        setBoundaryPoints(waBoundaryPoints, waContourPoints.points);
-        setBoundaryPoints(scBoundaryPoints, scContourPoints.points);
-        setBoundaryPoints(niBoundaryPoints, niContourPoints.points);
-        
-        setDetectPoints(enDetectPoints, enBoundaryPoints, enOffset);
-        setDetectPoints(waDetectPoints, waBoundaryPoints, waOffset);
-        setDetectPoints(scDetectPoints, scBoundaryPoints, scOffset);
-        setDetectPoints(niDetectPoints, niBoundaryPoints, niOffset);
-
-        scaleContourPoints(gbContourPoints.points, gbOffset);
-        scaleContourPoints(irContourPoints.points, irOffset);
-        
-        scaleContourPoints(enContourPoints.points, enOffset);
-        scaleContourPoints(waContourPoints.points, waOffset);
-        scaleContourPoints(scContourPoints.points, scOffset);
-        scaleContourPoints(niContourPoints.points, niOffset);
-
-
+        rescaleValues();
+        console.log(enContourPoints);
         // fill('#242124');
         // textFont(font);
         // textSize(16);
@@ -260,7 +299,12 @@ var sketch = (P5: p5) => {
     }
 
     // TODO: IMPLEMENT RESIZE FUNCTION.
-    function windowResize() {
+    P5.windowResized = () => {
+        P5.resizeCanvas(P5.windowHeight * 0.8, P5.windowHeight * 0.8, true);
+
+        console.log("Window Resized");
+
+        rescaleValues();
 
     }
 
@@ -286,7 +330,7 @@ var sketch = (P5: p5) => {
             }
             P5.endShape();
         }
-
+        
     }
 
 
@@ -303,68 +347,70 @@ var sketch = (P5: p5) => {
 
         P5.stroke(0, 0, 0);
 
-        P5.push();
+
         // P5.translate(widthTranslation, heightTranslation);
 
-        drawShapeFromContours(gbContourPoints.points, white);
-        drawShapeFromContours(irContourPoints.points, gray)
-        drawShapeFromContours(niContourPoints.points, white);
+        drawShapeFromContours(gbContourPoints, white);
+        drawShapeFromContours(irContourPoints, gray)
+        drawShapeFromContours(niContourPoints, white);
 
-        
-        switch(activeEntity) {
+        switch(hoverEntity) {
             case landmassEntity.NorthernIreland:
-                drawShapeFromContours(niContourPoints.points, niYellow, niYellow, 100);
+                drawShapeFromContours(niContourPoints, hoverGray, hoverGray, 100);
                 break;
             case landmassEntity.Wales:
-                drawShapeFromContours(waContourPoints.points, waGreen, waGreen, 100);
+                drawShapeFromContours(waContourPoints, hoverGray, hoverGray, 100);
                 break;
             case landmassEntity.Scotland:
-                drawShapeFromContours(scContourPoints.points, scBlue, scBlue, 100);
+                drawShapeFromContours(scContourPoints, hoverGray, hoverGray, 100);
                 break;
             case landmassEntity.England:
-                drawShapeFromContours(enContourPoints.points, enRed, enRed, 100);
+                drawShapeFromContours(enContourPoints, hoverGray, hoverGray, 100);
                 break;
             default:
                 break;
         }
-        P5.pop();
+
+        
+        switch(activeEntity) {
+            case landmassEntity.NorthernIreland:
+                drawShapeFromContours(niContourPoints, niYellow, niYellow, 100);
+                break;
+            case landmassEntity.Wales:
+                drawShapeFromContours(waContourPoints, waGreen, waGreen, 100);
+                break;
+            case landmassEntity.Scotland:
+                drawShapeFromContours(scContourPoints, scBlue, scBlue, 100);
+                break;
+            case landmassEntity.England:
+                drawShapeFromContours(enContourPoints, enRed, enRed, 100);
+                break;
+            default:
+                break;
+        }
+        
 
 
     }
 
     P5.mouseClicked = () => {
-        
-
+        activeEntity = hoverEntity;
+        const detectDiv = document.getElementById('detect')
+        const activeDiv = document.getElementById('activeEntity');
+        if (activeEntity) {
+            detectDiv.innerHTML = ` ${(activeEntity == landmassEntity.None) ? "" : landmassEntity[activeEntity]}`
+            activeDiv.innerHTML = ` ${activeEntity}`
+        }
 
 
     }
 
     P5.mouseMoved = () => {
+        hoverEntity = detectActiveEntity();
         const mouseXDiv = document.getElementById('mouseX');
         const mouseYDiv = document.getElementById('mouseY');
         mouseXDiv.innerHTML = ` ${P5.mouseX.toFixed(1)}`;
         mouseYDiv.innerHTML = ` ${P5.mouseY.toFixed(1)}`;
-
-
-
-        let detectOutput;
-
-        activeEntity = detectActiveEntity();
-
-        const detectDiv = document.getElementById('detect')
-        if (detectOutput) {
-            detectDiv.innerHTML = `${detectOutput}`;
-        }
-        
-        const activeDiv = document.getElementById('activeEntity');
-        if (activeEntity) {
-            activeDiv.innerHTML = ` ${activeEntity}`
-        }
-
-        
-
-
-
     }
 
 
