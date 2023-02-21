@@ -282,7 +282,6 @@ var sketch = (P5: p5) => {
         cnv.parent('#canvasWrapper')
 
         rescaleValues();
-        console.log(enContourPoints);
         // fill('#242124');
         // textFont(font);
         // textSize(16);
