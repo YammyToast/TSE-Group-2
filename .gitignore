@@ -27,3 +27,7 @@ build/
 *.vsix
 *.suo
 /.vs
+
+# Canvas Node Dependencies
+
+node_modules

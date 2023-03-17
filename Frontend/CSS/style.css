@@ -15,7 +15,7 @@
 #title {
     background: #F6F4F2;
     grid-area: title;
-    A justify-content: center;
+    justify-content: center;
     border: 2px solid black;
     margin: 2px;
 }
@@ -23,6 +23,8 @@
 main {
     background: #F6F4F2;
     grid-area: main;
+    justify-content: center;
+    align-items: center;
 }
 
 .container {
@@ -71,4 +73,10 @@ footer {
     grid-area: footer;
     border: 2px solid black;
     margin: 2px;
+}
+
+body {
+    margin: 0;
+
+
 }
