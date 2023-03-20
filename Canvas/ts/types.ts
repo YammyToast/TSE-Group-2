@@ -73,17 +73,17 @@ class CountourObject {
         }
     }
 
-    scalePoints(_scaleFactor: number) {
+    scalePoints(_scaleFactorX: number, _scaleFactorY: number) {
         for(let it = 0; it < this.contourPoints.length; it++) {
-            this.contourPoints[it][0] = this.contourPoints[it][0] * _scaleFactor;
-            this.contourPoints[it][1] = this.contourPoints[it][1] * _scaleFactor;
+            this.contourPoints[it][0] = this.contourPoints[it][0] * _scaleFactorX;
+            this.contourPoints[it][1] = this.contourPoints[it][1] * _scaleFactorY;
         }
     }
 
-    positionPoints(_scaleFactor: number, _heightTranslation: number, _widthTranslation: number) {
+    positionPoints(_scaleFactorX: number, _scaleFactorY: number, _heightTranslation: number, _widthTranslation: number) {
         for(let it = 0; it < this.contourPoints.length; it++) {
-            this.contourPoints[it][0] = this.contourPoints[it][0] + (this.rootOffsetX * _scaleFactor) + (_widthTranslation);
-            this.contourPoints[it][1] = this.contourPoints[it][1] + (this.rootOffsetY * _scaleFactor) + (_heightTranslation);
+            this.contourPoints[it][0] = this.contourPoints[it][0] + (this.rootOffsetX * _scaleFactorX) + (_widthTranslation);
+            this.contourPoints[it][1] = this.contourPoints[it][1] + (this.rootOffsetY * _scaleFactorY) + (_heightTranslation);
         }
 
     }
@@ -113,22 +113,22 @@ export class Country extends CountourObject {
         this.active = false;
     }
 
-    scaleObject(_scaleFactor: number): void {
+    scaleObject(_scaleFactorX: number, _scaleFactorY: number): void {
         this.contourPoints = JSON.parse(JSON.stringify(this.originContourPoints));
-        this.scalePoints(_scaleFactor)
-        this.setBoundaryPoints(_scaleFactor)
+        this.scalePoints(_scaleFactorX, _scaleFactorY)
+        this.setBoundaryPoints()
     }
 
-    positionObject(_scaleFactor: number, _heightTranslation: number, _widthTranslation: number): void {
-        this.positionPoints(_scaleFactor, _heightTranslation, _widthTranslation)
+    positionObject(_scaleFactorX: number, _scaleFactorY: number, _heightTranslation: number, _widthTranslation: number): void {
+        this.positionPoints(_scaleFactorX, _scaleFactorY, _heightTranslation, _widthTranslation)
 
-        this.detectPoints[0] = _widthTranslation + this.boundaryPoints[0] + (_scaleFactor * this.rootOffsetX)
-        this.detectPoints[1] = _heightTranslation + this.boundaryPoints[1] + (_scaleFactor * this.rootOffsetY)
-        this.detectPoints[2] = _widthTranslation + this.boundaryPoints[2] + (_scaleFactor * this.rootOffsetX)
-        this.detectPoints[3] = _heightTranslation + this.boundaryPoints[3] + (_scaleFactor * this.rootOffsetY)
+        this.detectPoints[0] = _widthTranslation + this.boundaryPoints[0] + (_scaleFactorX * this.rootOffsetX)
+        this.detectPoints[1] = _heightTranslation + this.boundaryPoints[1] + (_scaleFactorY * this.rootOffsetY)
+        this.detectPoints[2] = _widthTranslation + this.boundaryPoints[2] + (_scaleFactorX * this.rootOffsetX)
+        this.detectPoints[3] = _heightTranslation + this.boundaryPoints[3] + (_scaleFactorY * this.rootOffsetY)
     }
 
-    setBoundaryPoints(_scaleFactor: number): void {
+    setBoundaryPoints(): void {
         let points: number[][] = this.contourPoints;
         for(let it = 0; it < points.length; it++) {
             if(points[it][0] < this.boundaryPoints[0]) this.boundaryPoints[0] = points[it][0]
@@ -157,13 +157,13 @@ export class Country extends CountourObject {
     
     //https://www.eecs.umich.edu/courses/eecs380/HANDOUTS/PROJ2/InsidePoly.html
     // IMPLEMENTATION OF ALGORITHM 2
-    detectInside(_mouse: number[]) {
+    detectInside(_mouse: number[]): boolean {
         if (
             ((_mouse[0] >= this.detectPoints[0]) &&
             (_mouse[0] <= this.detectPoints[2]) &&
             (_mouse[1] >= this.detectPoints[1]) &&
             (_mouse[1] <= this.detectPoints[3]) == false)
-        ) {this.active = false; console.log("swag"); return};
+        ) {return false};
 
         let angle: number = 0;
         let polygon = this.contourPoints;
@@ -175,11 +175,9 @@ export class Country extends CountourObject {
         }
 
         if (Math.abs(angle) < Math.PI) {
-            this.active = false;
-            return;
+            return false;
         } else {
-            this.active = true;
-            return;
+            return true;
         }
     }
 

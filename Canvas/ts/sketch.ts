@@ -7,7 +7,8 @@ import { DEFAULTFILEPATHS, DEFAULTOFFSETS } from './config.js';
 var sketch = (P5: p5, /*_filePaths: ObjPaths*/) => {
     let ptsList: Array<any>;
     let ctryList: Array<Country>;
-    let scaleFactor: number, heightTranslation: number, widthTranslation: number;
+    let scaleFactorX: number, scaleFactorY: number;
+    let heightTranslation: number, widthTranslation: number;
 
     function loadPoints(): Array<any> {
 
@@ -21,20 +22,21 @@ var sketch = (P5: p5, /*_filePaths: ObjPaths*/) => {
     }
 
     function setScaleFactor(): void {
-        scaleFactor = P5.height * 0.0018
+        scaleFactorX = P5.width * 0.0025
+        scaleFactorY = P5.height * 0.0015
         heightTranslation = P5.height * 0.7;
         widthTranslation = P5.width * 0.6;
     }
 
     function scaleCountries(): void {
         for(let it = 0; it < ctryList.length; it++) {
-            ctryList.at(it).scaleObject(scaleFactor);   
+            ctryList.at(it).scaleObject(scaleFactorX, scaleFactorY);   
         }
     }
 
     function positionCountries(): void {
         for(let it = 0; it < ctryList.length; it++) {
-            ctryList.at(it).positionObject(scaleFactor, heightTranslation, widthTranslation);   
+            ctryList.at(it).positionObject(scaleFactorX, scaleFactorY, heightTranslation, widthTranslation);   
         }
     
 
@@ -96,18 +98,15 @@ var sketch = (P5: p5, /*_filePaths: ObjPaths*/) => {
 
             }
             P5.endShape()
-            // P5.translate(-(P5.width * 0.6), -(P5.height * 0.7))
-            P5.fill(255,255,255, 0)
-            P5.rect(ctryList.at(it).detectPoints[0], ctryList.at(it).detectPoints[1], ctryList.at(it).detectPoints[2] - ctryList.at(it).detectPoints[0], ctryList.at(it).detectPoints[3] - ctryList.at(it).detectPoints[1])
-            // P5.translate(P5.width * 0.6, P5.height * 0.7)
+            // !!!! SHOW DETECT BORDERS
+            // P5.fill(255,255,255, 0)
+            // P5.rect(ctryList.at(it).detectPoints[0], ctryList.at(it).detectPoints[1], ctryList.at(it).detectPoints[2] - ctryList.at(it).detectPoints[0], ctryList.at(it).detectPoints[3] - ctryList.at(it).detectPoints[1])
         }
     }
 
     P5.mouseMoved = () => {
         for(let it = 0; it < ctryList.length; it++) {
-            ctryList.at(it).detectInside([P5.mouseX, P5.mouseY]);
-            if(ctryList.at(it).active == true) console.log("Active")
-            // console.log(`${ctryList.at(it).detectPoints}, [${P5.mouseX}, ${P5.mouseY}]` )
+            ctryList.at(it).active = ctryList.at(it).detectInside([P5.mouseX, P5.mouseY]);
         }
 
     }

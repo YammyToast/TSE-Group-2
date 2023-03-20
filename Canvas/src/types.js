@@ -44,16 +44,16 @@ var CountourObject = /** @class */ (function () {
             console.log(error);
         }
     }
-    CountourObject.prototype.scalePoints = function (_scaleFactor) {
+    CountourObject.prototype.scalePoints = function (_scaleFactorX, _scaleFactorY) {
         for (var it = 0; it < this.contourPoints.length; it++) {
-            this.contourPoints[it][0] = this.contourPoints[it][0] * _scaleFactor;
-            this.contourPoints[it][1] = this.contourPoints[it][1] * _scaleFactor;
+            this.contourPoints[it][0] = this.contourPoints[it][0] * _scaleFactorX;
+            this.contourPoints[it][1] = this.contourPoints[it][1] * _scaleFactorY;
         }
     };
-    CountourObject.prototype.positionPoints = function (_scaleFactor, _heightTranslation, _widthTranslation) {
+    CountourObject.prototype.positionPoints = function (_scaleFactorX, _scaleFactorY, _heightTranslation, _widthTranslation) {
         for (var it = 0; it < this.contourPoints.length; it++) {
-            this.contourPoints[it][0] = this.contourPoints[it][0] + (this.rootOffsetX * _scaleFactor) + (_widthTranslation);
-            this.contourPoints[it][1] = this.contourPoints[it][1] + (this.rootOffsetY * _scaleFactor) + (_heightTranslation);
+            this.contourPoints[it][0] = this.contourPoints[it][0] + (this.rootOffsetX * _scaleFactorX) + (_widthTranslation);
+            this.contourPoints[it][1] = this.contourPoints[it][1] + (this.rootOffsetY * _scaleFactorY) + (_heightTranslation);
         }
     };
     return CountourObject;
@@ -80,19 +80,19 @@ var Country = /** @class */ (function (_super) {
         _this.active = false;
         return _this;
     }
-    Country.prototype.scaleObject = function (_scaleFactor) {
+    Country.prototype.scaleObject = function (_scaleFactorX, _scaleFactorY) {
         this.contourPoints = JSON.parse(JSON.stringify(this.originContourPoints));
-        this.scalePoints(_scaleFactor);
-        this.setBoundaryPoints(_scaleFactor);
+        this.scalePoints(_scaleFactorX, _scaleFactorY);
+        this.setBoundaryPoints();
     };
-    Country.prototype.positionObject = function (_scaleFactor, _heightTranslation, _widthTranslation) {
-        this.positionPoints(_scaleFactor, _heightTranslation, _widthTranslation);
-        this.detectPoints[0] = _widthTranslation + this.boundaryPoints[0] + (_scaleFactor * this.rootOffsetX);
-        this.detectPoints[1] = _heightTranslation + this.boundaryPoints[1] + (_scaleFactor * this.rootOffsetY);
-        this.detectPoints[2] = _widthTranslation + this.boundaryPoints[2] + (_scaleFactor * this.rootOffsetX);
-        this.detectPoints[3] = _heightTranslation + this.boundaryPoints[3] + (_scaleFactor * this.rootOffsetY);
+    Country.prototype.positionObject = function (_scaleFactorX, _scaleFactorY, _heightTranslation, _widthTranslation) {
+        this.positionPoints(_scaleFactorX, _scaleFactorY, _heightTranslation, _widthTranslation);
+        this.detectPoints[0] = _widthTranslation + this.boundaryPoints[0] + (_scaleFactorX * this.rootOffsetX);
+        this.detectPoints[1] = _heightTranslation + this.boundaryPoints[1] + (_scaleFactorY * this.rootOffsetY);
+        this.detectPoints[2] = _widthTranslation + this.boundaryPoints[2] + (_scaleFactorX * this.rootOffsetX);
+        this.detectPoints[3] = _heightTranslation + this.boundaryPoints[3] + (_scaleFactorY * this.rootOffsetY);
     };
-    Country.prototype.setBoundaryPoints = function (_scaleFactor) {
+    Country.prototype.setBoundaryPoints = function () {
         var points = this.contourPoints;
         for (var it = 0; it < points.length; it++) {
             if (points[it][0] < this.boundaryPoints[0])
@@ -125,9 +125,7 @@ var Country = /** @class */ (function (_super) {
             (_mouse[0] <= this.detectPoints[2]) &&
             (_mouse[1] >= this.detectPoints[1]) &&
             (_mouse[1] <= this.detectPoints[3]) == false)) {
-            this.active = false;
-            console.log("swag");
-            return;
+            return false;
         }
         ;
         var angle = 0;
@@ -138,12 +136,10 @@ var Country = /** @class */ (function (_super) {
             angle += this.angle2D(p1[0], p1[1], p2[0], p2[1]);
         }
         if (Math.abs(angle) < Math.PI) {
-            this.active = false;
-            return;
+            return false;
         }
         else {
-            this.active = true;
-            return;
+            return true;
         }
     };
     return Country;

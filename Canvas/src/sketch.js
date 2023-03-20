@@ -3,7 +3,8 @@ import { DEFAULTFILEPATHS, DEFAULTOFFSETS } from './config.js';
 var sketch = function (P5) {
     var ptsList;
     var ctryList;
-    var scaleFactor, heightTranslation, widthTranslation;
+    var scaleFactorX, scaleFactorY;
+    var heightTranslation, widthTranslation;
     function loadPoints() {
         var enPoints = { pts: (P5.loadJSON(DEFAULTFILEPATHS.enContours)), offset: DEFAULTOFFSETS.en };
         var scPoints = { pts: (P5.loadJSON(DEFAULTFILEPATHS.scContours)), offset: DEFAULTOFFSETS.sc };
@@ -12,18 +13,19 @@ var sketch = function (P5) {
         return ([enPoints, scPoints, waPoints, niPoints]);
     }
     function setScaleFactor() {
-        scaleFactor = P5.height * 0.0018;
+        scaleFactorX = P5.width * 0.0025;
+        scaleFactorY = P5.height * 0.0015;
         heightTranslation = P5.height * 0.7;
         widthTranslation = P5.width * 0.6;
     }
     function scaleCountries() {
         for (var it = 0; it < ctryList.length; it++) {
-            ctryList.at(it).scaleObject(scaleFactor);
+            ctryList.at(it).scaleObject(scaleFactorX, scaleFactorY);
         }
     }
     function positionCountries() {
         for (var it = 0; it < ctryList.length; it++) {
-            ctryList.at(it).positionObject(scaleFactor, heightTranslation, widthTranslation);
+            ctryList.at(it).positionObject(scaleFactorX, scaleFactorY, heightTranslation, widthTranslation);
         }
     }
     P5.preload = function () {
@@ -63,18 +65,14 @@ var sketch = function (P5) {
                 P5.vertex(ctryList.at(it).contourPoints[point_1][0], ctryList.at(it).contourPoints[point_1][1]);
             }
             P5.endShape();
-            // P5.translate(-(P5.width * 0.6), -(P5.height * 0.7))
-            P5.fill(255, 255, 255, 0);
-            P5.rect(ctryList.at(it).detectPoints[0], ctryList.at(it).detectPoints[1], ctryList.at(it).detectPoints[2] - ctryList.at(it).detectPoints[0], ctryList.at(it).detectPoints[3] - ctryList.at(it).detectPoints[1]);
-            // P5.translate(P5.width * 0.6, P5.height * 0.7)
+            // !!!! SHOW DETECT BORDERS
+            // P5.fill(255,255,255, 0)
+            // P5.rect(ctryList.at(it).detectPoints[0], ctryList.at(it).detectPoints[1], ctryList.at(it).detectPoints[2] - ctryList.at(it).detectPoints[0], ctryList.at(it).detectPoints[3] - ctryList.at(it).detectPoints[1])
         }
     };
     P5.mouseMoved = function () {
         for (var it = 0; it < ctryList.length; it++) {
-            ctryList.at(it).detectInside([P5.mouseX, P5.mouseY]);
-            if (ctryList.at(it).active == true)
-                console.log("Active");
-            // console.log(`${ctryList.at(it).detectPoints}, [${P5.mouseX}, ${P5.mouseY}]` )
+            ctryList.at(it).active = ctryList.at(it).detectInside([P5.mouseX, P5.mouseY]);
         }
     };
 };
