@@ -1,26 +1,13 @@
 import { Country, ObjPaths, CtryOffsets } from './types.js' 
+import { DEFAULTFILEPATHS, DEFAULTOFFSETS } from './config.js';
 
 
-
-const DEFAULTFILEPATHS: ObjPaths = {
-    enContours: '../Canvas/assets/ptsEn.json',
-    scContours: '../Canvas/assets/ptsSc.json',
-    waContours: '../Canvas/assets/ptsWa.json',
-    niContours: '../Canvas/assets/ptsNi.json'
-}
-
-const DEFAULTOFFSETS: CtryOffsets = {
-    en: [0,0],
-    sc: [-98, -246],
-    wa: [-72, 8],
-    ni: [-170, -118]
-}
 
 
 var sketch = (P5: p5, /*_filePaths: ObjPaths*/) => {
     let ptsList: Array<any>;
     let ctryList: Array<Country>;
-    let scaleFactor: number;
+    let scaleFactor: number, heightTranslation: number, widthTranslation: number;
 
     function loadPoints(): Array<any> {
 
@@ -35,6 +22,8 @@ var sketch = (P5: p5, /*_filePaths: ObjPaths*/) => {
 
     function setScaleFactor(): void {
         scaleFactor = P5.height * 0.0018
+        heightTranslation = P5.height * 0.7;
+        widthTranslation = P5.width * 0.6;
     }
 
     function scaleCountries(): void {
@@ -45,8 +34,10 @@ var sketch = (P5: p5, /*_filePaths: ObjPaths*/) => {
 
     function positionCountries(): void {
         for(let it = 0; it < ctryList.length; it++) {
-            ctryList.at(it).positionObject(scaleFactor);   
+            ctryList.at(it).positionObject(scaleFactor, heightTranslation, widthTranslation);   
         }
+    
+
     }
 
 
@@ -81,15 +72,19 @@ var sketch = (P5: p5, /*_filePaths: ObjPaths*/) => {
         P5.resizeCanvas(((document.body.clientWidth / 6) * 2.90), ((document.body.clientHeight / 5) * 3.90))
         setScaleFactor();
         scaleCountries();
+        positionCountries();   
     }
 
     P5.draw = () => {
         P5.fill(71, 105, 204);
         P5.rect(0, 0, P5.width, P5.height);   
-        P5.translate(P5.width * 0.6, P5.height * 0.7)
+        // P5.translate(P5.width * 0.6, P5.height * 0.7)
 
         for(let it = 0; it < ctryList.length; it++) {
             P5.fill(132, 173, 71);
+            if(ctryList.at(it).active == true) {
+                P5.fill(255, 255, 255);
+            } 
             P5.beginShape()
             
             for(let point = 0; point < ctryList.at(it).contourPoints.length; point++) {
@@ -101,7 +96,20 @@ var sketch = (P5: p5, /*_filePaths: ObjPaths*/) => {
 
             }
             P5.endShape()
+            // P5.translate(-(P5.width * 0.6), -(P5.height * 0.7))
+            P5.fill(255,255,255, 0)
+            P5.rect(ctryList.at(it).detectPoints[0], ctryList.at(it).detectPoints[1], ctryList.at(it).detectPoints[2] - ctryList.at(it).detectPoints[0], ctryList.at(it).detectPoints[3] - ctryList.at(it).detectPoints[1])
+            // P5.translate(P5.width * 0.6, P5.height * 0.7)
         }
+    }
+
+    P5.mouseMoved = () => {
+        for(let it = 0; it < ctryList.length; it++) {
+            ctryList.at(it).detectInside([P5.mouseX, P5.mouseY]);
+            if(ctryList.at(it).active == true) console.log("Active")
+            // console.log(`${ctryList.at(it).detectPoints}, [${P5.mouseX}, ${P5.mouseY}]` )
+        }
+
     }
 
 }
