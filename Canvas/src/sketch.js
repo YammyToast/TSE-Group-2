@@ -34,34 +34,49 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { Country } from './types.js';
-import { DEFAULTFILEPATHS, DEFAULTOFFSETS } from './config.js';
-var ctryList;
-function setupCanvas() {
+import { Country, CountourObject, Controller } from './types.js';
+import { DEFAULTFILEPATHS, DEFAULTOFFSETS, COLOURSLIGHT } from './config.js';
+function setupCanvas(_colorScheme) {
     return __awaiter(this, void 0, void 0, function () {
         function timeout(ms) {
             return new Promise(function (resolve) { return setTimeout(resolve, ms); });
         }
-        var sketch;
+        var ctryList, staticObjList, sketch;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     sketch = function (P5) {
-                        var ptsList;
+                        var ctryPtsList;
+                        var objPtsList;
                         var scaleFactorX, scaleFactorY;
                         var heightTranslation, widthTranslation;
-                        function loadPoints() {
+                        function loadCountries() {
                             var enPoints = { pts: (P5.loadJSON(DEFAULTFILEPATHS.enContours)), offset: DEFAULTOFFSETS.en, key: 'en' };
                             var scPoints = { pts: (P5.loadJSON(DEFAULTFILEPATHS.scContours)), offset: DEFAULTOFFSETS.sc, key: 'sc' };
                             var waPoints = { pts: (P5.loadJSON(DEFAULTFILEPATHS.waContours)), offset: DEFAULTOFFSETS.wa, key: 'wa' };
                             var niPoints = { pts: (P5.loadJSON(DEFAULTFILEPATHS.niContours)), offset: DEFAULTOFFSETS.ni, key: 'ni' };
                             return ([enPoints, scPoints, waPoints, niPoints]);
                         }
+                        function loadObjects() {
+                            var gbPoints = { pts: (P5.loadJSON(DEFAULTFILEPATHS.gbContours)), offset: DEFAULTOFFSETS.gb, key: 'gb' };
+                            var irPoints = { pts: (P5.loadJSON(DEFAULTFILEPATHS.irContours)), offset: DEFAULTOFFSETS.ir, key: 'ir' };
+                            return ([gbPoints, irPoints]);
+                        }
                         function setScaleFactor() {
                             scaleFactorX = P5.width * 0.0025;
                             scaleFactorY = P5.height * 0.0015;
                             heightTranslation = P5.height * 0.7;
                             widthTranslation = P5.width * 0.6;
+                        }
+                        function scaleObjects() {
+                            staticObjList.forEach(function (obj, key) {
+                                obj.scalePoints(scaleFactorX, scaleFactorY);
+                            });
+                        }
+                        function positionObjects() {
+                            staticObjList.forEach(function (obj, key) {
+                                obj.positionPoints(scaleFactorX, scaleFactorY, heightTranslation, widthTranslation);
+                            });
                         }
                         function scaleCountries() {
                             ctryList.forEach(function (ctry, key) {
@@ -75,7 +90,8 @@ function setupCanvas() {
                         }
                         P5.preload = function () {
                             var preloadStart = Date.now();
-                            ptsList = loadPoints();
+                            ctryPtsList = loadCountries();
+                            objPtsList = loadObjects();
                             var preloadEnd = Date.now();
                             console.log("[\u29D6]\tPreload\t|".concat(preloadEnd - preloadStart, "ms|\t[").concat(preloadStart, ", ").concat(preloadEnd, "]"));
                         };
@@ -84,8 +100,12 @@ function setupCanvas() {
                             var cnv = P5.createCanvas(((document.body.clientWidth / 6) * 2.90), ((document.body.clientHeight / 5) * 3.90));
                             cnv.parent('#canvas-parent');
                             ctryList = new Map();
-                            ptsList.map(function (obj) { return ctryList.set(obj.key, new Country(obj.pts, obj.offset[0], obj.offset[1])); });
+                            ctryPtsList.map(function (obj) { return ctryList.set(obj.key, new Country(obj.pts, obj.offset[0], obj.offset[1])); });
+                            staticObjList = new Map();
+                            objPtsList.map(function (obj) { return staticObjList.set(obj.key, new CountourObject(obj.pts, obj.offset[0], obj.offset[1])); });
                             setScaleFactor();
+                            scaleObjects();
+                            positionObjects();
                             scaleCountries();
                             positionCountries();
                             var setupEnd = Date.now();
@@ -94,18 +114,35 @@ function setupCanvas() {
                         P5.windowResized = function () {
                             P5.resizeCanvas(((document.body.clientWidth / 6) * 2.90), ((document.body.clientHeight / 5) * 3.90));
                             setScaleFactor();
+                            scaleObjects();
+                            positionObjects();
                             scaleCountries();
                             positionCountries();
                         };
+                        function drawObjects() {
+                            P5.fill(_colorScheme.gradientNull.r, _colorScheme.gradientNull.g, _colorScheme.gradientNull.b);
+                            staticObjList.forEach(function (obj, key) {
+                                console.log(obj);
+                                P5.beginShape();
+                                for (var point_1 = 0; point_1 < obj.contourPoints.length; point_1++) {
+                                    P5.vertex(obj.contourPoints[point_1][0], obj.contourPoints[point_1][1]);
+                                }
+                                P5.endShape();
+                            });
+                        }
                         function drawCountries() {
                             ctryList.forEach(function (ctry, key) {
-                                P5.fill(132, 173, 71);
+                                P5.fill(_colorScheme.gradientLight.r, _colorScheme.gradientLight.g, _colorScheme.gradientLight.b);
+                                P5.stroke(_colorScheme.stroke.r, _colorScheme.stroke.g, _colorScheme.stroke.b);
                                 if (ctry.active == true) {
-                                    P5.fill(255, 255, 255);
+                                    P5.fill(_colorScheme.gradientDark.r * 0.5, _colorScheme.gradientDark.g * 0.5, _colorScheme.gradientDark.b * 0.5);
+                                }
+                                else if (ctry.hover == true) {
+                                    P5.fill(_colorScheme.gradientDark.r, _colorScheme.gradientDark.g, _colorScheme.gradientDark.b);
                                 }
                                 P5.beginShape();
-                                for (var point_1 = 0; point_1 < ctry.contourPoints.length; point_1++) {
-                                    P5.vertex(ctry.contourPoints[point_1][0], ctry.contourPoints[point_1][1]);
+                                for (var point_2 = 0; point_2 < ctry.contourPoints.length; point_2++) {
+                                    P5.vertex(ctry.contourPoints[point_2][0], ctry.contourPoints[point_2][1]);
                                 }
                                 P5.endShape();
                                 // !!!! SHOW DETECT BORDERS
@@ -114,32 +151,43 @@ function setupCanvas() {
                             });
                         }
                         P5.draw = function () {
-                            P5.fill(71, 105, 204);
+                            P5.fill(_colorScheme.background.r, _colorScheme.background.g, _colorScheme.background.b);
                             P5.rect(0, 0, P5.width, P5.height);
                             // P5.translate(P5.width * 0.6, P5.height * 0.7)
+                            drawObjects();
                             drawCountries();
                         };
                         P5.mouseMoved = function () {
+                            P5.cursor(P5.ARROW);
+                            ctryList.forEach(function (ctry, key) {
+                                ctry.hover = ctry.detectInside([P5.mouseX, P5.mouseY]);
+                                if (ctry.hover == true && ctry.active == false) {
+                                    P5.cursor(P5.HAND);
+                                }
+                            });
+                        };
+                        P5.mouseClicked = function () {
                             ctryList.forEach(function (ctry, key) {
                                 ctry.active = ctry.detectInside([P5.mouseX, P5.mouseY]);
+                                if (ctry.active == true) {
+                                    return;
+                                }
                             });
                         };
                     };
                     return [4 /*yield*/, Promise.all([
                             new p5(sketch),
-                            timeout(1000)
-                        ]).then(function () {
-                            return "jfghoiwghawoighwagiohoinjhbdf";
-                        })];
+                            timeout(100)
+                        ])];
                 case 1:
                     _a.sent();
-                    return [2 /*return*/];
+                    return [2 /*return*/, new Controller(ctryList, staticObjList)];
             }
         });
     });
 }
-console.log("Start");
-Promise.all([setupCanvas()]).then(function () {
-    console.log("Done");
+Promise.all([setupCanvas(COLOURSLIGHT)]).then(function (obj) {
+    console.log(obj[0].CountryList);
+    obj[0].CountryList.get('en').active = true;
 });
 //# sourceMappingURL=sketch.js.map

@@ -16,12 +16,21 @@ var __extends = (this && this.__extends) || (function () {
 // Implementation of https://stackoverflow.com/a/5624139
 export function RGBFromHex(_hex) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(_hex);
+    console.log(result);
     return result ? {
         r: parseInt(result[1], 16),
         g: parseInt(result[2], 16),
         b: parseInt(result[3], 16)
     } : null;
 }
+var Controller = /** @class */ (function () {
+    function Controller(_ctryList, _stObjList) {
+        this.CountryList = _ctryList;
+        this.StaticObjectList = _stObjList;
+    }
+    return Controller;
+}());
+export { Controller };
 /**
  * Class for creating static shapes from contours. Contours are a set of points linked together through a line/stroke that form a full path/image.
  */
@@ -58,6 +67,7 @@ var CountourObject = /** @class */ (function () {
     };
     return CountourObject;
 }());
+export { CountourObject };
 var Country = /** @class */ (function (_super) {
     __extends(Country, _super);
     function Country(_Obj, _offsetX, _offSetY) {
@@ -77,7 +87,7 @@ var Country = /** @class */ (function (_super) {
         _this.detectPoints = [0, 0, 0, 0];
         // Javascript Deepcopy moment.
         _this.contourPoints = JSON.parse(JSON.stringify(_this.originContourPoints));
-        _this.active = false;
+        _this.hover = false;
         return _this;
     }
     Country.prototype.scaleObject = function (_scaleFactorX, _scaleFactorY) {

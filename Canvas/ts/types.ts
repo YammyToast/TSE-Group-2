@@ -7,7 +7,9 @@ export interface ObjPaths {
     readonly enContours: string,
     readonly scContours: string,
     readonly waContours: string,
-    readonly niContours: string
+    readonly niContours: string,
+    readonly gbContours: string,
+    readonly irContours: string
 }
 
 /**
@@ -17,7 +19,9 @@ export interface CtryOffsets {
     en: number[],
     sc: number[],
     wa: number[],
-    ni: number[]
+    ni: number[],
+    gb: number[],
+    ir: number[]
 }
 
 export interface ColourScheme {
@@ -31,6 +35,7 @@ export interface ColourScheme {
 // Implementation of https://stackoverflow.com/a/5624139
 export function RGBFromHex(_hex: string): RGB | null {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(_hex);
+    console.log(result)
     return result ? {
       r: parseInt(result[1], 16),
       g: parseInt(result[2], 16),
@@ -38,7 +43,16 @@ export function RGBFromHex(_hex: string): RGB | null {
     } : null;
 }
 
-type RGB = {
+export class Controller {
+    CountryList: Map<string, Country>;
+    StaticObjectList: Map<string, CountourObject>
+    constructor(_ctryList: Map<string, Country>, _stObjList: Map<string, CountourObject>) {
+        this.CountryList = _ctryList;
+        this.StaticObjectList = _stObjList;
+    }
+}
+
+export type RGB = {
     r: number,
     g: number,
     b: number
@@ -47,7 +61,7 @@ type RGB = {
 /**
  * Class for creating static shapes from contours. Contours are a set of points linked together through a line/stroke that form a full path/image.
  */
-class CountourObject {
+export class CountourObject {
     originContourPoints: number[][];
     contourPoints: number[][];
     rootOffsetX: number;
@@ -104,13 +118,14 @@ export class Country extends CountourObject {
      * Calculated each time there is a context change.
      */
     detectPoints: number[] = [0,0,0,0];
+    hover: boolean;
     active: boolean;
 
     constructor(_Obj: any, _offsetX: number, _offSetY: number) {
         super(_Obj.points, _offsetX, _offSetY)
         // Javascript Deepcopy moment.
         this.contourPoints = JSON.parse(JSON.stringify(this.originContourPoints));
-        this.active = false;
+        this.hover = false;
     }
 
     scaleObject(_scaleFactorX: number, _scaleFactorY: number): void {
