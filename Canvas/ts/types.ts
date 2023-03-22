@@ -69,6 +69,8 @@ export class CountourObject {
     fill: RGB;
     stroke: RGB;
 
+    animationMap: Map<string, Animation>
+
     /**
      * Initializing a Contour-based Object.
      * @param _pts 
@@ -196,5 +198,60 @@ export class Country extends CountourObject {
         }
     }
 
+    processAnimations(): void {
+        this.animationMap.forEach((animation, key) => {
+            animation.processAnimation()
+        })
+    }
+
+}
+class Animation {
+    country: Country;
+    name: string;
+    startTime: number;
+    endTime: number;
+    // Duration is in 'ms'.
+    duration: number;
+
+    getFramePercentage(): number {
+        let timestamp: number = Date.now();
+        return ((timestamp - this.startTime) / this.duration);
+    }
+
+
+    processAnimation?(): void;
+
+    constructor(_country: Country, _animationName: string, _duration: number) {
+        this.country = _country;
+        this.name = _animationName;
+        this.startTime = Date.now()
+        this.endTime = Date.now() + _duration;
+        this.duration = this.endTime - this.startTime;
+    }
 }
 
+class HoverAnimation extends Animation {
+    startColour: RGB;
+    shadeStrength: number;
+
+    processAnimation(): void {
+        let framePercentage: number = this.getFramePercentage();
+        if(framePercentage >= 1){ this.country.animationMap.delete(this.name); return };
+
+        let frameShade: number = Math.floor(this.shadeStrength * framePercentage)
+        
+        this.country.fill = { 
+            r: this.startColour.r - framePercentage,
+            g: this.startColour.g - framePercentage,
+            b: this.startColour.b - framePercentage 
+        }
+
+        return;
+    }
+
+    constructor(_country: Country, _animationName: string, _duration: number, _startColour: RGB, _shadeStrength: number) {
+        super(_country, _animationName, _duration);
+        this.startColour = _startColour;
+        this.shadeStrength = _shadeStrength;
+    }
+}
