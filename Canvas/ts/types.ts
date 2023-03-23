@@ -8,7 +8,6 @@ export interface ObjPaths {
     readonly scContours: string,
     readonly waContours: string,
     readonly niContours: string,
-    readonly gbContours: string,
     readonly irContours: string
 }
 
@@ -20,7 +19,6 @@ export interface CtryOffsets {
     sc: number[],
     wa: number[],
     ni: number[],
-    gb: number[],
     ir: number[]
 }
 
@@ -45,8 +43,8 @@ export function RGBFromHex(_hex: string): RGB | null {
 
 export class Controller {
     CountryList: Map<string, Country>;
-    StaticObjectList: Map<string, CountourObject>
-    constructor(_ctryList: Map<string, Country>, _stObjList: Map<string, CountourObject>) {
+    StaticObjectList: Map<string, ContourObject>
+    constructor(_ctryList: Map<string, Country>, _stObjList: Map<string, ContourObject>, /*_activeChangeCallback: (_active: string) => void*/) {
         this.CountryList = _ctryList;
         this.StaticObjectList = _stObjList;
     }
@@ -61,15 +59,16 @@ export type RGB = {
 /**
  * Class for creating static shapes from contours. Contours are a set of points linked together through a line/stroke that form a full path/image.
  */
-export class CountourObject {
+export class ContourObject {
     originContourPoints: number[][];
     contourPoints: number[][];
     rootOffsetX: number;
     rootOffsetY: number;
+    rootFill: RGB;
     fill: RGB;
     stroke: RGB;
 
-    animationMap: Map<string, Animation>
+    animationMap: Map<string, any>
 
     /**
      * Initializing a Contour-based Object.
@@ -83,6 +82,9 @@ export class CountourObject {
             this.originContourPoints = _pts;
             this.rootOffsetX = _offsetX;
             this.rootOffsetY = _offsetY;
+            // Javascript Deepcopy moment.
+            this.contourPoints = JSON.parse(JSON.stringify(this.originContourPoints));
+            this.animationMap = new Map();
         }
         catch(error) {
             console.log(error);
@@ -106,7 +108,7 @@ export class CountourObject {
 
 }
 
-export class Country extends CountourObject {
+export class Country extends ContourObject {
     /**
      * Stores the highest value that any coordinate reaches on a boundary. 
      * Calculated post-scaling, but are not relative to screen position.
@@ -125,8 +127,6 @@ export class Country extends CountourObject {
 
     constructor(_Obj: any, _offsetX: number, _offSetY: number) {
         super(_Obj.points, _offsetX, _offSetY)
-        // Javascript Deepcopy moment.
-        this.contourPoints = JSON.parse(JSON.stringify(this.originContourPoints));
         this.hover = false;
     }
 
@@ -205,6 +205,7 @@ export class Country extends CountourObject {
     }
 
 }
+
 class Animation {
     country: Country;
     name: string;
@@ -230,22 +231,27 @@ class Animation {
     }
 }
 
-class HoverAnimation extends Animation {
+export class HoverAnimation extends Animation {
     startColour: RGB;
     shadeStrength: number;
+    
+    endAnimation(): number {
+        // this.country.fill = this.startColour;
+        let framePercentage: number = this.getFramePercentage();
+        if (framePercentage >= 1) framePercentage = 1;
+        return Math.floor(this.shadeStrength * framePercentage) 
+    }
 
     processAnimation(): void {
         let framePercentage: number = this.getFramePercentage();
-        if(framePercentage >= 1){ this.country.animationMap.delete(this.name); return };
+        if(framePercentage >= 1) {return};
 
         let frameShade: number = Math.floor(this.shadeStrength * framePercentage)
-        
         this.country.fill = { 
-            r: this.startColour.r - framePercentage,
-            g: this.startColour.g - framePercentage,
-            b: this.startColour.b - framePercentage 
+            r: this.startColour.r - frameShade,
+            g: this.startColour.g - frameShade,
+            b: this.startColour.b - frameShade 
         }
-
         return;
     }
 
@@ -255,3 +261,4 @@ class HoverAnimation extends Animation {
         this.shadeStrength = _shadeStrength;
     }
 }
+

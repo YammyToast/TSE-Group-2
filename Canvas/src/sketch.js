@@ -34,14 +34,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { Country, CountourObject, Controller } from './types.js';
+import { Country, ContourObject, HoverAnimation, Controller } from './types.js';
 import { DEFAULTFILEPATHS, DEFAULTOFFSETS, COLOURSLIGHT } from './config.js';
-function setupCanvas(_colorScheme) {
+function setupCanvas(_colorScheme, _activeChangeCallback) {
     return __awaiter(this, void 0, void 0, function () {
         function timeout(ms) {
             return new Promise(function (resolve) { return setTimeout(resolve, ms); });
         }
-        var ctryList, staticObjList, sketch;
+        var ctryList, staticObjList, active, sketch;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -50,6 +50,11 @@ function setupCanvas(_colorScheme) {
                         var objPtsList;
                         var scaleFactorX, scaleFactorY;
                         var heightTranslation, widthTranslation;
+                        var averageColour = {
+                            r: Math.abs(_colorScheme.gradientLight.r - _colorScheme.gradientDark.r),
+                            g: Math.abs(_colorScheme.gradientLight.g - _colorScheme.gradientDark.g),
+                            b: Math.abs(_colorScheme.gradientLight.b - _colorScheme.gradientDark.b),
+                        };
                         function loadCountries() {
                             var enPoints = { pts: (P5.loadJSON(DEFAULTFILEPATHS.enContours)), offset: DEFAULTOFFSETS.en, key: 'en' };
                             var scPoints = { pts: (P5.loadJSON(DEFAULTFILEPATHS.scContours)), offset: DEFAULTOFFSETS.sc, key: 'sc' };
@@ -58,15 +63,14 @@ function setupCanvas(_colorScheme) {
                             return ([enPoints, scPoints, waPoints, niPoints]);
                         }
                         function loadObjects() {
-                            var gbPoints = { pts: (P5.loadJSON(DEFAULTFILEPATHS.gbContours)), offset: DEFAULTOFFSETS.gb, key: 'gb' };
                             var irPoints = { pts: (P5.loadJSON(DEFAULTFILEPATHS.irContours)), offset: DEFAULTOFFSETS.ir, key: 'ir' };
-                            return ([gbPoints, irPoints]);
+                            return ([irPoints]);
                         }
                         function setScaleFactor() {
-                            scaleFactorX = P5.width * 0.0025;
-                            scaleFactorY = P5.height * 0.0015;
+                            scaleFactorX = P5.width * 0.002;
+                            scaleFactorY = P5.height * 0.0018;
                             heightTranslation = P5.height * 0.7;
-                            widthTranslation = P5.width * 0.6;
+                            widthTranslation = P5.width * 0.65;
                         }
                         function scaleObjects() {
                             staticObjList.forEach(function (obj, key) {
@@ -100,9 +104,16 @@ function setupCanvas(_colorScheme) {
                             var cnv = P5.createCanvas(((document.body.clientWidth / 6) * 2.90), ((document.body.clientHeight / 5) * 3.90));
                             cnv.parent('#canvas-parent');
                             ctryList = new Map();
-                            ctryPtsList.map(function (obj) { return ctryList.set(obj.key, new Country(obj.pts, obj.offset[0], obj.offset[1])); });
+                            ctryPtsList.map(function (obj) {
+                                ctryList.set(obj.key, new Country(obj.pts, obj.offset[0], obj.offset[1]));
+                                ctryList.get(obj.key).rootFill = averageColour;
+                                ctryList.get(obj.key).fill = averageColour;
+                            });
                             staticObjList = new Map();
-                            objPtsList.map(function (obj) { return staticObjList.set(obj.key, new CountourObject(obj.pts, obj.offset[0], obj.offset[1])); });
+                            objPtsList.map(function (obj) {
+                                console.log(obj);
+                                staticObjList.set(obj.key, new ContourObject(obj.pts.points, obj.offset[0], obj.offset[1]));
+                            });
                             setScaleFactor();
                             scaleObjects();
                             positionObjects();
@@ -122,7 +133,6 @@ function setupCanvas(_colorScheme) {
                         function drawObjects() {
                             P5.fill(_colorScheme.gradientNull.r, _colorScheme.gradientNull.g, _colorScheme.gradientNull.b);
                             staticObjList.forEach(function (obj, key) {
-                                console.log(obj);
                                 P5.beginShape();
                                 for (var point_1 = 0; point_1 < obj.contourPoints.length; point_1++) {
                                     P5.vertex(obj.contourPoints[point_1][0], obj.contourPoints[point_1][1]);
@@ -132,14 +142,16 @@ function setupCanvas(_colorScheme) {
                         }
                         function drawCountries() {
                             ctryList.forEach(function (ctry, key) {
-                                P5.fill(_colorScheme.gradientLight.r, _colorScheme.gradientLight.g, _colorScheme.gradientLight.b);
+                                ctry.processAnimations();
+                                P5.strokeWeight(1);
+                                P5.fill(ctry.fill.r, ctry.fill.g, ctry.fill.b);
                                 P5.stroke(_colorScheme.stroke.r, _colorScheme.stroke.g, _colorScheme.stroke.b);
                                 if (ctry.active == true) {
                                     P5.fill(_colorScheme.gradientDark.r * 0.5, _colorScheme.gradientDark.g * 0.5, _colorScheme.gradientDark.b * 0.5);
                                 }
-                                else if (ctry.hover == true) {
-                                    P5.fill(_colorScheme.gradientDark.r, _colorScheme.gradientDark.g, _colorScheme.gradientDark.b);
-                                }
+                                // else if (ctry.hover == true) {
+                                //     P5.fill(_colorScheme.gradientDark.r, _colorScheme.gradientDark.g, _colorScheme.gradientDark.b);
+                                // }
                                 P5.beginShape();
                                 for (var point_2 = 0; point_2 < ctry.contourPoints.length; point_2++) {
                                     P5.vertex(ctry.contourPoints[point_2][0], ctry.contourPoints[point_2][1]);
@@ -157,20 +169,59 @@ function setupCanvas(_colorScheme) {
                             drawObjects();
                             drawCountries();
                         };
+                        function handleHoverAnimations(_ctry) {
+                            var shade = 12;
+                            if (_ctry.hover == true && _ctry.active == false) {
+                                P5.cursor(P5.HAND);
+                                if (_ctry.animationMap.has('hoverReverse')) {
+                                    // shade = shade - Math.abs(_ctry.animationMap.get('hoverReverse').endAnimation());
+                                    _ctry.animationMap.delete('hoverReverse');
+                                }
+                                // console.log(shade)
+                                if (!_ctry.animationMap.has('hover')) {
+                                    var startFill = {
+                                        r: _ctry.rootFill.r - shade,
+                                        g: _ctry.rootFill.g - shade,
+                                        b: _ctry.rootFill.b - shade
+                                    };
+                                    var animation = new HoverAnimation(_ctry, 'hover', 255, startFill, shade);
+                                    _ctry.animationMap.set('hover', animation);
+                                }
+                            }
+                            else {
+                                if (_ctry.animationMap.has('hover')) {
+                                    shade = -_ctry.animationMap.get('hover').endAnimation();
+                                    _ctry.animationMap.delete('hover');
+                                    if (!_ctry.animationMap.has('hoverReverse')) {
+                                        var startFill = {
+                                            r: _ctry.rootFill.r + shade,
+                                            g: _ctry.rootFill.g + shade,
+                                            b: _ctry.rootFill.b + shade
+                                        };
+                                        var animation = new HoverAnimation(_ctry, 'hoverReverse', 255, startFill, shade);
+                                        _ctry.animationMap.set('hoverReverse', animation);
+                                    }
+                                }
+                            }
+                        }
                         P5.mouseMoved = function () {
                             P5.cursor(P5.ARROW);
                             ctryList.forEach(function (ctry, key) {
                                 ctry.hover = ctry.detectInside([P5.mouseX, P5.mouseY]);
-                                if (ctry.hover == true && ctry.active == false) {
-                                    P5.cursor(P5.HAND);
-                                }
+                                handleHoverAnimations(ctry);
                             });
                         };
                         P5.mouseClicked = function () {
+                            var seenActive = false;
                             ctryList.forEach(function (ctry, key) {
-                                ctry.active = ctry.detectInside([P5.mouseX, P5.mouseY]);
-                                if (ctry.active == true) {
-                                    return;
+                                var clickActive = ctry.detectInside([P5.mouseX, P5.mouseY]);
+                                if (clickActive == true && !seenActive) {
+                                    ctry.active = true;
+                                    seenActive = true;
+                                    _activeChangeCallback(key);
+                                }
+                                else {
+                                    ctry.active = false;
                                 }
                             });
                         };
@@ -186,7 +237,10 @@ function setupCanvas(_colorScheme) {
         });
     });
 }
-Promise.all([setupCanvas(COLOURSLIGHT)]).then(function (obj) {
+function callback(_active) {
+    console.log(_active);
+}
+Promise.all([setupCanvas(COLOURSLIGHT, callback)]).then(function (obj) {
     console.log(obj[0].CountryList);
     obj[0].CountryList.get('en').active = true;
 });

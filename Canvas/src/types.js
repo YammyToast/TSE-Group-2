@@ -34,40 +34,43 @@ export { Controller };
 /**
  * Class for creating static shapes from contours. Contours are a set of points linked together through a line/stroke that form a full path/image.
  */
-var CountourObject = /** @class */ (function () {
+var ContourObject = /** @class */ (function () {
     /**
      * Initializing a Contour-based Object.
      * @param _pts
      * @param _offsetX
      * @param _offsetY
      */
-    function CountourObject(_pts, _offsetX, _offsetY) {
+    function ContourObject(_pts, _offsetX, _offsetY) {
         try {
             if (_pts.length <= 0)
                 throw 404;
             this.originContourPoints = _pts;
             this.rootOffsetX = _offsetX;
             this.rootOffsetY = _offsetY;
+            // Javascript Deepcopy moment.
+            this.contourPoints = JSON.parse(JSON.stringify(this.originContourPoints));
+            this.animationMap = new Map();
         }
         catch (error) {
             console.log(error);
         }
     }
-    CountourObject.prototype.scalePoints = function (_scaleFactorX, _scaleFactorY) {
+    ContourObject.prototype.scalePoints = function (_scaleFactorX, _scaleFactorY) {
         for (var it = 0; it < this.contourPoints.length; it++) {
             this.contourPoints[it][0] = this.contourPoints[it][0] * _scaleFactorX;
             this.contourPoints[it][1] = this.contourPoints[it][1] * _scaleFactorY;
         }
     };
-    CountourObject.prototype.positionPoints = function (_scaleFactorX, _scaleFactorY, _heightTranslation, _widthTranslation) {
+    ContourObject.prototype.positionPoints = function (_scaleFactorX, _scaleFactorY, _heightTranslation, _widthTranslation) {
         for (var it = 0; it < this.contourPoints.length; it++) {
             this.contourPoints[it][0] = this.contourPoints[it][0] + (this.rootOffsetX * _scaleFactorX) + (_widthTranslation);
             this.contourPoints[it][1] = this.contourPoints[it][1] + (this.rootOffsetY * _scaleFactorY) + (_heightTranslation);
         }
     };
-    return CountourObject;
+    return ContourObject;
 }());
-export { CountourObject };
+export { ContourObject };
 var Country = /** @class */ (function (_super) {
     __extends(Country, _super);
     function Country(_Obj, _offsetX, _offSetY) {
@@ -85,8 +88,6 @@ var Country = /** @class */ (function (_super) {
          * Calculated each time there is a context change.
          */
         _this.detectPoints = [0, 0, 0, 0];
-        // Javascript Deepcopy moment.
-        _this.contourPoints = JSON.parse(JSON.stringify(_this.originContourPoints));
         _this.hover = false;
         return _this;
     }
@@ -152,7 +153,58 @@ var Country = /** @class */ (function (_super) {
             return true;
         }
     };
+    Country.prototype.processAnimations = function () {
+        this.animationMap.forEach(function (animation, key) {
+            animation.processAnimation();
+        });
+    };
     return Country;
-}(CountourObject));
+}(ContourObject));
 export { Country };
+var Animation = /** @class */ (function () {
+    function Animation(_country, _animationName, _duration) {
+        this.country = _country;
+        this.name = _animationName;
+        this.startTime = Date.now();
+        this.endTime = Date.now() + _duration;
+        this.duration = this.endTime - this.startTime;
+    }
+    Animation.prototype.getFramePercentage = function () {
+        var timestamp = Date.now();
+        return ((timestamp - this.startTime) / this.duration);
+    };
+    return Animation;
+}());
+var HoverAnimation = /** @class */ (function (_super) {
+    __extends(HoverAnimation, _super);
+    function HoverAnimation(_country, _animationName, _duration, _startColour, _shadeStrength) {
+        var _this = _super.call(this, _country, _animationName, _duration) || this;
+        _this.startColour = _startColour;
+        _this.shadeStrength = _shadeStrength;
+        return _this;
+    }
+    HoverAnimation.prototype.endAnimation = function () {
+        // this.country.fill = this.startColour;
+        var framePercentage = this.getFramePercentage();
+        if (framePercentage >= 1)
+            framePercentage = 1;
+        return Math.floor(this.shadeStrength * framePercentage);
+    };
+    HoverAnimation.prototype.processAnimation = function () {
+        var framePercentage = this.getFramePercentage();
+        if (framePercentage >= 1) {
+            return;
+        }
+        ;
+        var frameShade = Math.floor(this.shadeStrength * framePercentage);
+        this.country.fill = {
+            r: this.startColour.r - frameShade,
+            g: this.startColour.g - frameShade,
+            b: this.startColour.b - frameShade
+        };
+        return;
+    };
+    return HoverAnimation;
+}(Animation));
+export { HoverAnimation };
 //# sourceMappingURL=types.js.map

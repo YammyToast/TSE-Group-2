@@ -3,7 +3,6 @@ export var DEFAULTFILEPATHS = {
     scContours: '../Canvas/assets/ptsSc.json',
     waContours: '../Canvas/assets/ptsWa.json',
     niContours: '../Canvas/assets/ptsNi.json',
-    gbContours: '../Canvas/assets/ptsGb.json',
     irContours: '../Canvas/assets/ptsIr.json'
 };
 export var DEFAULTOFFSETS = {
@@ -11,8 +10,7 @@ export var DEFAULTOFFSETS = {
     sc: [-98, -246],
     wa: [-72, 8],
     ni: [-170, -118],
-    gb: [-59, -122],
-    ir: [-212, -45]
+    ir: [-212, -44]
 };
 export var COLOURSLIGHT = {
     // background: RGBFromHex("#4769CC"),
