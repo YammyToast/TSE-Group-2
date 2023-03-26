@@ -1,3 +1,9 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow-y: hidden;
+}
+
 .container {
     display: grid;
     height: 100vh; /*hieght view*/
@@ -9,7 +15,7 @@
         "sidebar main main main content2 content2"
         "sidebar main main main content3 content3"
         "sidebar main main main content4 content4";
-    "footer" grid-gap:0.2rem;
+    grid-gap:0.2rem;
 }
 
 #title {
@@ -25,6 +31,7 @@ main {
     grid-area: main;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 
 .container {

@@ -1,0 +1,48 @@
+#canvas-label-wrapper {
+    display: flex;
+    position: absolute;
+    height: calc(calc(100% / 5) * 3.90);
+    width: calc(calc(100% / 6) * 2.90);
+    z-index: 2;
+    font-family: 'Atkinson Hyperlegible', sans-serif;
+}
+
+#canvas-label-wrapper .canvas-label {
+    display: flex;
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    padding: 1em;    
+    border-radius: 0.5em;
+    font-size:0.8em;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.canvas-label .canvas-label-title {
+    display: flex;
+    margin-bottom: 0.1em;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.canvas-label .canvas-label-row {
+    display: grid;
+    width: fit-content;
+    grid-template-columns: 1.5rem 1fr;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    padding: 0.1em;
+    gap: 1em;
+}
+
+.canvas-label-row svg {
+    position: relative;
+    display: flex;
+    height: 1.2rem;
+    width: 1.2rem;
+    padding: 0.1em 0;
+
+}

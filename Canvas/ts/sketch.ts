@@ -1,19 +1,19 @@
 import { Country, ContourObject, HoverAnimation, ColourScheme, Controller, RGB } from './types.js'
 import { DEFAULTFILEPATHS, DEFAULTOFFSETS, COLOURSLIGHT } from './config.js';
 
-
-
-
-
-async function setupCanvas(_colorScheme: ColourScheme, _activeChangeCallback: (_active: string) => void): Promise<Controller> {
+export async function setupCanvas(_colorScheme: ColourScheme, _labelContainer: JQuery<HTMLElement>): Promise<Controller> {
     let ctryList: Map<string, Country>;
     let staticObjList: Map<string, ContourObject>;
     let active: boolean;
+    let heightTranslation: number, widthTranslation: number;
+    let scaleFactorX: number, scaleFactorY: number;
+
+    // Pass by object to force shared pointer to lists.
+    let controller: Controller;
+
     var sketch = (P5: p5) => {
         let ctryPtsList: Array<any>;
         let objPtsList: Array<any>;
-        let scaleFactorX: number, scaleFactorY: number;
-        let heightTranslation: number, widthTranslation: number;
 
         let averageColour: RGB = {
             r: Math.abs(_colorScheme.gradientLight.r - _colorScheme.gradientDark.r),
@@ -37,7 +37,7 @@ async function setupCanvas(_colorScheme: ColourScheme, _activeChangeCallback: (_
         }
 
         function setScaleFactor(): void {
-            scaleFactorX = P5.width * 0.002
+            scaleFactorX = P5.width * 0.0015
             scaleFactorY = P5.height * 0.0018
             heightTranslation = P5.height * 0.7;
             widthTranslation = P5.width * 0.65;
@@ -85,7 +85,6 @@ async function setupCanvas(_colorScheme: ColourScheme, _activeChangeCallback: (_
 
             var cnv = P5.createCanvas(((document.body.clientWidth / 6) * 2.90), ((document.body.clientHeight / 5) * 3.90))
             cnv.parent('#canvas-parent')
-
             ctryList = new Map();
             ctryPtsList.map((obj) => {
                 ctryList.set(obj.key, new Country(obj.pts, obj.offset[0], obj.offset[1]))
@@ -95,7 +94,6 @@ async function setupCanvas(_colorScheme: ColourScheme, _activeChangeCallback: (_
             })
             staticObjList = new Map();
             objPtsList.map((obj) => {
-                console.log(obj)
                 staticObjList.set(obj.key, new ContourObject(obj.pts.points, obj.offset[0], obj.offset[1]))
             })
             setScaleFactor();
@@ -107,16 +105,20 @@ async function setupCanvas(_colorScheme: ColourScheme, _activeChangeCallback: (_
 
             let setupEnd = Date.now()
             console.log(`[⧖]\tSetup\t|${setupEnd - setupStart}ms|\t[${setupStart}, ${setupEnd}]`)
-
         }
 
         P5.windowResized = () => {
             P5.resizeCanvas(((document.body.clientWidth / 6) * 2.90), ((document.body.clientHeight / 5) * 3.90))
             setScaleFactor();
+
             scaleObjects();
             positionObjects();
             scaleCountries();
             positionCountries();
+
+            controller.updateCanvasAttributes(scaleFactorX, scaleFactorY)
+            controller.positionLabels();
+            controller.renderLabels();
         }
 
         function drawObjects() {
@@ -173,51 +175,16 @@ async function setupCanvas(_colorScheme: ColourScheme, _activeChangeCallback: (_
 
         }
 
-        function handleHoverAnimations(_ctry: Country) {
-            let shade = 12;  
 
-            if (_ctry.hover == true && _ctry.active == false) {
-                P5.cursor(P5.HAND)
-                if(_ctry.animationMap.has('hoverReverse')) {
-                    // shade = shade - Math.abs(_ctry.animationMap.get('hoverReverse').endAnimation());
-                    _ctry.animationMap.delete('hoverReverse')
-                }
-                // console.log(shade)
-                if (!_ctry.animationMap.has('hover')) {
-                    let startFill = {
-                        r: _ctry.rootFill.r - shade,
-                        g: _ctry.rootFill.g - shade,
-                        b: _ctry.rootFill.b - shade
-                    }
-                    let animation = new HoverAnimation(_ctry,'hover',255,startFill,shade)
-                    _ctry.animationMap.set('hover', animation);
-                }
-            } else {
-                if(_ctry.animationMap.has('hover')) {
-                    shade = -_ctry.animationMap.get('hover').endAnimation();
-                    _ctry.animationMap.delete('hover')
-
-
-                    if (!_ctry.animationMap.has('hoverReverse')) {
-                        let startFill = {
-                            r: _ctry.rootFill.r + shade,
-                            g: _ctry.rootFill.g + shade,
-                            b: _ctry.rootFill.b + shade
-                        }
-                        let animation = new HoverAnimation(_ctry,'hoverReverse',255,startFill,shade)
-                        _ctry.animationMap.set('hoverReverse', animation);
-                    }
-                }
-            }
-        }
 
         P5.mouseMoved = () => {
             P5.cursor(P5.ARROW)
-            ctryList.forEach((ctry, key) => {
+            for( let [key, ctry] of ctryList) {
+                if(ctry.hoverLock == true) continue;
                 ctry.hover = ctry.detectInside([P5.mouseX, P5.mouseY])
-                handleHoverAnimations(ctry);
+                controller.handleHoverAnimations(ctry);
 
-            })
+            }
         }
 
         P5.mouseClicked = () => {
@@ -227,7 +194,7 @@ async function setupCanvas(_colorScheme: ColourScheme, _activeChangeCallback: (_
                 if (clickActive == true && !seenActive) { 
                     ctry.active = true
                     seenActive = true
-                    _activeChangeCallback(key)
+                    controller.activeChangeCallback(key)
                 } else {
                     ctry.active = false
                 }
@@ -239,18 +206,13 @@ async function setupCanvas(_colorScheme: ColourScheme, _activeChangeCallback: (_
     function timeout(ms: number) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
+    let p5Context: p5;
     await Promise.all([
-        new p5(sketch),
-        timeout(100)
+        p5Context = new p5(sketch),
+        timeout(50)
     ])
-    return new Controller(ctryList, staticObjList)
+    return controller = new Controller({ctryList, staticObjList}, _labelContainer, heightTranslation, widthTranslation, scaleFactorX, scaleFactorY)
 }
 
-function callback(_active: string): void {
-    console.log(_active)
-}
 
-Promise.all([setupCanvas(COLOURSLIGHT, callback)]).then((obj) => {
-    console.log(obj[0].CountryList)
-    obj[0].CountryList.get('en').active = true
-})
+
