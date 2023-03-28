@@ -18,6 +18,7 @@ function setupApp() {
         controller.setupLabels(DEFAULTLABELS);
         controller.positionLabels();
         controller.renderLabels();
+        controller.renderSelectBarLabels();
         return new Manager(controller);
     });
 }

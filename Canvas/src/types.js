@@ -1,4 +1,4 @@
-import { COLOURSLIGHT, createLabel } from "./config.js";
+import { COLOURSLIGHT, ViewTypes, createLabel, createSelectItems } from "./config.js";
 // Implementation of https://stackoverflow.com/a/5624139
 // export function RGBFromHex(_hex: string): RGB | null {
 //     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(_hex);
@@ -59,6 +59,12 @@ export class Controller {
             }
         }
     }
+    viewChange(_view) {
+        if (this.viewActive == _view)
+            return;
+        this.viewActive = _view;
+        this.renderSelectBarLabels();
+    }
     checkLabelOwnerExists(_labelName) {
         for (let key of this.countryList.keys()) {
             if (_labelName == key)
@@ -102,26 +108,46 @@ export class Controller {
             if (!this.checkLabelOwnerExists(key))
                 continue;
             label.content.css({
-                "top": (this.labelContainer.innerHeight() * 0.7) + (label.offsetY * this.canvasScaleFactorY),
-                "left": (this.labelContainer.innerWidth() * 0.65) + (label.offsetX * this.canvasScaleFactorX)
+                // "top": (this.labelContainer.innerHeight() * 0.7) + (label.offsetY * this.canvasScaleFactorY),
+                // "left": (this.labelContainer.innerWidth() * 0.65) + (label.offsetX * this.canvasScaleFactorX)
+                "top": this.canvasHeightTranslation + (label.offsetY * this.canvasScaleFactorY),
+                "left": this.canvasWidthTranslation + (label.offsetX * this.canvasScaleFactorX)
             });
         }
     }
     renderLabels() {
-        this.labelContainer.empty();
         this.labelList.forEach((obj, key) => {
             obj.content.appendTo(this.labelContainer);
         });
     }
-    constructor(_objects, _labelContainer, _canvasHeightTranslation, _canvasWidthTranslation, _canvasScaleFactorX, _canvasScaleFactorY) {
+    renderSelectBarLabels() {
+        let selectBar = this.labelContainer.find('#canvas-label-select-bar');
+        if (!selectBar)
+            return;
+        selectBar.empty();
+        for (let key = 0; key < Object.entries(ViewTypes).length; key++) {
+            let element = createSelectItems(Object.entries(ViewTypes)[key][0], COLOURSLIGHT);
+            if (key == this.viewActive) {
+                element.addClass("canvas-label-select-bar-item-active");
+            }
+            else {
+                element.on('click', (e) => {
+                    this.viewChange(key);
+                });
+            }
+            element.appendTo(selectBar);
+        }
+    }
+    constructor(_objects, _labelContainer, _canvasHeightTranslation, _canvasWidthTranslation, _scaleFactorX, _scaleFactorY) {
         this.countryList = _objects.ctryList;
         this.staticObjectList = _objects.staticObjList;
         this.labelContainer = _labelContainer;
-        this.lastActive = undefined;
         this.labelList = new Map();
+        this.lastActive = undefined;
         this.canvasHeightTranslation = _canvasHeightTranslation;
         this.canvasWidthTranslation = _canvasWidthTranslation;
-        this.updateCanvasAttributes(_canvasScaleFactorX, _canvasScaleFactorY);
+        this.updateCanvasAttributes(_scaleFactorX, _scaleFactorY);
+        this.viewActive = ViewTypes.highTemp;
     }
 }
 /**

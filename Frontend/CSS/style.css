@@ -29,6 +29,7 @@ body {
 main {
     background: #F6F4F2;
     grid-area: main;
+    display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;

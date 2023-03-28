@@ -8,12 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Country, ContourObject, Controller } from './types.js';
-import { DEFAULTFILEPATHS, DEFAULTOFFSETS } from './config.js';
+import { DEFAULTFILEPATHS, DEFAULTOFFSETS, SCALINGCONSTANTS } from './config.js';
 export function setupCanvas(_colorScheme, _labelContainer) {
     return __awaiter(this, void 0, void 0, function* () {
         let ctryList;
         let staticObjList;
-        let active;
         let heightTranslation, widthTranslation;
         let scaleFactorX, scaleFactorY;
         // Pass by object to force shared pointer to lists.
@@ -38,10 +37,10 @@ export function setupCanvas(_colorScheme, _labelContainer) {
                 return ([irPoints]);
             }
             function setScaleFactor() {
-                scaleFactorX = P5.width * 0.0015;
-                scaleFactorY = P5.height * 0.0018;
-                heightTranslation = P5.height * 0.7;
-                widthTranslation = P5.width * 0.65;
+                scaleFactorX = P5.width * SCALINGCONSTANTS.scaleX;
+                scaleFactorY = P5.height * SCALINGCONSTANTS.scaleY;
+                heightTranslation = P5.height * SCALINGCONSTANTS.heightTranslation;
+                widthTranslation = P5.width * SCALINGCONSTANTS.widthTranslation;
             }
             function scaleObjects() {
                 staticObjList.forEach((obj, key) => {
@@ -72,7 +71,8 @@ export function setupCanvas(_colorScheme, _labelContainer) {
             };
             P5.setup = () => {
                 let setupStart = Date.now();
-                var cnv = P5.createCanvas(((document.body.clientWidth / 6) * 2.90), ((document.body.clientHeight / 5) * 3.90));
+                // var cnv = P5.createCanvas(((document.body.clientWidth / 6) * 2.85), ((document.body.clientHeight / 5) * 3.85))
+                var cnv = P5.createCanvas($('#canvas-parent').innerWidth(), $('#canvas-parent').innerHeight());
                 cnv.parent('#canvas-parent');
                 ctryList = new Map();
                 ctryPtsList.map((obj) => {

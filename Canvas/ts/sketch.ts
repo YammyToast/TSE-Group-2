@@ -1,10 +1,9 @@
 import { Country, ContourObject, HoverAnimation, ColourScheme, Controller, RGB } from './types.js'
-import { DEFAULTFILEPATHS, DEFAULTOFFSETS, COLOURSLIGHT } from './config.js';
+import { DEFAULTFILEPATHS, DEFAULTOFFSETS, COLOURSLIGHT, SCALINGCONSTANTS } from './config.js';
 
 export async function setupCanvas(_colorScheme: ColourScheme, _labelContainer: JQuery<HTMLElement>): Promise<Controller> {
     let ctryList: Map<string, Country>;
     let staticObjList: Map<string, ContourObject>;
-    let active: boolean;
     let heightTranslation: number, widthTranslation: number;
     let scaleFactorX: number, scaleFactorY: number;
 
@@ -37,10 +36,10 @@ export async function setupCanvas(_colorScheme: ColourScheme, _labelContainer: J
         }
 
         function setScaleFactor(): void {
-            scaleFactorX = P5.width * 0.0015
-            scaleFactorY = P5.height * 0.0018
-            heightTranslation = P5.height * 0.7;
-            widthTranslation = P5.width * 0.65;
+            scaleFactorX = P5.width * SCALINGCONSTANTS.scaleX
+            scaleFactorY = P5.height * SCALINGCONSTANTS.scaleY
+            heightTranslation = P5.height * SCALINGCONSTANTS.heightTranslation
+            widthTranslation = P5.width * SCALINGCONSTANTS.widthTranslation
         }
 
         function scaleObjects(): void {
@@ -82,8 +81,9 @@ export async function setupCanvas(_colorScheme: ColourScheme, _labelContainer: J
         P5.setup = () => {
 
             let setupStart = Date.now()
-
-            var cnv = P5.createCanvas(((document.body.clientWidth / 6) * 2.90), ((document.body.clientHeight / 5) * 3.90))
+            
+            // var cnv = P5.createCanvas(((document.body.clientWidth / 6) * 2.85), ((document.body.clientHeight / 5) * 3.85))
+            var cnv = P5.createCanvas($('#canvas-parent').innerWidth(), $('#canvas-parent').innerHeight())
             cnv.parent('#canvas-parent')
             ctryList = new Map();
             ctryPtsList.map((obj) => {
@@ -102,7 +102,7 @@ export async function setupCanvas(_colorScheme: ColourScheme, _labelContainer: J
             positionObjects();
             scaleCountries();
             positionCountries();
-
+            
             let setupEnd = Date.now()
             console.log(`[⧖]\tSetup\t|${setupEnd - setupStart}ms|\t[${setupStart}, ${setupEnd}]`)
         }
@@ -115,7 +115,7 @@ export async function setupCanvas(_colorScheme: ColourScheme, _labelContainer: J
             positionObjects();
             scaleCountries();
             positionCountries();
-
+            
             controller.updateCanvasAttributes(scaleFactorX, scaleFactorY)
             controller.positionLabels();
             controller.renderLabels();
@@ -213,6 +213,3 @@ export async function setupCanvas(_colorScheme: ColourScheme, _labelContainer: J
     ])
     return controller = new Controller({ctryList, staticObjList}, _labelContainer, heightTranslation, widthTranslation, scaleFactorX, scaleFactorY)
 }
-
-
-

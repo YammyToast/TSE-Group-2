@@ -10,6 +10,7 @@ async function setupApp() : Promise<Manager> {
     controller.setupLabels(DEFAULTLABELS);
     controller.positionLabels();
     controller.renderLabels();
+    controller.renderSelectBarLabels();
     return new Manager(controller)
 }
 

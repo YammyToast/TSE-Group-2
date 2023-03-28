@@ -1,4 +1,5 @@
-import { DEFAULTFILEPATHS, COLOURSLIGHT, DEFAULTIMGPATHS, createLabel } from "./config.js";
+import { DEFAULTFILEPATHS, COLOURSLIGHT, SCALINGCONSTANTS, ViewTypes, createLabel, createSelectItems } from "./config.js";
+
 
 export interface ImgPaths {
     readonly rainfall: string,
@@ -54,6 +55,8 @@ export interface ColourScheme {
 export class Manager {
     controller: Controller;
 
+
+
     constructor(_controller: Controller) {
         this.controller = _controller;
         this.controller.managerChangeCallback = this.contextChangeCallback;
@@ -75,6 +78,8 @@ export class Controller {
     canvasWidthTranslation: number;
     canvasScaleFactorX: number;
     canvasScaleFactorY: number;
+
+    viewActive: number;
 
     managerChangeCallback: (_active: string) => void;
 
@@ -120,6 +125,12 @@ export class Controller {
                 }
             }
         }
+    }
+
+    viewChange(_view: number) {
+        if(this.viewActive == _view) return;
+        this.viewActive = _view;
+        this.renderSelectBarLabels();
     }
 
     checkLabelOwnerExists(_labelName: string): boolean {
@@ -168,40 +179,67 @@ export class Controller {
         this.canvasScaleFactorY = _scaleFactorY;
     }
 
+
     positionLabels(): void {
         for (let [key, label] of this.labelList.entries()) {
             if (!this.checkLabelOwnerExists(key)) continue;
 
             label.content.css({
-                "top": (this.labelContainer.innerHeight() * 0.7) + (label.offsetY * this.canvasScaleFactorY),
-                "left": (this.labelContainer.innerWidth() * 0.65) + (label.offsetX * this.canvasScaleFactorX)
+                // "top": (this.labelContainer.innerHeight() * 0.7) + (label.offsetY * this.canvasScaleFactorY),
+                // "left": (this.labelContainer.innerWidth() * 0.65) + (label.offsetX * this.canvasScaleFactorX)
+                "top": this.canvasHeightTranslation + (label.offsetY * this.canvasScaleFactorY),
+                "left": this.canvasWidthTranslation + (label.offsetX * this.canvasScaleFactorX)
             })
         }
 
     }
 
     renderLabels() {
-        this.labelContainer.empty()
         this.labelList.forEach((obj, key) => {
             obj.content.appendTo(this.labelContainer)
         })
+
+
+    }
+    
+    renderSelectBarLabels() {
+        let selectBar = this.labelContainer.find('#canvas-label-select-bar')
+        if(!selectBar) return;
+        selectBar.empty()
+        for(let key = 0; key < Object.entries(ViewTypes).length; key++) {
+            let element: JQuery<HTMLElement> = createSelectItems(Object.entries(ViewTypes)[key][0], COLOURSLIGHT);            
+            
+            if(key == this.viewActive) {
+                element.addClass("canvas-label-select-bar-item-active")
+            } else {
+                element.on('click', (e: JQuery.Event) => {
+                    this.viewChange(key)
+                })
+            }
+            
+            element.appendTo(selectBar);
+        }
     }
 
     constructor(_objects: { ctryList: Map<string, Country>, staticObjList: Map<string, ContourObject> },
         _labelContainer: JQuery<HTMLElement>,
         _canvasHeightTranslation: number,
         _canvasWidthTranslation: number,
-        _canvasScaleFactorX: number,
-        _canvasScaleFactorY: number
+        _scaleFactorX: number,
+        _scaleFactorY: number
     ) {
         this.countryList = _objects.ctryList;
         this.staticObjectList = _objects.staticObjList;
+        
         this.labelContainer = _labelContainer;
-        this.lastActive = undefined;
         this.labelList = new Map();
+        this.lastActive = undefined;
+
         this.canvasHeightTranslation = _canvasHeightTranslation;
         this.canvasWidthTranslation = _canvasWidthTranslation;
-        this.updateCanvasAttributes(_canvasScaleFactorX, _canvasScaleFactorY)
+        this.updateCanvasAttributes(_scaleFactorX, _scaleFactorY);
+
+        this.viewActive = ViewTypes.highTemp
     }
 }
 
