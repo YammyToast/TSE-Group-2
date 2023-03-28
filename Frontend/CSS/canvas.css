@@ -55,12 +55,13 @@
 
 }
 
-#canvas-label-wrapper #canvas-label-select-bar{
+#canvas-label-wrapper #canvas-label-select-bar {
     position: absolute;
     display: flex;
     height: fit-content;
     width: fit-content;
-    top: 0;
+    top: 1em;
+    left: 1em;
     flex-direction: row;
     justify-content: right;
     align-items: center;
@@ -69,13 +70,25 @@
 #canvas-label-select-bar .canvas-label-select-bar-item {
     position: relative;
     display: flex;
-    height: 2.4rem;
-    width: 2.4rem;
-    padding: 0.2rem;
+    height: fit-content;
+    width: fit-content;
+    padding: 0.7rem;
     cursor: pointer;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
 }
+
+.canvas-label-select-bar-item:first-child {
+    border-top-left-radius: 0.5em;
+    border-bottom-left-radius: 0.5em;
+}
+
+.canvas-label-select-bar-item:last-child {
+    border-top-right-radius: 0.5em;
+    border-bottom-right-radius: 0.5em;
+}
+
 
 #canvas-label-select-bar .canvas-label-select-bar-item svg {
     height: 1.8rem;
@@ -93,9 +106,25 @@
 }
 
 .canvas-label-select-bar-item-active {
-    filter: brightness(0.7) !important;
-
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
 }
+
+#canvas-label-wrapper .canvas-label-select-bar-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: fit-content;
+    display: flex;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+    transform: translateX(-50%);
+    padding: 0.35rem;
+    border-radius: 0.5em;
+}
+
+
 
 /* https://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting */
 .noselect {

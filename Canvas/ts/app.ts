@@ -1,6 +1,7 @@
 import { setupCanvas } from './sketch.js';
 import { COLOURSLIGHT, DEFAULTLABELS } from './config.js';
-import { Manager, Controller } from './types.js'
+import { Manager } from './manager.js'
+import { Controller } from './controller.js'
 
 // we do a little dependency injection.
 async function setupApp() : Promise<Manager> {

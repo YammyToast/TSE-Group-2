@@ -7,8 +7,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { Country, ContourObject, Controller } from './types.js';
+import { Country, ContourObject } from './types.js';
 import { DEFAULTFILEPATHS, DEFAULTOFFSETS, SCALINGCONSTANTS } from './config.js';
+import { Controller } from './controller.js';
 export function setupCanvas(_colorScheme, _labelContainer) {
     return __awaiter(this, void 0, void 0, function* () {
         let ctryList;
@@ -99,7 +100,7 @@ export function setupCanvas(_colorScheme, _labelContainer) {
                 positionObjects();
                 scaleCountries();
                 positionCountries();
-                controller.updateCanvasAttributes(scaleFactorX, scaleFactorY);
+                controller.updateCanvasAttributes(scaleFactorX, scaleFactorY, widthTranslation, heightTranslation);
                 controller.positionLabels();
                 controller.renderLabels();
             };
@@ -174,7 +175,7 @@ export function setupCanvas(_colorScheme, _labelContainer) {
             p5Context = new p5(sketch),
             timeout(50)
         ]);
-        return controller = new Controller({ ctryList, staticObjList }, _labelContainer, heightTranslation, widthTranslation, scaleFactorX, scaleFactorY);
+        return controller = new Controller({ ctryList, staticObjList }, _labelContainer, scaleFactorX, scaleFactorY, widthTranslation, heightTranslation);
     });
 }
 //# sourceMappingURL=sketch.js.map

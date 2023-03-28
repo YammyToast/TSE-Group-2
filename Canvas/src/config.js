@@ -113,6 +113,7 @@ export function createSelectItems(_key, _colorScheme) {
     return jQuery(`
         <div class = "canvas-label-select-bar-item" id="${_key}" style = "background:${_colorScheme.labelBackground}; color:${_colorScheme.labelText}">
             ${getSVG(_key, _colorScheme)}
+            <div class = "canvas-label-select-bar-dropdown" style = "background:${_colorScheme.labelBackground}; color:${_colorScheme.labelText}">${_key.charAt(0).toUpperCase() + _key.slice(1)}</div>
         </div>
     `);
 }

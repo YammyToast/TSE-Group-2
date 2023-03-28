@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { setupCanvas } from './sketch.js';
 import { COLOURSLIGHT, DEFAULTLABELS } from './config.js';
-import { Manager } from './types.js';
+import { Manager } from './manager.js';
 // we do a little dependency injection.
 function setupApp() {
     return __awaiter(this, void 0, void 0, function* () {
