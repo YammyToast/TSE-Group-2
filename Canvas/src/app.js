@@ -15,14 +15,24 @@ function setupApp() {
     return __awaiter(this, void 0, void 0, function* () {
         let labelContainer = $('#canvas-label-wrapper');
         let controller = yield setupCanvas(COLOURSLIGHT, labelContainer);
-        controller.setupLabels(DEFAULTLABELS);
-        controller.positionLabels();
-        controller.renderLabels();
-        controller.renderSelectBarLabels();
-        return new Manager(controller);
+        let manager = new Manager(controller);
+        // add guard clause if max values fails.
+        // reject promise etc.
+        // use this as a test for server connectivity.
+        manager.getMaximumValues();
+        return manager;
     });
 }
-let app = Promise.all([setupApp()]).then((obj) => {
-    console.log(obj);
+let app = Promise.all([setupApp()])
+    .then((obj) => {
+    let manager = obj[0];
+    manager.controller.setupLabels(DEFAULTLABELS);
+    manager.controller.positionLabels();
+    manager.controller.renderLabels();
+    manager.controller.renderSelectBarLabels();
+    manager.handleYearSelection(2010);
+})
+    .catch((error) => {
+    console.log(error);
 });
 //# sourceMappingURL=app.js.map

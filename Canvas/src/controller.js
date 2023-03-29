@@ -123,6 +123,14 @@ export class Controller {
             element.appendTo(selectBar);
         }
     }
+    renderYearAverages(_yearAverages, _dataMinValue, _dataMaxValue, _colourScheme) {
+        let range = _dataMaxValue - _dataMinValue;
+        let colourGradient = {
+            r: ((_colourScheme.gradientDark.r - _colourScheme.gradientLight.r) / (range)),
+            g: ((_colourScheme.gradientDark.g - _colourScheme.gradientLight.g) / (range)),
+            b: ((_colourScheme.gradientDark.b - _colourScheme.gradientLight.b) / (range))
+        };
+    }
     constructor(_objects, _labelContainer, _scaleFactorX, _scaleFactorY, _widthTranslation, _heightTranslation) {
         this.countryList = _objects.ctryList;
         this.staticObjectList = _objects.staticObjList;

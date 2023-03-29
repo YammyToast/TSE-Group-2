@@ -1,5 +1,6 @@
-import { Country, ContourObject, HoverAnimation} from './types.js'
+import { Country, ContourObject, HoverAnimation, ColourScheme, RGB } from './types.js'
 import { createLabel, COLOURSLIGHT, ViewTypes, createSelectItems } from './config.js'
+import { DataYearAverages } from './api.js';
 
 export class Controller {
     countryList: Map<string, Country>;
@@ -155,6 +156,16 @@ export class Controller {
             
             element.appendTo(selectBar);
         }
+    }
+
+    renderYearAverages(_yearAverages: DataYearAverages, _dataMinValue: number, _dataMaxValue: number, _colourScheme: ColourScheme) {
+        let range = _dataMaxValue - _dataMinValue;
+        let colourGradient: RGB = {
+            r: ((_colourScheme.gradientDark.r - _colourScheme.gradientLight.r) / (range)),
+            g: ((_colourScheme.gradientDark.g - _colourScheme.gradientLight.g) / (range)),
+            b: ((_colourScheme.gradientDark.b - _colourScheme.gradientLight.b) / (range))
+        }
+        
     }
 
     constructor(_objects: { ctryList: Map<string, Country>, staticObjList: Map<string, ContourObject> },
