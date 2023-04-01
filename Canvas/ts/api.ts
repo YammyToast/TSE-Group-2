@@ -21,6 +21,12 @@ export interface DataMaximumValues {
 
 }
 
+export interface DataYearAveragesInstance {
+    en: DataYearAverages,
+    sc: DataYearAverages,
+    wa: DataYearAverages,
+    ni: DataYearAverages
+}
 
 export interface DataYearAverages {
     rainfall: number,
@@ -28,3 +34,7 @@ export interface DataYearAverages {
     lowTemp: number,
     highTemp: number
 } 
+
+export interface DataYearMonthValues {
+    
+}

@@ -3,16 +3,27 @@ import { COLOURSLIGHT, DEFAULTLABELS } from './config.js';
 import { Manager } from './manager.js'
 import { Controller } from './controller.js'
 
-// we do a little dependency injection.
+/**
+ * Factory for the creation of the object hierarchy.
+ * Initializes the Manager and Controller objects.
+ * Requires a successful request to the data server succeed.
+ * @returns Promise of an instance of a Manager.
+*/
 async function setupApp() : Promise<Manager> {
-    
+    // Find the labelContainer object within the HTML DOM.
+    // This requires the document to have rendered first.
     let labelContainer: JQuery<HTMLElement> = $('#canvas-label-wrapper')
+    // Initialize a controller. The setupCanvas function calls for a 
+    // basic setup render to be successful.
     let controller: Controller = await setupCanvas(COLOURSLIGHT, labelContainer)
+    // we do a little dependency injection.
+    // Inject the Controller into a new Manager instance.
     let manager = new Manager(controller)
     // add guard clause if max values fails.
     // reject promise etc.
     // use this as a test for server connectivity.
     manager.getMaximumValues()
+    // Return the completed manager object.
     return manager
 }
 
