@@ -1,5 +1,6 @@
-from flask import Blueprint, request, render_template, abort, current_app
+import json
 
+from flask import current_app, request
 from app.api import bp
 from app.models.db_models import en, sc, wa, ni
 
@@ -58,8 +59,15 @@ def api_data_max_values():
 
 @bp.route('/api/data_year_averages')
 def api_data_year_averages():
-    #year = request.get["year"]
-    year=1988
+    year = int(request.args.get('year'))
+
+    if year < 1910 or year > 2022:
+        response = current_app.response_class(
+        response="Year must be between 1910 and 2022",
+        status=400,
+        mimetype='application/json')
+        return response
+    
     en_response = en.query.filter_by(year=year).first()
     sc_response = sc.query.filter_by(year=year).first()
     wa_response = wa.query.filter_by(year=year).first()
