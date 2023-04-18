@@ -1,0 +1,139 @@
+#canvas-label-wrapper {
+    display: flex;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    /* height: calc(calc(100% / 5) * 3.90);
+    width: calc(calc(100% / 6) * 2.90); */
+    z-index: 3;
+    font-family: 'Atkinson Hyperlegible', sans-serif;
+    /* box-shadow: 0px 1px 5px 0px rgba(71,105,204,0.75) inset;
+    -webkit-box-shadow: 0px 1px 5px 0px rgba(71,105,204,0.75) inset;
+    -moz-box-shadow: 0px 1px 5px 0px rgba(71,105,204,0.75) inset; */
+    box-shadow: 0px 1px 5px 0px black inset;
+    -webkit-box-shadow: 0px 1px 5px 0px black inset;
+    -moz-box-shadow: 0px 1px 5px 0px black inset;
+}
+
+#canvas-label-wrapper .canvas-label {
+    display: flex;
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    padding: 1em;    
+    border-radius: 0.5em;
+    font-size:0.8em;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.canvas-label .canvas-label-title {
+    display: flex;
+    margin-bottom: 0.1em;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.canvas-label .canvas-label-row {
+    display: grid;
+    width: fit-content;
+    grid-template-columns: 1.5rem 1fr;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    padding: 0.1em;
+    gap: 1em;
+}
+
+.canvas-label-row svg {
+    position: relative;
+    display: flex;
+    height: 1.2rem;
+    width: 1.2rem;
+    padding: 0.1em 0;
+
+}
+
+#canvas-label-wrapper #canvas-label-select-bar {
+    position: absolute;
+    display: flex;
+    height: fit-content;
+    width: fit-content;
+    top: 1em;
+    left: 1em;
+    flex-direction: row;
+    justify-content: right;
+    align-items: center;
+}
+
+#canvas-label-select-bar .canvas-label-select-bar-item {
+    position: relative;
+    display: flex;
+    height: fit-content;
+    width: fit-content;
+    padding: 0.7rem;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.canvas-label-select-bar-item:first-child {
+    border-top-left-radius: 0.5em;
+    border-bottom-left-radius: 0.5em;
+}
+
+.canvas-label-select-bar-item:last-child {
+    border-top-right-radius: 0.5em;
+    border-bottom-right-radius: 0.5em;
+}
+
+
+#canvas-label-select-bar .canvas-label-select-bar-item svg {
+    height: 1.8rem;
+    width: 1.8rem;
+}
+
+.canvas-label-select-bar-item:hover {
+    transition: 255ms;
+    filter: brightness(0.7)
+}
+
+.canvas-label-select-bar-item:not(hover) {
+    transition: 255ms;
+    filter: brightness(1)
+}
+
+.canvas-label-select-bar-item-active {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+#canvas-label-wrapper .canvas-label-select-bar-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: fit-content;
+    display: flex;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+    transform: translateX(-50%);
+    padding: 0.35rem;
+    border-radius: 0.5em;
+    font-size:0.8em;
+}
+
+
+
+/* https://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting */
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Old versions of Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Edge, Opera and Firefox */
+}

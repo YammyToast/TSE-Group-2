@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "module": "es6",
+        "target": "ES2015",
+        "moduleResolution": "node",
+        "noImplicitAny": true,
+        "outDir": "./src/",
+        "rootDir": "./ts/",
+        "preserveConstEnums": true,
+        "allowJs": true,
+        "sourceMap": true,
+    },
+    "compileOnSave": true
+}
