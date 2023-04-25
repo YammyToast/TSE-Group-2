@@ -1,6 +1,7 @@
 .container {
     display: grid;
-    height: 100vh; /*hieght view*/
+    height: 100vh; /*view hieght */
+    width: 100%;
     grid-template-columns: repeat(6, 1fr);
     grid-template-rows: repeat(5, 1fr);
     grid-template-areas:
@@ -135,11 +136,11 @@ main {
     margin: 2px;
 }
 
-    #content4.dark-mode {
-        background-color: #191919;
-        color: #FAB162;
-        border-color: #FAB162;
-    }
+#content4.dark-mode {
+    background-color: #191919;
+    color: #FAB162;
+    border-color: #FAB162;
+}
 
 footer {
     background: #425664;
@@ -149,11 +150,11 @@ footer {
     text-align: left;
 }
 
-    footer.dark-mode {
-        background-color: #191919;
-        color: #FAB162;
-        border-color: #FAB162;
-    }
+footer.dark-mode {
+    background-color: #191919;
+    color: #FAB162;
+    border-color: #FAB162;
+}
 
 .button-box {
     /*Dimensions*/
