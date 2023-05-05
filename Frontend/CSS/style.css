@@ -1,7 +1,21 @@
+body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: #F6F4F2;
+}
+
+    body.dark-mode {
+        background: #191919;
+    }
+
 .container {
-    display: grid;
-    height: 100vh; /*view hieght */
     width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: grid;
     grid-template-columns: repeat(6, 1fr);
     grid-template-rows: repeat(5, 1fr);
     grid-template-areas:
@@ -12,16 +26,6 @@
         "sidebar main main main content4 content4"
         "sidebar main main main footer footer";
 }
-
-body {
-    margin: 0;
-    padding: 0;
-    background: #F6F4F2;
-}
-
-    body.dark-mode {
-        background: #191919;
-    }
 
 #title {
     /*spacing of title*/
@@ -154,6 +158,24 @@ footer.dark-mode {
     background-color: #191919;
     color: #FAB162;
     border-color: #FAB162;
+}
+/*Menu stylings*/
+.menu {
+    background: #425664;
+    padding: 2px;
+    font-family:'Comic Sans MS', 'Sans Serif Collection'; 
+}
+.menu li {
+    margin: 0 10px;
+}
+
+.menu a{
+    color: red;
+    font-weight: bold;
+}
+
+.menu a:hover{
+    text-decoration: underline;
 }
 
 .button-box {
@@ -342,7 +364,7 @@ footer.dark-mode {
     justify-content: center;
     overflow: hidden;
 }
-
+/** Tarteels CSS attributes */
 .navbar {
     margin: auto;
     overflow: hidden;
@@ -411,5 +433,3 @@ footer.dark-mode {
 .dropdown:hover .dropdown-content {
     display: block;
 }
-
-
