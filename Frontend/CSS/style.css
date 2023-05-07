@@ -54,18 +54,6 @@ body {
     font-size: 48px;
     color: #425664;
 }
-
-main {
-    background: #F6F4F2;
-    grid-area: main;
-    color: #425664;
-}
-
-    main.dark-mode {
-        background-color: #191919;
-        color: #FAB162;
-    }
-
 .container {
     /*layout*/
     background: #F6F4F2;
@@ -81,10 +69,13 @@ main {
         background: #191919;
     }
 
+
 #sidebar {
     background: #425664;
     grid-area: sidebar;
-    border: 2px solid black;
+    width: 100%;
+    height: 100%;
+    border: 2px solid white;
     margin: 2px;
 }
 
@@ -92,6 +83,57 @@ main {
         background-color: #191919;
         color: #FAB162;
         border-color: #FAB162;
+    }
+
+ .slidecontainer{
+     width: auto; /*Width and height of the slider boundaries*/
+     height: auto;
+ }
+ /*The slider in question*/
+.slider {
+    -webkit-appearance: none; /*Overwrites default CSS design*/
+    appearance: none;
+    width: 50%;
+    height: 90%;
+    background: #F6F4F2;
+    outline: none;
+    opacity: 0.7; /* Set transparency for hovering*/
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+    .slider.dark-mode {
+        background: #191919;
+    }
+.slider:hover{
+    opacity: 1;
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 10%;
+    height: 2%;
+    background: Green;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 15%;
+    height: 2%;
+    background: pink;
+    cursor: pointer;
+}
+
+main {
+    background: #F6F4F2;
+    grid-area: main;
+    color: #425664;
+}
+
+    main.dark-mode {
+        background-color: #191919;
+        color: #FAB162;
     }
 
 #content1 {
@@ -254,8 +296,6 @@ footer.dark-mode {
     .sun.night div {
         width: 0;
     }
-text-align: left;
-}
 
 footer.dark-mode {
     background-color: #191919;
@@ -340,7 +380,7 @@ footer.dark-mode {
     .sun.night div {
         width: 0;
     }
-}
+
 
 footer.dark-mode {
     background-color: #191919;
