@@ -38,6 +38,11 @@ def getVarCode(var):
     elif var == "sun": return "Sunshine"
 
 def main():
+    '''for x in ['en', 'sc', 'ni', 'wa']:
+        for c in ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']:
+            for v in ['HighTemp', 'LowTemp', 'Rainfall', 'Sunshine']:
+                print(f"ALTER TABLE {x} ADD {c}{v} TEXT;")'''
+
     for country in countries:
         for key in urls:
             url = urls[key]
@@ -55,8 +60,8 @@ def main():
                     min_val = min(col[data] for data in dict(list(col.items())[1:-5]))
                     max_val = max(col[data] for data in dict(list(col.items())[1:-5]))
                     avg_val = int(sum(col[data] for data in dict(list(col.items())[1:-5]))/len([col[data] for data in dict(list(col.items())[1:-5])]))
-
-                    print(f"INSERT INTO {country_code} (year, min{var_code}, max{var_code}, avg{var_code}) VALUES ({col['year']}, {min_val}, {max_val}, {avg_val}) ON CONFLICT(`year`) DO UPDATE SET min{var_code}={min_val}, max{var_code}={max_val}, avg{var_code}={avg_val};")
+                    print(f"INSERT INTO {country_code} (year, jan{var_code}, feb{var_code}, mar{var_code}, apr{var_code}, may{var_code}, jun{var_code}, jul{var_code}, aug{var_code}, sep{var_code}, oct{var_code}, nov{var_code}, dec{var_code}) VALUES ({col['year']}, {col['jan']}, {col['feb']}, {col['mar']}, {col['apr']}, {col['may']}, {col['jun']}, {col['jul']}, {col['aug']}, {col['sep']}, {col['oct']}, {col['nov']}, {col['dec']}) ON CONFLICT(`year`) DO UPDATE SET jan{var_code}={col['jan']}, feb{var_code}={col['feb']}, mar{var_code}={col['mar']}, apr{var_code}={col['apr']}, may{var_code}={col['may']}, jun{var_code}={col['jun']}, jul{var_code}={col['jul']}, aug{var_code}={col['aug']}, sep{var_code}={col['sep']}, oct{var_code}={col['oct']}, nov{var_code}={col['nov']}, dec{var_code}={col['dec']};")
+                    # print(f"INSERT INTO {country_code} (year, min{var_code}, max{var_code}, avg{var_code}) VALUES ({col['year']}, {min_val}, {max_val}, {avg_val}) ON CONFLICT(`year`) DO UPDATE SET min{var_code}={min_val}, max{var_code}={max_val}, avg{var_code}={avg_val};")
                 except TypeError:
                     continue
 
