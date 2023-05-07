@@ -19,37 +19,36 @@
                 GeoUK
             </div>
         </div>
-        <main class="dark-mode"> Main </main>
         <div id="sidebar" class="dark-mode">
-            Sidebar>
             <div class="slidecontainer">
-                <input type="range" min="1941" max="2023" value="1982" class="slider" id="YearSlider">
+                <input id="YearSlider" type="range" min="1941" max="2023" value="1982" class="slider">
             </div>
         </div>
+        <main id="main" class="dark-mode"> Main </main>
         <div id="content1" class="dark-mode">Content1</div>
         <div id="content2" class="dark-mode">Content2</div>
         <div id="content3" class="dark-mode">Content3</div>
         <div id="content4" class="dark-mode">Content4</div>
         <footer class="dark-mode" ><!--style="overflow-x: hidden;"-->
             <!--The menu in the footer to take the users to the other sections-->
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <nav id="navbar" class="dark-mode">
                 <div class="container">
                     <button class="navbar-toggle" type="button" data-toggler="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggle-icon""></span>
+                        <span class="navbar-toggle-icon"></span>
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Terms & Conditions</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">About Us</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Contact Us</a>
+                                </li>
+                            </ul>
+                        </div>
                     </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav">
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Terms & Conditions</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">About Us</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Contact Us</a>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
             </nav>
             <!--<nav class="navbar fixed-bottom navbar-invert-md bg-light navbar-light">

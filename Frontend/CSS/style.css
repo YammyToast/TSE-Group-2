@@ -69,14 +69,17 @@ body {
         background: #191919;
     }
 
-
+    /**
+        The slider needs an area for the title, the top and bottom date
+        Then the current date needs to be added, the value the slider is on
+        Then add top and bottom notches.
+    */
 #sidebar {
-    background: #425664;
+    background-color: #425664;
     grid-area: sidebar;
     width: 100%;
     height: 100%;
-    border: 2px solid white;
-    margin: 2px;
+    border: 2px solid black;
 }
 
     #sidebar.dark-mode {
@@ -85,24 +88,34 @@ body {
         border-color: #FAB162;
     }
 
- .slidecontainer{
-     width: auto; /*Width and height of the slider boundaries*/
-     height: auto;
- }
+.slidecontainer {
+    width: 100%; /*Width and height of the slider boundaries*/
+    height: 100%;
+    position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
  /*The slider in question*/
 .slider {
     -webkit-appearance: none; /*Overwrites default CSS design*/
     appearance: none;
-    width: 50%;
+    width: 10%;
     height: 90%;
+    margin: 0 auto;
     background: #F6F4F2;
     outline: none;
-    opacity: 0.7; /* Set transparency for hovering*/
-    -webkit-transition: .2s;
+    opacity: 0.7; /* Set transparency to change when hovering over, *interactive**/
+    -webkit-transition: .2;
     transition: opacity .2s;
+    /*transform: rotate(-90deg); /*Have the slide vertically, this can be swapped to 270 if it's upside down.*/
+    position: relative;
+    border-radius: 3px;
 }
+
     .slider.dark-mode {
-        background: #191919;
+        background-color: #191919;
     }
 .slider:hover{
     opacity: 1;
@@ -112,15 +125,20 @@ body {
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 10%;
-    height: 2%;
-    background: Green;
+    width: 25px;
+    height: 10px;
+    background: #FAB162;
     cursor: pointer;
+    border-radius: 7px;
 }
+    .slider::-webkit-slider-thumb.dark-mode {
+        border-color: white;
+        background: #FAB162;
+    }
 
 .slider::-moz-range-thumb {
-    width: 15%;
-    height: 2%;
+    width: 15px;
+    height: 10px;
     background: pink;
     cursor: pointer;
 }
@@ -202,15 +220,21 @@ footer.dark-mode {
     border-color: #FAB162;
 }
 /*Menu stylings*/
+
+/*Get the buttons, and navbar working, there is a lot of nesting, new classes need to be made
+  There is a good chance that the button will need to be removed, and replaced with a interactive 
+  text area that has a hover value and takes the user to different sub-websites.
+*/
 .menu {
     background: #425664;
     padding: 2px;
     font-family:'Comic Sans MS', 'Sans Serif Collection'; 
 }
-.menu li {
-    margin: 0 10px;
-}
-
+    .menu.dark-mode {
+        background-color: #191919;
+        color: #FAB162;
+        border-color: #FAB162;
+    }
 .menu a{
     color: red;
     font-weight: bold;
@@ -228,14 +252,40 @@ footer.dark-mode {
     border-style: solid;
     border-color: #000;
     border-radius: 6px;
-    /*positioning*/
-    float: right;
-    /*misc*/
-    display: flex;
-    align-items: center;
-    justify-content: center;
     overflow: hidden;
 }
+#navbar {
+    background-color: #425664;
+    border: solid black;
+    /*To get the button and items in line*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+    #navbar.dark-mode {
+        background-color: #191919;
+        color: #FAB162;
+        border-color: #FAB162;
+    }
+
+#navbar-toggle{
+    width: 90%;
+    height: 90%;
+}
+    #navbar-toggle.dark-mode {
+    }
+.navbar-nav {
+    background-color: #425664;
+}
+    .navbar-nav.dark-mode {
+        background-color: #191919;
+        color: #FAB162;
+    }
+.nav-item{
+
+}
+    .nav-item.dark-mode {
+    }
 /*dimensions and values of inner circle*/
 .sun {
     width: 9px;
