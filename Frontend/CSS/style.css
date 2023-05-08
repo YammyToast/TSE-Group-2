@@ -82,26 +82,34 @@ body {
         color: #FAB162;
         border-color: #FAB162;
     }
-
+     
 #slidecontainer {
     width: 100%; /*Width and height of the slider boundaries*/
-    height: 100%;
+    height: 90%;
     position: center;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0 auto;
 }
+#slidertitle{
+    height: 2%;
+    margin-bottom:2px;
+}
+#slidertop {
+    height: 3%;
+}
  /*The slider in question*/
- #yearslider {
-     width: 100%;
-     height: 100%;
- }
+#yearslider {
+    width: 100%;
+    height: 100%;
+   
+}
  /*# for id . for class*/
 #yearslider {
     -webkit-appearance: none; /*Overwrites default CSS design*/
     appearance: none;
-    width: 90%; /*This is height because of the transformation*/
+    width: 70vh; /*This is height because of the transformation*/
     height: 10px; /*This is width because of the transformation*/
     margin: 0 auto;
     background: #F6F4F2;
@@ -110,13 +118,21 @@ body {
     -webkit-transition: .2;
     transition: opacity .2s;
     transform: rotate(-90deg); /*Have the slide vertically, this can be swapped to 270 if it's upside down.*/
-    position: relative;
+    position: absolute;
     border-radius: 3px;
 }
 
     #yearslider.dark-mode {
         background-color: #F6F4F2;
     }
+
+#sliderlabel {
+    position: relative;
+
+    left: 30%;
+    top: 0;
+}
+
 #yearslider:hover{
     opacity: 1;
 }
@@ -125,7 +141,6 @@ body {
 #yearslider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 5px;
     width: 5px;
     height: 20px;
     background: #FAB162;
@@ -140,8 +155,10 @@ body {
 #yearslider::-moz-range-thumb {
     width: 15px;
     height: 10px;
-    background: pink;
     cursor: pointer;
+}
+#sliderbottom {
+    height: 2%;
 }
 
 main {

@@ -23,9 +23,16 @@
             <div id="slidertitle" class="dark-mode">
                 Year Slider
             </div>
+            <div id="slidertop" class="dark-mode">
+                2023
+            </div>
             <form id="slidecontainer" class="dark-mode">
+                <div id="sliderlabel">"value"</div>
                 <input id="yearslider" type="range" min="1941" max="2023" value="1982" step="1" class="dark-mode">
             </form>
+            <div id="sliderbottom" class="dark-mode">
+                1941
+            </div>
         </div>
         <main id="main" class="dark-mode"> Main </main>
         <div id="content1" class="dark-mode">Content1</div>
@@ -110,12 +117,24 @@
                     elements.forEach(element => element.classList.toggle("dark-mode"));
                     /*This JS code uses the QuerySelectorAll to iterate through darkmode and light mode using a foreach method.*/
                 }
-                $(document).ready(function () {
-                    $("#YearSlider").on("input", function () {
-                        var value = $(this).val();
-                        //Pass the value of the slider to the backend AKA. Harry/James.
-                    });
-                });
+                document.getElementById("yearslider").oninput = function (e) {
+                    let value = document.getElementById("yearslider").value
+                    // at 0%, top -41%
+                    let groundedValue = value - 1941
+                    let percentOffset = (groundedValue / (2023 - 1941))
+                    let offsetValue = 50 + -(100 * percentOffset)
+                    console.log(offsetValue)
+                    document.getElementById("sliderlabel").style.top = `${offsetValue}%`
+
+                    console.log(value)
+                }
+                //$(document).ready(function () {
+                //    $("#YearSlider").on("input", function () {
+                //        var value = $(this).val();
+                //        console.log(value)
+                //        //Pass the value of the slider to the backend AKA. Harry/James.
+                //    });
+                //});
             </script>
 </body>
 
