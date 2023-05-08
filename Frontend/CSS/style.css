@@ -10,11 +10,11 @@ body {
         background: #191919;
     }
 
-.container {
+#container {
     width: 100%;
     height: 100%;
     margin: 0;
-    padding: 0;
+    padding: 5px;
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     grid-template-rows: repeat(5, 1fr);
@@ -25,7 +25,16 @@ body {
         "sidebar main main main content3 content3"
         "sidebar main main main content4 content4"
         "sidebar main main main footer footer";
+    /*layout*/
+    background: #F6F4F2;
+    grid-area: content;
+    font-family: "Atkinson Hyperlegible", sans-serif;
+    color: #F6F4F2;
+    text-align: center;
 }
+    #container.dark-mode {
+        background: #191919;
+    }
 
 #title {
     /*spacing of title*/
@@ -49,25 +58,11 @@ body {
 /*insisde the title box*/
 #GeoUk {
     text-align: center;
-    /*background-color: red;*/
     margin: 10px;
     font-size: 48px;
     color: #425664;
 }
-.container {
-    /*layout*/
-    background: #F6F4F2;
-    grid-area: content;
-    /* border: 2px solid black;*/
-    /*content*/
-    font-family: "Atkinson Hyperlegible", sans-serif;
-    color: #F6F4F2;
-    text-align: center;
-}
 
-    .container.dark-mode {
-        background: #191919;
-    }
 
     /**
         The slider needs an area for the title, the top and bottom date
@@ -88,7 +83,7 @@ body {
         border-color: #FAB162;
     }
 
-.slidecontainer {
+#slidecontainer {
     width: 100%; /*Width and height of the slider boundaries*/
     height: 100%;
     position: center;
@@ -98,45 +93,51 @@ body {
     margin: 0 auto;
 }
  /*The slider in question*/
-.slider {
+ #yearslider {
+     width: 100%;
+     height: 100%;
+ }
+ /*# for id . for class*/
+#yearslider {
     -webkit-appearance: none; /*Overwrites default CSS design*/
     appearance: none;
-    width: 10%;
-    height: 90%;
+    width: 90%; /*This is height because of the transformation*/
+    height: 10px; /*This is width because of the transformation*/
     margin: 0 auto;
     background: #F6F4F2;
-    outline: none;
+   /*outline: 2px solid red;*/
     opacity: 0.7; /* Set transparency to change when hovering over, *interactive**/
     -webkit-transition: .2;
     transition: opacity .2s;
-    /*transform: rotate(-90deg); /*Have the slide vertically, this can be swapped to 270 if it's upside down.*/
+    transform: rotate(-90deg); /*Have the slide vertically, this can be swapped to 270 if it's upside down.*/
     position: relative;
     border-radius: 3px;
 }
 
-    .slider.dark-mode {
-        background-color: #191919;
+    #yearslider.dark-mode {
+        background-color: #F6F4F2;
     }
-.slider:hover{
+#yearslider:hover{
     opacity: 1;
 }
 
 /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
-.slider::-webkit-slider-thumb {
+#yearslider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 25px;
-    height: 10px;
+    width: 5px;
+    width: 5px;
+    height: 20px;
     background: #FAB162;
     cursor: pointer;
-    border-radius: 7px;
+    border-radius: 4px;
 }
-    .slider::-webkit-slider-thumb.dark-mode {
+    #yearslider::-webkit-slider-thumb.dark-mode {
         border-color: white;
         background: #FAB162;
     }
 
-.slider::-moz-range-thumb {
+#yearslider::-moz-range-thumb {
     width: 15px;
     height: 10px;
     background: pink;

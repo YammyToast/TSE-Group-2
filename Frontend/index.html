@@ -12,24 +12,27 @@
     <title>GeoUK Home</title>
 </head>
 
-<body class="dark-mode">
-    <div class="container dark-mode">
+<body id="body" class="dark-mode">
+    <div id="container" class="dark-mode">
         <div id="title" class="dark-mode">
             <div id="GeoUk">
                 GeoUK
             </div>
         </div>
         <div id="sidebar" class="dark-mode">
-            <div class="slidecontainer">
-                <input id="YearSlider" type="range" min="1941" max="2023" value="1982" class="slider">
+            <div id="slidertitle" class="dark-mode">
+                Year Slider
             </div>
+            <form id="slidecontainer" class="dark-mode">
+                <input id="yearslider" type="range" min="1941" max="2023" value="1982" step="1" class="dark-mode">
+            </form>
         </div>
         <main id="main" class="dark-mode"> Main </main>
         <div id="content1" class="dark-mode">Content1</div>
         <div id="content2" class="dark-mode">Content2</div>
         <div id="content3" class="dark-mode">Content3</div>
         <div id="content4" class="dark-mode">Content4</div>
-        <footer class="dark-mode" ><!--style="overflow-x: hidden;"-->
+        <footer class="dark-mode">
             <!--The menu in the footer to take the users to the other sections-->
             <nav id="navbar" class="dark-mode">
                 <div class="container">
@@ -110,7 +113,7 @@
                 $(document).ready(function () {
                     $("#YearSlider").on("input", function () {
                         var value = $(this).val();
-                        //Pass the value of the slider to the backend AKA. Harry.
+                        //Pass the value of the slider to the backend AKA. Harry/James.
                     });
                 });
             </script>
