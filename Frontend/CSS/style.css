@@ -93,7 +93,8 @@ body {
     margin: 0 auto;
 }
 #slidertitle{
-    height: 2%;
+    font-size:24px;
+    height: 4%;
     margin-bottom:2px;
 }
 #slidertop {

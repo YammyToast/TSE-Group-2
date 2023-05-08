@@ -27,7 +27,7 @@
                 2023
             </div>
             <form id="slidecontainer" class="dark-mode">
-                <div id="sliderlabel">"value"</div>
+                <div id="sliderlabel"> 1981</div>
                 <input id="yearslider" type="range" min="1941" max="2023" value="1982" step="1" class="dark-mode">
             </form>
             <div id="sliderbottom" class="dark-mode">
@@ -106,36 +106,31 @@
 
         </footer>
     </div>
-                <!--Move to JS-->
-            <script>
-                let sun = document.getElementById("sun");
-                let elements = document.querySelectorAll(".dark-mode");
+            <!--Move to JS-->
+        <script>
+            let sun = document.getElementById("sun");
+            let elements = document.querySelectorAll(".dark-mode");
 
-                sun.onclick = function () {
-                    sun.classList.toggle("night");
-                    document.body.classList.toggle("dark-mode");
-                    elements.forEach(element => element.classList.toggle("dark-mode"));
-                    /*This JS code uses the QuerySelectorAll to iterate through darkmode and light mode using a foreach method.*/
-                }
-                document.getElementById("yearslider").oninput = function (e) {
-                    let value = document.getElementById("yearslider").value
-                    // at 0%, top -41%
-                    let groundedValue = value - 1941
-                    let percentOffset = (groundedValue / (2023 - 1941))
-                    let offsetValue = 50 + -(100 * percentOffset)
-                    console.log(offsetValue)
-                    document.getElementById("sliderlabel").style.top = `${offsetValue}%`
+            sun.onclick = function () {
+                sun.classList.toggle("night");
+                document.body.classList.toggle("dark-mode");
+                elements.forEach(element => element.classList.toggle("dark-mode"));
+                /*This JS code uses the QuerySelectorAll to iterate through darkmode and light mode using a foreach method.*/
+            }
+            //JS to take the slider value, set the center point and tie the year value to the slider. 
+            document.getElementById("yearslider").oninput = function (e) {
+                let value = document.getElementById("yearslider").value
+                // at 0%, top -41%
+                let groundedValue = value - 1941
+                let percentOffset = (groundedValue / (2023 - 1941))
+                let offsetValue = 50 + -(100 * percentOffset)
+                //console.log(offsetValue)
+                document.getElementById("sliderlabel").style.top = `${offsetValue}%`
 
-                    console.log(value)
-                }
-                //$(document).ready(function () {
-                //    $("#YearSlider").on("input", function () {
-                //        var value = $(this).val();
-                //        console.log(value)
-                //        //Pass the value of the slider to the backend AKA. Harry/James.
-                //    });
-                //});
-            </script>
+                document.getElementById("sliderlabel").textContent = value
+                console.log(value)
+            }
+        </script>
 </body>
 
 </html>
