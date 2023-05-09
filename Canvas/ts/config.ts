@@ -20,7 +20,7 @@ export const ViewTypes = {
 export const SCALINGCONSTANTS = {
     heightTranslation: 0.7,
     widthTranslation: 0.65,
-    scaleX: 0.0015,
+    scaleX: 0.002,
     scaleY: 0.0018
 } as const
 
@@ -33,7 +33,7 @@ export const DEFAULTOFFSETS: CtryOffsets = {
 }
 
 export const DEFAULTLABELS = {
-    enLabel: { owner: 'en', title: 'England', offset: [135, -20] },
+    enLabel: { owner: 'en', title: 'England', offset: [75, -150] },
     scLabel: { owner: 'sc', title: 'Scotland', offset: [10, -300] },
     waLabel: { owner: 'wa', title: 'Wales', offset: [-200, -50] },
     niLabel: { owner: 'ni', title: 'Nth. Ire.', offset: [-325, -200] },

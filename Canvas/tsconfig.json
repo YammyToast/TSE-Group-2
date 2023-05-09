@@ -9,6 +9,7 @@
         "preserveConstEnums": true,
         "allowJs": true,
         "sourceMap": true,
+        "allowUmdGlobalAccess": true
     },
     "compileOnSave": true
 }

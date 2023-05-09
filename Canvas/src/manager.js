@@ -25,7 +25,7 @@ export class Manager {
     getMaximumValues() {
         try {
             // Make AJAX Request to maxValues route.
-            $.get('api/maxValues', (data) => {
+            $.get('https://harrysmith.dev/api/data_max_values', (data) => {
                 // Data validation to check success of request.
                 if (!data || Object.keys(data).length == 0)
                     return false;
