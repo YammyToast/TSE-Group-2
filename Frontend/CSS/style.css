@@ -114,7 +114,7 @@ body {
     height: 10px; /*This is width because of the transformation*/
     margin: 0 auto;
     background: #F6F4F2;
-   /*outline: 2px solid red;*/
+    /*outline: 2px solid red;*/
     opacity: 0.7; /* Set transparency to change when hovering over, *interactive**/
     -webkit-transition: .2;
     transition: opacity .2s;
@@ -143,8 +143,7 @@ body {
     -webkit-appearance: none;
     appearance: none;
     width: 5px;
-    height: 20px;
-    background: #FAB162;
+    height: 20px; /*FIX THIS________________________-------------------------*/
     cursor: pointer;
     border-radius: 4px;
 }
@@ -244,35 +243,6 @@ footer.dark-mode {
   There is a good chance that the button will need to be removed, and replaced with a interactive 
   text area that has a hover value and takes the user to different sub-websites.
 */
-.menu {
-    background: #425664;
-    padding: 2px;
-    font-family:'Comic Sans MS', 'Sans Serif Collection'; 
-}
-    .menu.dark-mode {
-        background-color: #191919;
-        color: #FAB162;
-        border-color: #FAB162;
-    }
-.menu a{
-    color: red;
-    font-weight: bold;
-}
-
-.menu a:hover{
-    text-decoration: underline;
-}
-
-.button-box {
-    /*Dimensions*/
-    width: 20px;
-    height: 20px;
-    background: #F6F5F2;
-    border-style: solid;
-    border-color: #000;
-    border-radius: 6px;
-    overflow: hidden;
-}
 #navbar {
     background-color: #425664;
     border: solid black;
@@ -280,19 +250,29 @@ footer.dark-mode {
     display: flex;
     justify-content: center;
     align-items: center;
+    float: left;
+    width:90%;
+    margin: 1px;
 }
     #navbar.dark-mode {
         background-color: #191919;
         color: #FAB162;
-        border-color: #FAB162;
     }
 
-#navbar-toggle{
-    width: 90%;
-    height: 90%;
+#menu{
+    width:100%;
+    height: 100%;
+}
+#navbar-toggle {
+    width:80%;
+    height: 20px;
+    padding: 0px;
+    border: 0px;
 }
     #navbar-toggle.dark-mode {
+        /*Add further details */
     }
+
 .navbar-nav {
     background-color: #425664;
 }
@@ -305,175 +285,7 @@ footer.dark-mode {
 }
     .nav-item.dark-mode {
     }
-/*dimensions and values of inner circle*/
-.sun {
-    width: 9px;
-    height: 9px;
-    background: #000;
-    border-radius: 50%;
-    cursor: pointer;
-    position: relative;
-    border: 1px solid #000;
-}
-    /*Beams of "light"*/
-    .sun div {
-        height: 1px;
-        background: #000;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transition: width 0.5s;
-    }
 
-    .sun .line1 {
-        width: 17px;
-        transform: translate(-50%, -50%);
-    }
-
-    .sun .line2 {
-        width: 17px;
-        transform: translate(-50%, -50%) rotate(90deg);
-    }
-
-    .sun .line3 {
-        width: 17px;
-        transform: translate(-50%, -50%) rotate(135deg);
-    }
-
-    .sun .line4 {
-        width: 17px;
-        transform: translate(-50%, -50%) rotate(45deg);
-    }
-    /*after being clicked, turns to a moon*/
-    .sun::after {
-        content: '';
-        width: 9px;
-        height: 9px;
-        background: #F6F5F2;
-        border-radius: 50%;
-        position: absolute;
-        bottom: 9px;
-        left: 9px;
-        transition: 0.5s;
-    }
-    /*moon is formed by moving another circle over it*/
-    .sun.night::after {
-        bottom: 3px;
-        left: 3px;
-    }
-    /*gets rid of light beams*/
-    .sun.night div {
-        width: 0;
-    }
-
-footer.dark-mode {
-    background-color: #191919;
-    color: #FAB162;
-    border-color: #FAB162;
-}
-
-.button-box {
-    /*Dimensions*/
-    width: 20px;
-    height: 20px;
-    background: #F6F5F2;
-    border-style: solid;
-    border-color: #000;
-    border-radius: 6px;
-    /*positioning*/
-    float: right;
-    /*misc*/
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-/*dimensions and values of inner circle*/
-.sun {
-    width: 9px;
-    height: 9px;
-    background: #000;
-    border-radius: 50%;
-    cursor: pointer;
-    position: relative;
-    border: 1px solid #000;
-}
-    /*Beams of "light"*/
-    .sun div {
-        height: 1px;
-        background: #000;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transition: width 0.5s;
-    }
-
-    .sun .line1 {
-        width: 17px;
-        transform: translate(-50%, -50%);
-    }
-
-    .sun .line2 {
-        width: 17px;
-        transform: translate(-50%, -50%) rotate(90deg);
-    }
-
-    .sun .line3 {
-        width: 17px;
-        transform: translate(-50%, -50%) rotate(135deg);
-    }
-
-    .sun .line4 {
-        width: 17px;
-        transform: translate(-50%, -50%) rotate(45deg);
-    }
-    /*after being clicked, turns to a moon*/
-    .sun::after {
-        content: '';
-        width: 9px;
-        height: 9px;
-        background: #F6F5F2;
-        border-radius: 50%;
-        position: absolute;
-        bottom: 9px;
-        left: 9px;
-        transition: 0.5s;
-    }
-    /*moon is formed by moving another circle over it*/
-    .sun.night::after {
-        bottom: 3px;
-        left: 3px;
-    }
-    /*gets rid of light beams*/
-    .sun.night div {
-        width: 0;
-    }
-
-
-footer.dark-mode {
-    background-color: #191919;
-    color: #FAB162;
-    border-color: #FAB162;
-}
-
-.button-box {
-    /*Dimensions*/
-    width: 20px;
-    height: 20px;
-    background: #F6F5F2;
-    border-style: solid;
-    border-color: #000;
-    border-radius: 6px;
-    /*positioning*/
-    float: right;
-    /*misc*/
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-/** Tarteels CSS attributes */
 .navbar {
     margin: auto;
     overflow: hidden;
@@ -491,7 +303,7 @@ footer.dark-mode {
     }
 
 .dropdown {
-    float: left;
+    float: right;
     overflow: hidden;
 }
 
@@ -542,3 +354,103 @@ footer.dark-mode {
 .dropdown:hover .dropdown-content {
     display: block;
 }
+
+.menu {
+    background: #425664;
+    padding: 2px;
+    font-family:'Comic Sans MS', 'Sans Serif Collection'; 
+}
+    .menu.dark-mode {
+        background-color: #191919;
+        color: #FAB162;
+        border-color: #FAB162;
+    }
+.menu a{
+    color: red;
+    font-weight: bold;
+}
+
+.menu a:hover{
+    text-decoration: underline;
+}
+
+/*dimensions and values of inner circle*/
+#sun-button {
+    /*Dimensions*/
+    width: 20px;
+    height: 20px;
+    background: #F6F5F2;
+    border-style: solid;
+    border-color: #000;
+    border-radius: 6px;
+    /*positioning*/
+    float: right;
+    top:15%;
+    position:relative;
+    /*content of button*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/*Don't touch this finally got it right where it belongs and functioning well.*/
+.sun {
+    width: 9px;
+    height: 9px;
+    background: #000;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    border: 1px solid #000;
+}
+    /*Beams of "light"*/
+    .sun div {
+        height: 1px;
+        background: #000;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transition: width 0.5s;
+    }
+
+    .sun .line1 {
+        width: 17px;
+        transform: translate(-50%, -50%);
+    }
+
+    .sun .line2 {
+        width: 17px;
+        transform: translate(-50%, -50%) rotate(90deg);
+    }
+
+    .sun .line3 {
+        width: 17px;
+        transform: translate(-50%, -50%) rotate(135deg);
+    }
+
+    .sun .line4 {
+        width: 17px;
+        transform: translate(-50%, -50%) rotate(45deg);
+    }
+    /*after being clicked, turns to a moon*/
+    .sun::after {
+        content: '';
+        width: 9px;
+        height: 9px;
+        background: #F6F5F2;
+        border-radius: 50%;
+        position: absolute;
+        bottom: 9px;
+        left: 9px;
+        transition: 0.5s;
+    }
+    /*moon is formed by moving another circle over it*/
+    .sun.night::after {
+        bottom: 3px;
+        left: 3px;
+    }
+    /*gets rid of light beams*/
+    .sun.night div {
+        width: 0;
+    }
