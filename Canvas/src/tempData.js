@@ -9,7 +9,7 @@ export const maximumValues = {
     min_highTemp: 4.4,
     max_highTemp: 24
 };
-export const yearAverages = {
+export const yearAverages1910 = {
     en: { highTemp: 12.0, lowTemp: 5.0, rainfall: 12.0, sunshine: 114.0 },
     ni: { highTemp: 11.0, lowTemp: 4.0, rainfall: 17.0, sunshine: 109.0 },
     sc: { highTemp: 10.0, lowTemp: 3.0, rainfall: 16.0, sunshine: 100.0 },

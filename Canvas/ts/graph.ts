@@ -18,9 +18,25 @@ export function drawGraph(_canvas: HTMLCanvasElement) {
                 data: {
                     labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
                     datasets: [{
-                        label: '# of Votes',
+                        label: 'rainfall',
                         data: [30, 90, 60, 80, 20, 70, 50],
                     }]
                 }
     }); 
+}
+
+export function drawYearAverageGraph(_canvas: HTMLCanvasElement, _dataLabels: number[], _data: number[], _typeLabel: string) {
+    const chart: Chart = new Chart(_canvas, {
+        type: 'line',
+        data: {
+            labels: _dataLabels,
+            datasets: [{
+                label: _typeLabel,
+                data: _data
+
+            }]
+        }
+
+    })
+
 }

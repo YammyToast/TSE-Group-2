@@ -1,3 +1,4 @@
+import { DataYearAveragesInstance } from './api'
 import { ImgPaths, ObjPaths, CtryOffsets, ColourScheme } from './types'
 
 

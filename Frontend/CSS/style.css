@@ -1,333 +1,433 @@
 body {
-  width: 100vw;
-  height: 100vh;
-  margin: 0;
-  padding: 0;
-  background: #f6f4f2;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: #F6F4F2;
 }
 
-body.dark-mode {
-  background: #191919;
-}
+    body.dark-mode {
+        background: #191919;
+    }
 
 .container {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(5, 1fr);
-  grid-template-areas:
-    "title title title title title title"
-    "sidebar main main main content1 content1"
-    "sidebar main main main content2 content2"
-    "sidebar main main main content3 content3"
-    "sidebar main main main content4 content4"
-    "sidebar main main main footer footer";
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    grid-template-areas:
+        "title title title title title title"
+        "sidebar main main main content1 content1"
+        "sidebar main main main content2 content2"
+        "sidebar main main main content3 content3"
+        "sidebar main main main content4 content4"
+        "sidebar main main main footer footer";
 }
 
 #title {
-  /*spacing of title*/
-  margin: 2px;
-  background: #f6f4f2;
-  grid-area: title;
-  justify-content: center;
-  border: 2px solid black;
-  border-style: hidden;
+    /*spacing of title*/
+    margin: 2px;
+    background: #F6F4F2;
+    grid-area: title;
+    justify-content: center;
+    border: 2px solid black;
+    border-style: hidden;
 }
 
-#title.dark-mode {
-  background-color: #191919;
-  color: #fab162;
-}
+    #title.dark-mode {
+        background-color: #191919;
+        color: #FAB162;
+    }
 
-#title.dark-mode #GeoUk {
-  /*This is for the colour of the font only, IDK why*/
-  color: #fab162;
-}
+        #title.dark-mode #GeoUk {
+            /*This is for the colour of the font only, IDK why*/
+            color: #FAB162;
+        }
 /*insisde the title box*/
 #GeoUk {
-  text-align: center;
-  /*background-color: red;*/
-  margin: 10px;
-  font-size: 48px;
-  color: #425664;
+    text-align: center;
+    /*background-color: red;*/
+    margin: 10px;
+    font-size: 48px;
+    color: #425664;
 }
 
 main {
-  background: #f6f4f2;
-  grid-area: main;
-  color: #425664;
+    background: #F6F4F2;
+    grid-area: main;
+    color: #425664;
 }
 
-main.dark-mode {
-  background-color: #191919;
-  color: #fab162;
-}
+    main.dark-mode {
+        background-color: #191919;
+        color: #FAB162;
+    }
 
 .container {
-  /*layout*/
-  background: #f6f4f2;
-  grid-area: content;
-  /* border: 2px solid black;*/
-  /*content*/
-  font-family: "Atkinson Hyperlegible", sans-serif;
-  color: #f6f4f2;
-  text-align: center;
+    /*layout*/
+    background: #F6F4F2;
+    grid-area: content;
+    /* border: 2px solid black;*/
+    /*content*/
+    font-family: "Atkinson Hyperlegible", sans-serif;
+    color: #F6F4F2;
+    text-align: center;
 }
 
-.container.dark-mode {
-  background: #191919;
-}
+    .container.dark-mode {
+        background: #191919;
+    }
 
 #sidebar {
-  background: #425664;
-  grid-area: sidebar;
-  border: 2px solid black;
-  margin: 2px;
+    background: #425664;
+    grid-area: sidebar;
+    border: 2px solid black;
+    margin: 2px;
 }
 
-#sidebar.dark-mode {
-  background-color: #191919;
-  color: #fab162;
-  border-color: #fab162;
-}
+    #sidebar.dark-mode {
+        background-color: #191919;
+        color: #FAB162;
+        border-color: #FAB162;
+    }
 
 #content1 {
-  background: #425664;
-  grid-area: content1;
-  border: 2px solid black;
-  margin: 2px;
+    background: #425664;
+    grid-area: content1;
+    border: 2px solid black;
+    margin: 2px;
 }
 
-#content1.dark-mode {
-  background-color: #191919;
-  color: #fab162;
-  border-color: #fab162;
-}
+    #content1.dark-mode {
+        background-color: #191919;
+        color: #FAB162;
+        border-color: #FAB162;
+    }
 
 #content2 {
-  background: #425664;
-  grid-area: content2;
-  border: 2px solid black;
-  margin: 2px;
+    background: #425664;
+    grid-area: content2;
+    border: 2px solid black;
+    margin: 2px;
 }
 
-#content2.dark-mode {
-  background-color: #191919;
-  color: #fab162;
-  border-color: #fab162;
-}
+    #content2.dark-mode {
+        background-color: #191919;
+        color: #FAB162;
+        border-color: #FAB162;
+    }
 
 #content3 {
-  background: #425664;
-  grid-area: content3;
-  border: 2px solid black;
-  margin: 2px;
+    background: #425664;
+    grid-area: content3;
+    border: 2px solid black;
+    margin: 2px;
 }
 
-#content3.dark-mode {
-  background-color: #191919;
-  color: #fab162;
-  border-color: #fab162;
-}
+    #content3.dark-mode {
+        background-color: #191919;
+        color: #FAB162;
+        border-color: #FAB162;
+    }
 
 #content4 {
-  background: #425664;
-  grid-area: content4;
-  border: 2px solid black;
-  margin: 2px;
+    background: #425664;
+    grid-area: content4;
+    border: 2px solid black;
+    margin: 2px;
 }
 
 #content4.dark-mode {
-  background-color: #191919;
-  color: #fab162;
-  border-color: #fab162;
+    background-color: #191919;
+    color: #FAB162;
+    border-color: #FAB162;
 }
 
 footer {
-  background: #425664;
-  grid-area: footer;
-  border: 2px solid black;
-  margin: 2px;
-  text-align: left;
+    background: #425664;
+    grid-area: footer;
+    border: 2px solid black;
+    margin: 2px;
+    text-align: left;
 }
 
 footer.dark-mode {
-  background-color: #191919;
-  color: #fab162;
-  border-color: #fab162;
+    background-color: #191919;
+    color: #FAB162;
+    border-color: #FAB162;
 }
 /*Menu stylings*/
 .menu {
-  background: #425664;
-  padding: 2px;
-  font-family: "Comic Sans MS", "Sans Serif Collection";
+    background: #425664;
+    padding: 2px;
+    font-family:'Comic Sans MS', 'Sans Serif Collection'; 
 }
 .menu li {
-  margin: 0 10px;
+    margin: 0 10px;
 }
 
-.menu a {
-  color: red;
-  font-weight: bold;
+.menu a{
+    color: red;
+    font-weight: bold;
 }
 
-.menu a:hover {
-  text-decoration: underline;
+.menu a:hover{
+    text-decoration: underline;
 }
+
 
 /*dimensions and values of inner circle*/
 .sun {
-  width: 9px;
-  height: 9px;
-  background: #000;
-  border-radius: 50%;
-  cursor: pointer;
-  position: relative;
-  border: 1px solid #000;
+    width: 9px;
+    height: 9px;
+    background: #000;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    border: 1px solid #000;
 }
-/*Beams of "light"*/
-.sun div {
-  height: 1px;
-  background: #000;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transition: width 0.5s;
-}
+    /*Beams of "light"*/
+    .sun div {
+        height: 1px;
+        background: #000;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transition: width 0.5s;
+    }
 
-.sun .line1 {
-  width: 17px;
-  transform: translate(-50%, -50%);
-}
+    .sun .line1 {
+        width: 17px;
+        transform: translate(-50%, -50%);
+    }
 
-.sun .line2 {
-  width: 17px;
-  transform: translate(-50%, -50%) rotate(90deg);
-}
+    .sun .line2 {
+        width: 17px;
+        transform: translate(-50%, -50%) rotate(90deg);
+    }
 
-.sun .line3 {
-  width: 17px;
-  transform: translate(-50%, -50%) rotate(135deg);
-}
+    .sun .line3 {
+        width: 17px;
+        transform: translate(-50%, -50%) rotate(135deg);
+    }
 
-.sun .line4 {
-  width: 17px;
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-/*after being clicked, turns to a moon*/
-.sun::after {
-  content: "";
-  width: 9px;
-  height: 9px;
-  background: #f6f5f2;
-  border-radius: 50%;
-  position: absolute;
-  bottom: 9px;
-  left: 9px;
-  transition: 0.5s;
-}
-/*moon is formed by moving another circle over it*/
-.sun.night::after {
-  bottom: 3px;
-  left: 3px;
-}
-/*gets rid of light beams*/
-.sun.night div {
-  width: 0;
-}
+    .sun .line4 {
+        width: 17px;
+        transform: translate(-50%, -50%) rotate(45deg);
+    }
+    /*after being clicked, turns to a moon*/
+    .sun::after {
+        content: '';
+        width: 9px;
+        height: 9px;
+        background: #F6F5F2;
+        border-radius: 50%;
+        position: absolute;
+        bottom: 9px;
+        left: 9px;
+        transition: 0.5s;
+    }
+    /*moon is formed by moving another circle over it*/
+    .sun.night::after {
+        bottom: 3px;
+        left: 3px;
+    }
+    /*gets rid of light beams*/
+    .sun.night div {
+        width: 0;
+    }
+
 
 footer.dark-mode {
-  background-color: #191919;
-  color: #fab162;
-  border-color: #fab162;
+    background-color: #191919;
+    color: #FAB162;
+    border-color: #FAB162;
 }
 
 .button-box {
-  /*Dimensions*/
-  width: 20px;
-  height: 20px;
-  background: #f6f5f2;
-  border-style: solid;
-  border-color: #000;
-  border-radius: 6px;
-  /*positioning*/
-  float: right;
-  /*misc*/
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+    /*Dimensions*/
+    width: 20px;
+    height: 20px;
+    background: #F6F5F2;
+    border-style: solid;
+    border-color: #000;
+    border-radius: 6px;
+    /*positioning*/
+    float: right;
+    /*misc*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
 }
 /** Tarteels CSS attributes */
 .navbar {
-  margin: auto;
-  overflow: hidden;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background-color: #000080;
+    margin: auto;
+    overflow: hidden;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #000080;
 }
 
-.navbar a {
-  float: none;
-  font-size: 16px;
-  color: white;
-  text-decoration: none;
-}
+    .navbar a {
+        float: none;
+        font-size: 16px;
+        color: white;
+        text-decoration: none;
+    }
 
 .dropdown {
-  float: left;
-  overflow: hidden;
+    float: left;
+    overflow: hidden;
 }
 
-.dropdown .dropbtn {
-  font-size: 16px;
-  border: none;
-  outline: none;
-  color: white;
-  padding: 14px 16px;
-  background-color: inherit;
-  font-family: inherit;
-  margin: 0;
-}
+    .dropdown .dropbtn {
+        font-size: 16px;
+        border: none;
+        outline: none;
+        color: white;
+        padding: 14px 16px;
+        background-color: inherit;
+        font-family: inherit;
+        margin: 0;
+    }
 
-.navbar a:hover,
-.dropdown:hover .dropbtn {
-  background-color: #1ba098;
-}
+    .navbar a:hover, .dropdown:hover .dropbtn {
+        background-color: #1ba098;
+    }
 
 .dropdown-menu a {
-  padding-bottom: 0px;
-  padding-right: 0px;
-  padding-left: 0px;
-  padding-top: 0px;
+    padding-bottom: 0px;
+    padding-right: 0px;
+    padding-left: 0px;
+    padding-top: 0px;
 }
 
 .dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  z-index: 1;
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
 }
 
-.dropdown-content a {
-  float: none;
-  color: #000080;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  text-align: left;
-}
+    .dropdown-content a {
+        float: none;
+        color: #000080;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        text-align: left;
+    }
 
-.dropdown-content a:hover {
-  background-color: #ddd;
-}
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
 
 .dropdown:hover .dropdown-content {
-  display: block;
+    display: block;
 }
+
+    /**
+        The slider needs an area for the title, the top and bottom date
+        Then the current date needs to be added, the value the slider is on
+        Then add top and bottom notches.
+    */
+    #sidebar {
+      background-color: #425664;
+      grid-area: sidebar;
+      width: 100%;
+      height: 100%;
+      border: 2px solid black;
+  }
+  
+      #sidebar.dark-mode {
+          background-color: #191919;
+          color: #FAB162;
+          border-color: #FAB162;
+      }
+       
+  #slidecontainer {
+      width: 100%; /*Width and height of the slider boundaries*/
+      height: 90%;
+      position: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto;
+  }
+  #slidertitle{
+      font-size:24px;
+      height: 4%;
+      margin-bottom:2px;
+  }
+  #slidertop {
+      height: 3%;
+  }
+   /*The slider in question*/
+  #yearslider {
+      width: 100%;
+      height: 100%;
+     
+  }
+   /*# for id . for class*/
+  #yearslider {
+      -webkit-appearance: none; /*Overwrites default CSS design*/
+      appearance: none;
+      width: 70vh; /*This is height because of the transformation*/
+      height: 10px; /*This is width because of the transformation*/
+      margin: 0 auto;
+      background: #F6F4F2;
+      /*outline: 2px solid red;*/
+      opacity: 0.7; /* Set transparency to change when hovering over, *interactive**/
+      -webkit-transition: .2;
+      transition: opacity .2s;
+      transform: rotate(-90deg); /*Have the slide vertically, this can be swapped to 270 if it's upside down.*/
+      position: absolute;
+      border-radius: 3px;
+  }
+  
+      #yearslider.dark-mode {
+          background-color: #F6F4F2;
+      }
+  
+  #sliderlabel {
+      position: relative;
+  
+      left: 30%;
+      top: 0;
+  }
+  
+  #yearslider:hover{
+      opacity: 1;
+  }
+  
+  /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+  #yearslider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 5px;
+      height: 20px; /*FIX THIS________________________-------------------------*/
+      cursor: pointer;
+      border-radius: 4px;
+      background-color: white;
+  }
+      #yearslider::-webkit-slider-thumb.dark-mode {
+          border-color: white;
+          background: #FAB162;
+          background-color: red;
+      }
+  
+  #yearslider::-moz-range-thumb {
+      width: 15px;
+      height: 10px;
+      cursor: pointer;
+  }
+  #sliderbottom {
+      height: 2%;
+  }

@@ -32,7 +32,21 @@
             </div>
         </main>
 
-        <div id="sidebar" class="dark-mode">Sidebar</div>
+        <div id="sidebar" class="dark-mode">
+            <div id="slidertitle" class="dark-mode">
+                Year Slider
+            </div>
+            <div id="slidertop" class="dark-mode">
+                2023
+            </div>
+            <form id="slidecontainer" class="dark-mode">
+                <div id="sliderlabel"> 1981</div>
+                <input id="yearslider" type="range" min="1910" max="2023" value="1982" step="1" class="dark-mode">
+            </form>
+            <div id="sliderbottom" class="dark-mode">
+                1910
+            </div>
+        </div>
         <div id="content1" class="dark-mode">
             <canvas id = "graph-1"></canvas>
         </div>
@@ -112,18 +126,18 @@
 
         </footer>
     </div>
-                <!--Move to JS-->
-            <script>
-                let sun = document.getElementById("sun");
-                let elements = document.querySelectorAll(".dark-mode");
+    <script>
+        let sun = document.getElementById("sun");
+        let elements = document.querySelectorAll(".dark-mode");
 
-                sun.onclick = function () {
-                    sun.classList.toggle("night");
-                    document.body.classList.toggle("dark-mode");
-                    elements.forEach(element => element.classList.toggle("dark-mode"));
-                    /*This JS code uses the QuerySelectorAll to iterate through darkmode and light mode using a foreach method.*/
-                }
-            </script>
+        sun.onclick = function () {
+            sun.classList.toggle("night");
+            document.body.classList.toggle("dark-mode");
+            elements.forEach(element => element.classList.toggle("dark-mode"));
+            /*This JS code uses the QuerySelectorAll to iterate through darkmode and light mode using a foreach method.*/
+        }
+
+    </script>
 </body>
 
 </html>

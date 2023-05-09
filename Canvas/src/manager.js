@@ -1,6 +1,6 @@
 import { YEARRANGE } from './api.js';
 import { COLOURSLIGHT, ViewTypes } from './config.js';
-import { maximumValues } from './tempData.js';
+import { maximumValues, yearAverages1910 } from './tempData.js';
 /**
  * Data Abstraction layer for the canvas.
  * Maintains records of data requests made to the server.
@@ -19,6 +19,18 @@ export class Manager {
         // Initialize Cache map.
         this.dataYearAveragesCache = new Map();
         this.dataSelectedYear = 1943;
+        this.dataMaximumValues = maximumValues;
+        this.dataYearAveragesCache.set(1910, yearAverages1910);
+        this.dataYearAveragesCache.set(1911, yearAverages1910);
+        this.dataYearAveragesCache.set(1912, yearAverages1910);
+        this.dataYearAveragesCache.set(1913, yearAverages1910);
+        this.dataYearAveragesCache.set(1914, yearAverages1910);
+        this.dataYearAveragesCache.set(1915, yearAverages1910);
+        this.dataYearAveragesCache.set(1916, yearAverages1910);
+        this.dataYearAveragesCache.set(1917, yearAverages1910);
+        this.dataYearAveragesCache.set(1918, yearAverages1910);
+        this.dataYearAveragesCache.set(1919, yearAverages1910);
+        this.dataYearAveragesCache.set(1920, yearAverages1910);
     }
     /**
      * Makes a request for the maximum data values of the dataset.
@@ -37,7 +49,6 @@ export class Manager {
         }
         catch (error) {
             console.log(error);
-            this.dataMaximumValues = maximumValues;
             return false;
         }
     }
@@ -96,6 +107,7 @@ export class Manager {
     handleYearSelection(_year) {
         try {
             // If the selected year is the same as previously, do nothing.
+            let dataset = [];
             if (this.dataSelectedYear == _year)
                 return;
             // Account for data 5 years either side of the selected year.
@@ -105,9 +117,18 @@ export class Manager {
                 if (_year < YEARRANGE.low || _year > YEARRANGE.high || this.dataYearAveragesCache.has(_year))
                     continue;
                 // API Request function.
-                let data = this.getYearAverage(_year);
+                // let data = this.getYearAverage(_year)
+                let data = yearAverages1910;
                 // Add Data to Storage.
                 this.dataYearAveragesCache.set(_year, data);
+            }
+            for (let it = _year - 5; it < _year + 5; it++) {
+                let dataInstance = this.dataYearAveragesCache.get(it);
+                console.log(this.dataYearAveragesCache);
+                dataset.push([dataInstance.en.rainfall, dataInstance.en.sunshine, dataInstance.en.lowTemp, dataInstance.en.highTemp]);
+                dataset.push([dataInstance.ni.rainfall, dataInstance.ni.sunshine, dataInstance.ni.lowTemp, dataInstance.ni.highTemp]);
+                dataset.push([dataInstance.wa.rainfall, dataInstance.wa.sunshine, dataInstance.wa.lowTemp, dataInstance.wa.highTemp]);
+                dataset.push([dataInstance.sc.rainfall, dataInstance.sc.sunshine, dataInstance.sc.lowTemp, dataInstance.sc.highTemp]);
             }
             // Set selected year value for previous check.
             this.dataSelectedYear = _year;
@@ -136,6 +157,13 @@ export class Manager {
             // Data is pulled from the storage map, and a colour scheme is passed.
             // Intensity is calculated in the render function.
             this.controller.renderYearAverages(this.dataYearAveragesCache.get(this.dataSelectedYear), low, high, COLOURSLIGHT);
+            let graphYear = this.dataSelectedYear;
+            if (graphYear - 1910 < 5)
+                graphYear = 1915;
+            if (2022 - graphYear < 5)
+                graphYear = 2015;
+            this.controller.setGraphYearAverages(dataset);
+            // console.log("Swag", graphYear)
         }
         catch (error) {
             console.error(error);
@@ -143,8 +171,8 @@ export class Manager {
         }
     }
     activeChangeCallback(_active) {
-        if (!this.dataSelectedYear)
-            this.dataSelectedYear = 1943;
+        // Javascript moment not allowing me to access a variable I very much assigned.
+        // if(!this.dataSelectedYear) this.dataSelectedYear = 1943
         console.log(_active, this.dataSelectedYear);
     }
 }

@@ -2,6 +2,8 @@ import { Country, ContourObject, HoverAnimation, ColourScheme, RGB } from './typ
 import { createLabel, COLOURSLIGHT, ViewTypes, createSelectItems, GRAPHIDS } from './config.js'
 import { DataYearAverages, DataYearAveragesInstance } from './api.js';
 import { drawGraph } from './graph.js';
+
+import { yearAverages1910 } from './tempData.js';
 /**
  * Interface / View-Controller Abstraction layer for the canvas.
  * Controls canvas through access to abstraction objects.
@@ -279,17 +281,137 @@ export class Controller {
      * @param _colourScheme Colour Scheme to render the intensity to.
      */
     renderYearAverages(_yearAverages: DataYearAveragesInstance, _dataMinValue: number, _dataMaxValue: number, _colourScheme: ColourScheme) {
-        let range = _dataMaxValue - _dataMinValue;
-        let colourGradient: RGB = {
-            r: ((_colourScheme.gradientDark.r - _colourScheme.gradientLight.r) / (range)),
-            g: ((_colourScheme.gradientDark.g - _colourScheme.gradientLight.g) / (range)),
-            b: ((_colourScheme.gradientDark.b - _colourScheme.gradientLight.b) / (range))
+        try {
+
+            _yearAverages = yearAverages1910
+            
+            // WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh            
+            
+            
+            
+            let range = _dataMaxValue - _dataMinValue;
+            let colourGradient: RGB = {
+                r: ((_colourScheme.gradientDark.r - _colourScheme.gradientLight.r) / (range)),
+                g: ((_colourScheme.gradientDark.g - _colourScheme.gradientLight.g) / (range)),
+                b: ((_colourScheme.gradientDark.b - _colourScheme.gradientLight.b) / (range))
+            }
+            let data: any = {}
+            switch(this.viewActive) {
+                case ViewTypes.rainfall:
+                    data.en = _yearAverages.en.rainfall
+                    data.sc = _yearAverages.sc.rainfall
+                    data.wa = _yearAverages.wa.rainfall
+                    data.ni = _yearAverages.ni.rainfall
+                    break;
+                case ViewTypes.sunshine:
+                    data.en = _yearAverages.en.sunshine
+                    data.sc = _yearAverages.sc.sunshine
+                    data.ni = _yearAverages.ni.sunshine
+                    data.wa = _yearAverages.wa.sunshine
+                    break;
+                case ViewTypes.lowTemp:
+                    data.en = _yearAverages.en.lowTemp
+                    data.sc = _yearAverages.sc.lowTemp
+                    data.wa = _yearAverages.wa.lowTemp
+                    data.ni = _yearAverages.ni.lowTemp
+                    break;
+                case ViewTypes.highTemp:
+                    data.en = _yearAverages.en.highTemp
+                    data.sc = _yearAverages.sc.highTemp
+                    data.wa = _yearAverages.wa.highTemp
+                    data.ni = _yearAverages.ni.highTemp
+                    break;    
+
+         }
+
+               // console.log(this.countryList)
+        if (this.countryList.has('en')) {
+            let groundedVal = data.en - _dataMinValue;
+            let colour = {
+                r: ((_colourScheme.gradientDark.r - (colourGradient.r * groundedVal))),
+                g: ((_colourScheme.gradientDark.g - (colourGradient.g * groundedVal))),
+                b: ((_colourScheme.gradientDark.b - (colourGradient.b * groundedVal)))
+            }
+            this.countryList.get('en').fill = colour
+            this.countryList.get('en').rootFill = colour
         }
+        if (this.countryList.has('ni')) {
+            let groundedVal = data.ni - _dataMinValue;
+            let colour = {
+                r: ((_colourScheme.gradientDark.r - (colourGradient.r * groundedVal))),
+                g: ((_colourScheme.gradientDark.g - (colourGradient.g * groundedVal))),
+                b: ((_colourScheme.gradientDark.b - (colourGradient.b * groundedVal)))
+            }
+            this.countryList.get('ni').fill = colour
+            this.countryList.get('ni').rootFill = colour
+        }
+        if (this.countryList.has('sc')) {
+            let groundedVal = data.sc - _dataMinValue;
+            let colour = {
+                r: ((_colourScheme.gradientDark.r - (colourGradient.r * groundedVal))),
+                g: ((_colourScheme.gradientDark.g - (colourGradient.g * groundedVal))),
+                b: ((_colourScheme.gradientDark.b - (colourGradient.b * groundedVal)))
+            }
+            this.countryList.get('sc').fill = colour
+            this.countryList.get('sc').rootFill = colour
+        }
+        if (this.countryList.has('wa')) {
+            let groundedVal = data.wa - _dataMinValue;
+            let colour = {
+                r: ((_colourScheme.gradientDark.r - (colourGradient.r * groundedVal))),
+                g: ((_colourScheme.gradientDark.g - (colourGradient.g * groundedVal))),
+                b: ((_colourScheme.gradientDark.b - (colourGradient.b * groundedVal)))
+            }
+            this.countryList.get('wa').fill = colour
+            this.countryList.get('wa').rootFill = colour
+        }
+
+        this.setLabelValues(_yearAverages)
         
+        } catch (error) {
+            console.error(error)
+
+        }
+  
     }
 
-    setGraphYearAverage() {
+    setLabelValues(_yearAverages: DataYearAveragesInstance) {
+        if (this.labelList.has('en')) {
+            let content = this.labelList.get('en').content;
+            content.find('#canvas-label-text-rainfall').text(_yearAverages.en.rainfall + "mm/yr")
+            content.find('#canvas-label-text-sunshine').text(_yearAverages.en.sunshine)
+            content.find('#canvas-label-text-lowTemp').text(_yearAverages.en.lowTemp + "°")
+            content.find('#canvas-label-text-highTemp').text(_yearAverages.en.highTemp + "°")
+        }
 
+        if (this.labelList.has('sc')) {
+            let content = this.labelList.get('sc').content;
+            content.find('#canvas-label-text-rainfall').text(_yearAverages.sc.rainfall + "mm/yr")
+            content.find('#canvas-label-text-sunshine').text(_yearAverages.sc.sunshine)
+            content.find('#canvas-label-text-lowTemp').text(_yearAverages.sc.lowTemp + "°")
+            content.find('#canvas-label-text-highTemp').text(_yearAverages.sc.highTemp + "°")
+        }
+
+        if (this.labelList.has('wa')) {
+            let content = this.labelList.get('wa').content;
+            content.find('#canvas-label-text-rainfall').text(_yearAverages.wa.rainfall + "mm/yr")
+            content.find('#canvas-label-text-sunshine').text(_yearAverages.wa.sunshine)
+            content.find('#canvas-label-text-lowTemp').text(_yearAverages.wa.lowTemp + "°")
+            content.find('#canvas-label-text-highTemp').text(_yearAverages.wa.highTemp + "°")
+        }
+
+        if (this.labelList.has('ni')) {
+            let content = this.labelList.get('ni').content;
+            content.find('#canvas-label-text-rainfall').text(_yearAverages.ni.rainfall + "mm/yr")
+            content.find('#canvas-label-text-sunshine').text(_yearAverages.ni.sunshine)
+            content.find('#canvas-label-text-lowTemp').text(_yearAverages.ni.lowTemp + "°")
+            content.find('#canvas-label-text-highTemp').text(_yearAverages.ni.highTemp + "°")
+        }
+
+    }
+
+    setGraphYearAverages(_dataRange: number[][]) {
+        console.log(_dataRange)
 
     }
 

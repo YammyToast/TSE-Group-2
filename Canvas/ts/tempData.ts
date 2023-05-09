@@ -11,13 +11,15 @@ export const maximumValues: DataMaximumValues = {
     max_highTemp: 24
 };
 
-export const yearAverages: DataYearAveragesInstance = {
+export const yearAverages1910: DataYearAveragesInstance = {
   en: { highTemp: 12.0, lowTemp: 5.0, rainfall: 12.0, sunshine: 114.0 },
   ni: { highTemp: 11.0, lowTemp: 4.0, rainfall: 17.0, sunshine: 109.0 },
   sc: { highTemp: 10.0, lowTemp: 3.0, rainfall: 16.0, sunshine: 100.0 },
   wa: { highTemp: 11.0, lowTemp: 5.0, rainfall: 16.0, sunshine: 112.0 },
   year: 1910
 };
+
+
 
 export const fullYearValues: DataYearMonthValues = {
   country: Country.en,
