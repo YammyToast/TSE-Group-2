@@ -146,10 +146,12 @@ body {
     height: 20px; /*FIX THIS________________________-------------------------*/
     cursor: pointer;
     border-radius: 4px;
+    background-color: white;
 }
     #yearslider::-webkit-slider-thumb.dark-mode {
         border-color: white;
         background: #FAB162;
+        background-color: red;
     }
 
 #yearslider::-moz-range-thumb {
