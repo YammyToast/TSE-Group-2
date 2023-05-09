@@ -1,5 +1,6 @@
 import { YEARRANGE } from './api.js';
 import { COLOURSLIGHT, ViewTypes } from './config.js';
+import { maximumValues } from './tempData.js';
 /**
  * Data Abstraction layer for the canvas.
  * Maintains records of data requests made to the server.
@@ -17,6 +18,7 @@ export class Manager {
         this.controller.managerChangeCallback = this.activeChangeCallback;
         // Initialize Cache map.
         this.dataYearAveragesCache = new Map();
+        this.dataSelectedYear = 1943;
     }
     /**
      * Makes a request for the maximum data values of the dataset.
@@ -35,6 +37,7 @@ export class Manager {
         }
         catch (error) {
             console.log(error);
+            this.dataMaximumValues = maximumValues;
             return false;
         }
     }
@@ -48,7 +51,30 @@ export class Manager {
     getYearAverage(_year) {
         try {
             // Make AJAX Request to yearAverages route, passing in the year as a parameter.
-            $.get(`api/yearAverages/${_year}`, (data) => {
+            $.get(`https://harrysmith.dev/api/data_year_averages?year=${_year}`, (data) => {
+                // Data validation to check success of request.
+                if (!data || Object.keys(data).length == 0)
+                    return false;
+                // do a bit of parsing.
+                return {};
+            });
+        }
+        catch (error) {
+            console.log(error);
+            return null;
+        }
+    }
+    /**
+     * Requests all the averages, of all the datatypes,
+     * for a single year.
+     * @param _year Year of the data to request.
+     * @returns yearAverageInstance, containing parsed data for the year,
+     * or null if the request failed.
+     */
+    getFullYearValues(_year, _country) {
+        try {
+            // Make AJAX Request to yearAverages route, passing in the year as a parameter.
+            $.get(`https://harrysmith.dev/api/data_full_year_values?year=${_year}&country=${_country}`, (data) => {
                 // Data validation to check success of request.
                 if (!data || Object.keys(data).length == 0)
                     return false;
@@ -117,7 +143,9 @@ export class Manager {
         }
     }
     activeChangeCallback(_active) {
-        console.log(_active);
+        if (!this.dataSelectedYear)
+            this.dataSelectedYear = 1943;
+        console.log(_active, this.dataSelectedYear);
     }
 }
 //# sourceMappingURL=manager.js.map

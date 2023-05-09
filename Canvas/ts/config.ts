@@ -49,6 +49,13 @@ export const COLOURSLIGHT: ColourScheme = {
     labelText: "#FCFCFC"
 }
 
+export const GRAPHIDS = {
+    graph1: 'graph-1',
+    graph2: 'graph-2',
+    graph3: 'graph-3',
+    graph4: 'graph-4'
+}
+
 function getSVG(_key: string, _colorScheme: ColourScheme): string {
     switch (_key) {
         case "rainfall":

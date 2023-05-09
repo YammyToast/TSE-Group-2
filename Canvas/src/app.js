@@ -10,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { setupCanvas } from './sketch.js';
 import { COLOURSLIGHT, DEFAULTLABELS } from './config.js';
 import { Manager } from './manager.js';
-import { drawGraph } from './graph.js';
 /**
  * Factory for the creation of the object hierarchy.
  * Initializes the Manager and Controller objects.
@@ -48,6 +47,4 @@ let app = Promise.all([setupApp()])
     .catch((error) => {
     console.log(error);
 });
-var cnv = document.getElementById("graph-1");
-drawGraph(cnv);
 //# sourceMappingURL=app.js.map

@@ -39,6 +39,12 @@ export const COLOURSLIGHT = {
     labelBackground: "#242124",
     labelText: "#FCFCFC"
 };
+export const GRAPHIDS = {
+    graph1: 'graph-1',
+    graph2: 'graph-2',
+    graph3: 'graph-3',
+    graph4: 'graph-4'
+};
 function getSVG(_key, _colorScheme) {
     switch (_key) {
         case "rainfall":

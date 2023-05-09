@@ -1,6 +1,7 @@
 import { Country, ContourObject, HoverAnimation, ColourScheme, RGB } from './types.js'
-import { createLabel, COLOURSLIGHT, ViewTypes, createSelectItems } from './config.js'
+import { createLabel, COLOURSLIGHT, ViewTypes, createSelectItems, GRAPHIDS } from './config.js'
 import { DataYearAverages, DataYearAveragesInstance } from './api.js';
+import { drawGraph } from './graph.js';
 /**
  * Interface / View-Controller Abstraction layer for the canvas.
  * Controls canvas through access to abstraction objects.
@@ -17,6 +18,9 @@ export class Controller {
     labelList: Map<string, Label>
     // Identifier of the last selected country.
     lastActive: string;
+
+    // Map of graph element IDs against HTMLCanvasElements.
+    graphList: Map<string, HTMLCanvasElement>
 
     // Root Y offset of the canvas renderer.
     canvasHeightTranslation: number;
@@ -284,6 +288,11 @@ export class Controller {
         
     }
 
+    setGraphYearAverage() {
+
+
+    }
+
     constructor(_objects: { ctryList: Map<string, Country>, staticObjList: Map<string, ContourObject> },
         _labelContainer: JQuery<HTMLElement>,
         _scaleFactorX: number,
@@ -300,6 +309,14 @@ export class Controller {
         
 
         this.updateCanvasAttributes(_scaleFactorX, _scaleFactorY, _widthTranslation, _heightTranslation);
+
+        this.graphList = new Map();
+        Object.entries(GRAPHIDS).forEach(([key, value]) => {
+            this.graphList.set(value, document.getElementById(value) as HTMLCanvasElement)
+        });
+        for (let [key, value] of this.graphList.entries()) {
+            drawGraph(value)
+        }
 
         this.viewActive = ViewTypes.highTemp
     }

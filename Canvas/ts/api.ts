@@ -40,7 +40,8 @@ export interface DataYearAveragesInstance {
     en: DataYearAverages,
     sc: DataYearAverages,
     wa: DataYearAverages,
-    ni: DataYearAverages
+    ni: DataYearAverages,
+    year: number
 }
 
 /**

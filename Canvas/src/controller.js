@@ -1,5 +1,6 @@
 import { HoverAnimation } from './types.js';
-import { createLabel, COLOURSLIGHT, ViewTypes, createSelectItems } from './config.js';
+import { createLabel, COLOURSLIGHT, ViewTypes, createSelectItems, GRAPHIDS } from './config.js';
+import { drawGraph } from './graph.js';
 /**
  * Interface / View-Controller Abstraction layer for the canvas.
  * Controls canvas through access to abstraction objects.
@@ -261,6 +262,8 @@ export class Controller {
             b: ((_colourScheme.gradientDark.b - _colourScheme.gradientLight.b) / (range))
         };
     }
+    setGraphYearAverage() {
+    }
     constructor(_objects, _labelContainer, _scaleFactorX, _scaleFactorY, _widthTranslation, _heightTranslation) {
         this.countryList = _objects.ctryList;
         this.staticObjectList = _objects.staticObjList;
@@ -268,6 +271,13 @@ export class Controller {
         this.labelList = new Map();
         this.lastActive = undefined;
         this.updateCanvasAttributes(_scaleFactorX, _scaleFactorY, _widthTranslation, _heightTranslation);
+        this.graphList = new Map();
+        Object.entries(GRAPHIDS).forEach(([key, value]) => {
+            this.graphList.set(value, document.getElementById(value));
+        });
+        for (let [key, value] of this.graphList.entries()) {
+            drawGraph(value);
+        }
         this.viewActive = ViewTypes.highTemp;
     }
 }

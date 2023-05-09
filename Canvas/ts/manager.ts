@@ -1,6 +1,9 @@
 import { Controller } from './controller.js'
-import { YEARRANGE, DataYearAverages, DataYearAveragesInstance, DataMaximumValues } from './api.js'
+import { YEARRANGE, DataYearAverages, DataYearAveragesInstance, DataMaximumValues, DataYearMonthValues, DataMonthValues, Country } from './api.js'
 import { COLOURSLIGHT, ViewTypes } from './config.js';
+
+import { maximumValues, yearAverages, fullYearValues} from './tempData.js';
+
 
 /**
  * Data Abstraction layer for the canvas.
@@ -20,6 +23,9 @@ export class Manager {
     // Each Instance holds 4 DataYearAverages, 
     // each of which holds the 4 datatypes for each country.
     dataYearAveragesCache: Map<number, DataYearAveragesInstance>
+    // Storage of requests made for full year-month values.
+
+    dataFullYearValuesCache: Map<[number, Country], DataYearMonthValues>
     /**
      * Constructor for a Manager. Requires dependency injection of a Pre-loaded Controller / Canvas.
      * @param _controller Pre-initalized Controller instance.
@@ -30,6 +36,7 @@ export class Manager {
         this.controller.managerChangeCallback = this.activeChangeCallback;
         // Initialize Cache map.
         this.dataYearAveragesCache = new Map();
+        this.dataSelectedYear = 1943;
     }
     /**  
      * Makes a request for the maximum data values of the dataset.
@@ -47,6 +54,7 @@ export class Manager {
 
         } catch(error) {
             console.log(error);
+            this.dataMaximumValues = maximumValues;
             return false;
         }
     }
@@ -60,7 +68,30 @@ export class Manager {
     getYearAverage(_year: number): DataYearAveragesInstance | null {
         try {
             // Make AJAX Request to yearAverages route, passing in the year as a parameter.
-            $.get(`api/yearAverages/${_year}`, (data) => {
+            $.get(`https://harrysmith.dev/api/data_year_averages?year=${_year}`, (data) => {
+                // Data validation to check success of request.
+                if(!data || Object.keys(data).length == 0) return false;
+                // do a bit of parsing.
+                return {
+
+                } as DataYearAverages
+            })
+        } catch(error) {
+            console.log(error);
+            return null
+        }
+    }
+    /**
+     * Requests all the averages, of all the datatypes,
+     * for a single year.
+     * @param _year Year of the data to request.
+     * @returns yearAverageInstance, containing parsed data for the year,
+     * or null if the request failed.
+     */
+    getFullYearValues(_year: number, _country: string): DataYearAveragesInstance | null {
+        try {
+            // Make AJAX Request to yearAverages route, passing in the year as a parameter.
+            $.get(`https://harrysmith.dev/api/data_full_year_values?year=${_year}&country=${_country}`, (data) => {
                 // Data validation to check success of request.
                 if(!data || Object.keys(data).length == 0) return false;
                 // do a bit of parsing.
@@ -128,7 +159,8 @@ export class Manager {
     }
 
     activeChangeCallback(_active: string) {
-        console.log(_active)
+        if(!this.dataSelectedYear) this.dataSelectedYear = 1943
+        console.log(_active, this.dataSelectedYear)
     }
 }
 

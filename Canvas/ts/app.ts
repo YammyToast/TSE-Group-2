@@ -42,6 +42,3 @@ let app = Promise.all([setupApp()])
 })
 
 
-var cnv = document.getElementById("graph-1") as HTMLCanvasElement
-
-drawGraph(cnv)
