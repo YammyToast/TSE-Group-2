@@ -7,21 +7,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { setupCanvas } from './sketch.js';
-import { COLOURSLIGHT, DEFAULTLABELS } from './config.js';
-import { Manager } from './manager.js';
+import { setupCanvas } from "./sketch.js";
+import { COLOURSLIGHT, DEFAULTLABELS } from "./config.js";
+import { Manager } from "./manager.js";
 /**
  * Factory for the creation of the object hierarchy.
  * Initializes the Manager and Controller objects.
  * Requires a successful request to the data server succeed.
  * @returns Promise of an instance of a Manager.
-*/
+ */
 function setupApp() {
     return __awaiter(this, void 0, void 0, function* () {
         // Find the labelContainer object within the HTML DOM.
         // This requires the document to have rendered first.
-        let labelContainer = $('#canvas-label-wrapper');
-        // Initialize a controller. The setupCanvas function calls for a 
+        let labelContainer = $("#canvas-label-wrapper");
+        // Initialize a controller. The setupCanvas function calls for a
         // basic setup render to be successful.
         let controller = yield setupCanvas(COLOURSLIGHT, labelContainer);
         // we do a little dependency injection.
@@ -42,9 +42,25 @@ let app = Promise.all([setupApp()])
     manager.controller.positionLabels();
     manager.controller.renderLabels();
     manager.controller.renderSelectBarLabels();
-    manager.handleYearSelection(2010);
+    manager.handleYearSelection(1981);
+    return manager;
 })
     .catch((error) => {
     console.log(error);
+}).then((_manager) => {
+    if (!_manager)
+        throw 0;
+    //JS to take the slider value, set the center point and tie the year value to the slider.
+    document.getElementById("yearslider").oninput = function (e) {
+        let value = document.getElementById("yearslider").value;
+        // at 0%, top -41%
+        let groundedValue = value - 1941;
+        let percentOffset = groundedValue / (2023 - 1941);
+        let offsetValue = 50 + -(100 * percentOffset);
+        //console.log(offsetValue)
+        document.getElementById("sliderlabel").style.top = `${offsetValue}%`;
+        document.getElementById("sliderlabel").textContent = value;
+        _manager.handleYearSelection(value);
+    };
 });
 //# sourceMappingURL=app.js.map

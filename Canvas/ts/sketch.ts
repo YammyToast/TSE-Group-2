@@ -141,6 +141,7 @@ export async function setupCanvas(_colorScheme: ColourScheme, _labelContainer: J
             var cnv = P5.createCanvas($('#canvas-parent').innerWidth(), $('#canvas-parent').innerHeight())
             // Set canvas to render inside of parent container.
             cnv.parent('#canvas-parent')
+            $('.p5Canvas').addClass('canvas-element')
             // Initalize country object list.
             ctryList = new Map();
             // Iterate over the map of preloaded country points.
@@ -175,7 +176,9 @@ export async function setupCanvas(_colorScheme: ColourScheme, _labelContainer: J
          * Called whenever the document is reloaded.
          */
         P5.windowResized = () => {
-            P5.resizeCanvas(((document.body.clientWidth / 6) * 2.90), ((document.body.clientHeight / 5) * 3.90))
+            // Remove as this seems to mess up the size of the canvas element itself.
+            // Keep the rest as the items within the canvas need to be scaled.
+            // P5.resizeCanvas(((document.body.clientWidth / 6) * 2.90), ((document.body.clientHeight / 5) * 3.90))
             setScaleFactor();
 
             scaleObjects();
@@ -302,6 +305,9 @@ export async function setupCanvas(_colorScheme: ColourScheme, _labelContainer: J
                 }
 
             })
+            if (seenActive == false) {
+                controller.activeChangeCallback("none")
+            }
         }
     }
     // Helper setup function.

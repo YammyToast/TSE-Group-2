@@ -25,7 +25,7 @@ export const DEFAULTOFFSETS = {
     ir: [-212, -44]
 };
 export const DEFAULTLABELS = {
-    enLabel: { owner: 'en', title: 'England', offset: [135, -20] },
+    enLabel: { owner: 'en', title: 'England', offset: [75, -150] },
     scLabel: { owner: 'sc', title: 'Scotland', offset: [10, -300] },
     waLabel: { owner: 'wa', title: 'Wales', offset: [-200, -50] },
     niLabel: { owner: 'ni', title: 'Nth. Ire.', offset: [-325, -200] },
@@ -38,6 +38,12 @@ export const COLOURSLIGHT = {
     gradientNull: { r: 71, g: 110, b: 173 },
     labelBackground: "#242124",
     labelText: "#FCFCFC"
+};
+export const GRAPHIDS = {
+    graph1: 'content1',
+    graph2: 'content2',
+    graph3: 'content3',
+    graph4: 'content4'
 };
 function getSVG(_key, _colorScheme) {
     switch (_key) {

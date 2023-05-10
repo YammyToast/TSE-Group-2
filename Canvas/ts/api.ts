@@ -40,7 +40,8 @@ export interface DataYearAveragesInstance {
     en: DataYearAverages,
     sc: DataYearAverages,
     wa: DataYearAverages,
-    ni: DataYearAverages
+    ni: DataYearAverages,
+    year: number
 }
 
 /**
@@ -60,10 +61,10 @@ export interface DataYearAverages {
  * @brief Enumeration of all possible country identifiers.
  */
 export enum Country {
-    en,
-    sc,
-    wa,
-    ni
+    en = 0,
+    sc = 1,
+    wa = 2,
+    ni = 3
 }
 
 /**
