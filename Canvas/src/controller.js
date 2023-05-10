@@ -1,7 +1,6 @@
-import { HoverAnimation } from './types.js';
-import { createLabel, COLOURSLIGHT, ViewTypes, createSelectItems, GRAPHIDS } from './config.js';
-import { drawGraph } from './graph.js';
-import { yearAverages1910 } from './tempData.js';
+import { HoverAnimation, } from "./types.js";
+import { createLabel, COLOURSLIGHT, ViewTypes, createSelectItems, GRAPHIDS, } from "./config.js";
+import { drawYearAverageGraph } from "./graph.js";
 /**
  * Interface / View-Controller Abstraction layer for the canvas.
  * Controls canvas through access to abstraction objects.
@@ -15,7 +14,7 @@ export class Controller {
      * @returns Void
      */
     activeChangeCallback(_active) {
-        // If the new active country is the same as the last, do nothing. 
+        // If the new active country is the same as the last, do nothing.
         if (_active == this.lastActive)
             return;
         // Set the last selected country to the newly selected.
@@ -33,51 +32,51 @@ export class Controller {
         // Maximum shade to exert for the hover animation.
         let shade = 12;
         /*
-        If the country has been detected as being hovered by the renderer,
-        and is also not currently active, add hovering shade.
-         */
+            If the country has been detected as being hovered by the renderer,
+            and is also not currently active, add hovering shade.
+             */
         if (_ctry.hover == true && _ctry.active == false) {
             // If the animation map contains the reverse animation,
             // remove it.
-            if (_ctry.animationMap.has('hoverReverse')) {
-                _ctry.animationMap.delete('hoverReverse');
+            if (_ctry.animationMap.has("hoverReverse")) {
+                _ctry.animationMap.delete("hoverReverse");
             }
             // If the country doesn't already have a hover animation in its map.
-            if (!_ctry.animationMap.has('hover')) {
+            if (!_ctry.animationMap.has("hover")) {
                 // Set the start fill for the animation to revert when the animation finishes.
                 let startFill = {
                     r: _ctry.rootFill.r - shade,
                     g: _ctry.rootFill.g - shade,
-                    b: _ctry.rootFill.b - shade
+                    b: _ctry.rootFill.b - shade,
                 };
                 // Create a new animation, referencing the hovered country, that lasts
                 // for 255ms.
-                let animation = new HoverAnimation(_ctry, 'hover', 255, startFill, shade);
+                let animation = new HoverAnimation(_ctry, "hover", 255, startFill, shade);
                 // Add the animation to the animationMap of the hovered country.
-                _ctry.animationMap.set('hover', animation);
+                _ctry.animationMap.set("hover", animation);
             }
         }
         // If the country isn't currently being hovered over.
         else {
             // If the country has previously been hovered over.
-            if (_ctry.animationMap.has('hover')) {
+            if (_ctry.animationMap.has("hover")) {
                 // Set the shade to "undo" based on the progress of the hover animation.
-                shade = -_ctry.animationMap.get('hover').endAnimation();
+                shade = -_ctry.animationMap.get("hover").endAnimation();
                 // Delete the hover animation from the country's map.
-                _ctry.animationMap.delete('hover');
+                _ctry.animationMap.delete("hover");
                 // If the country doesn't currently have a reverse animation.
-                if (!_ctry.animationMap.has('hoverReverse')) {
+                if (!_ctry.animationMap.has("hoverReverse")) {
                     // Set the target colour based on the "undo" shade.
                     let startFill = {
                         r: _ctry.rootFill.r + shade,
                         g: _ctry.rootFill.g + shade,
-                        b: _ctry.rootFill.b + shade
+                        b: _ctry.rootFill.b + shade,
                     };
                     // Create a new animation, referencing the hovered country, that lasts
                     // for 255ms.
-                    let animation = new HoverAnimation(_ctry, 'hoverReverse', 255, startFill, shade);
+                    let animation = new HoverAnimation(_ctry, "hoverReverse", 255, startFill, shade);
                     // Add the reverse animation to the animationMap of the hovered country.
-                    _ctry.animationMap.set('hoverReverse', animation);
+                    _ctry.animationMap.set("hoverReverse", animation);
                 }
             }
         }
@@ -88,7 +87,6 @@ export class Controller {
      * @returns Void
      */
     viewChange(_view) {
-        // WIP
         // If the newly selected view is the same as the last, don't do anything.
         if (this.viewActive == _view)
             return;
@@ -96,6 +94,7 @@ export class Controller {
         this.viewActive = _view;
         // Rerender the map's labels with attributes for the new view.
         this.renderSelectBarLabels();
+        this.manager.handleYearSelection(document.getElementById("yearslider").value);
     }
     /**
      * Helper function, to verify whether the provided Identifier exists
@@ -126,23 +125,23 @@ export class Controller {
             // If the owner of this iteration instance doesn't exist, skip to the next object.
             if (!this.checkLabelOwnerExists(info.owner))
                 continue;
-            // A JQuery-Wrapper Label Element.            
+            // A JQuery-Wrapper Label Element.
             let element = createLabel(COLOURSLIGHT);
             // Get the Country for which the label will be bound to.
             let country = this.countryList.get(info.owner);
             // Set the title of the label from the config.
-            element.find('#canvas-label-title').text(info.title);
+            element.find("#canvas-label-title").text(info.title);
             // Create the controller's reference to the label element.
             // Offsets are obtained from the labelConfig.
             let label = {
                 content: element,
                 offsetX: info.offset[0],
-                offsetY: info.offset[1]
+                offsetY: info.offset[1],
             };
             // Add an event listener to the label.
             // This event listener will allow for the hover animation of its bound
             // owner to be played when this label is hovered over.
-            label.content.on('mouseenter', (e) => {
+            label.content.on("mouseenter", (e) => {
                 // Set the hoverLock to true, requirement of the current animation system.
                 // Prevents the hover attribute from being set to false.
                 country.hoverLock = true;
@@ -152,14 +151,14 @@ export class Controller {
             });
             // Reverse of the above bound hover event.
             // Once a country leaves the bounds of the label.
-            label.content.on('mouseleave', (e) => {
+            label.content.on("mouseleave", (e) => {
                 // Remove the hoverLock.
                 // Setting the hover value to false is unneccesary, as it is handled
                 // on the next frame by the renderer.
                 country.hoverLock = false;
             });
             // WIP.
-            label.content.on('click', (e) => {
+            label.content.on("click", (e) => {
                 country.active = true;
             });
             // Add the label the reference to the set of labels.
@@ -193,8 +192,9 @@ export class Controller {
             // Position the labels by assigning CSS properties.
             // The root position of the label is the top left of the labelContainer.
             label.content.css({
-                "top": this.canvasHeightTranslation + (label.offsetY * this.canvasScaleFactorY),
-                "left": this.canvasWidthTranslation + (label.offsetX * this.canvasScaleFactorX)
+                top: this.canvasHeightTranslation +
+                    label.offsetY * this.canvasScaleFactorY,
+                left: this.canvasWidthTranslation + label.offsetX * this.canvasScaleFactorX,
             });
         }
     }
@@ -215,7 +215,7 @@ export class Controller {
      */
     renderSelectBarLabels() {
         // Find the select-bar element.
-        let selectBar = this.labelContainer.find('#canvas-label-select-bar');
+        let selectBar = this.labelContainer.find("#canvas-label-select-bar");
         // If the element could not be found, return.
         if (!selectBar)
             return;
@@ -230,17 +230,17 @@ export class Controller {
                 // Add the active class to change its appearance.
                 element.addClass("canvas-label-select-bar-item-active");
                 // Show the dropdown element of the button.
-                element.find('.canvas-label-select-bar-dropdown').show();
+                element.find(".canvas-label-select-bar-dropdown").show();
             }
             else {
                 // Add an event listener to the label to allow it to be select as active.
                 // The active element won't retain its event as the label-container is cleared
                 // on each iteration.
-                element.on('click', (e) => {
+                element.on("click", (e) => {
                     this.viewChange(key);
                 });
                 // Hide the dropdown element of the button.
-                element.find('.canvas-label-select-bar-dropdown').hide();
+                element.find(".canvas-label-select-bar-dropdown").hide();
             }
             // Append the button to the select-bar container.
             element.appendTo(selectBar);
@@ -257,13 +257,14 @@ export class Controller {
      */
     renderYearAverages(_yearAverages, _dataMinValue, _dataMaxValue, _colourScheme) {
         try {
-            _yearAverages = yearAverages1910;
-            // WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh   WHGIAHGWaesghiesgbhioohisebdohbisdhobisdddddddddddddddddddddddddddddddddddddddnsioegbnsioghbiosehgsoighsieogh            
             let range = _dataMaxValue - _dataMinValue;
             let colourGradient = {
-                r: ((_colourScheme.gradientDark.r - _colourScheme.gradientLight.r) / (range)),
-                g: ((_colourScheme.gradientDark.g - _colourScheme.gradientLight.g) / (range)),
-                b: ((_colourScheme.gradientDark.b - _colourScheme.gradientLight.b) / (range))
+                r: (_colourScheme.gradientDark.r - _colourScheme.gradientLight.r) /
+                    range,
+                g: (_colourScheme.gradientDark.g - _colourScheme.gradientLight.g) /
+                    range,
+                b: (_colourScheme.gradientDark.b - _colourScheme.gradientLight.b) /
+                    range,
             };
             let data = {};
             switch (this.viewActive) {
@@ -293,45 +294,45 @@ export class Controller {
                     break;
             }
             // console.log(this.countryList)
-            if (this.countryList.has('en')) {
+            if (this.countryList.has("en")) {
                 let groundedVal = data.en - _dataMinValue;
                 let colour = {
-                    r: ((_colourScheme.gradientDark.r - (colourGradient.r * groundedVal))),
-                    g: ((_colourScheme.gradientDark.g - (colourGradient.g * groundedVal))),
-                    b: ((_colourScheme.gradientDark.b - (colourGradient.b * groundedVal)))
+                    r: _colourScheme.gradientDark.r - colourGradient.r * groundedVal,
+                    g: _colourScheme.gradientDark.g - colourGradient.g * groundedVal,
+                    b: _colourScheme.gradientDark.b - colourGradient.b * groundedVal,
                 };
-                this.countryList.get('en').fill = colour;
-                this.countryList.get('en').rootFill = colour;
+                this.countryList.get("en").fill = colour;
+                this.countryList.get("en").rootFill = colour;
             }
-            if (this.countryList.has('ni')) {
+            if (this.countryList.has("ni")) {
                 let groundedVal = data.ni - _dataMinValue;
                 let colour = {
-                    r: ((_colourScheme.gradientDark.r - (colourGradient.r * groundedVal))),
-                    g: ((_colourScheme.gradientDark.g - (colourGradient.g * groundedVal))),
-                    b: ((_colourScheme.gradientDark.b - (colourGradient.b * groundedVal)))
+                    r: _colourScheme.gradientDark.r - colourGradient.r * groundedVal,
+                    g: _colourScheme.gradientDark.g - colourGradient.g * groundedVal,
+                    b: _colourScheme.gradientDark.b - colourGradient.b * groundedVal,
                 };
-                this.countryList.get('ni').fill = colour;
-                this.countryList.get('ni').rootFill = colour;
+                this.countryList.get("ni").fill = colour;
+                this.countryList.get("ni").rootFill = colour;
             }
-            if (this.countryList.has('sc')) {
+            if (this.countryList.has("sc")) {
                 let groundedVal = data.sc - _dataMinValue;
                 let colour = {
-                    r: ((_colourScheme.gradientDark.r - (colourGradient.r * groundedVal))),
-                    g: ((_colourScheme.gradientDark.g - (colourGradient.g * groundedVal))),
-                    b: ((_colourScheme.gradientDark.b - (colourGradient.b * groundedVal)))
+                    r: _colourScheme.gradientDark.r - colourGradient.r * groundedVal,
+                    g: _colourScheme.gradientDark.g - colourGradient.g * groundedVal,
+                    b: _colourScheme.gradientDark.b - colourGradient.b * groundedVal,
                 };
-                this.countryList.get('sc').fill = colour;
-                this.countryList.get('sc').rootFill = colour;
+                this.countryList.get("sc").fill = colour;
+                this.countryList.get("sc").rootFill = colour;
             }
-            if (this.countryList.has('wa')) {
+            if (this.countryList.has("wa")) {
                 let groundedVal = data.wa - _dataMinValue;
                 let colour = {
-                    r: ((_colourScheme.gradientDark.r - (colourGradient.r * groundedVal))),
-                    g: ((_colourScheme.gradientDark.g - (colourGradient.g * groundedVal))),
-                    b: ((_colourScheme.gradientDark.b - (colourGradient.b * groundedVal)))
+                    r: _colourScheme.gradientDark.r - colourGradient.r * groundedVal,
+                    g: _colourScheme.gradientDark.g - colourGradient.g * groundedVal,
+                    b: _colourScheme.gradientDark.b - colourGradient.b * groundedVal,
                 };
-                this.countryList.get('wa').fill = colour;
-                this.countryList.get('wa').rootFill = colour;
+                this.countryList.get("wa").fill = colour;
+                this.countryList.get("wa").rootFill = colour;
             }
             this.setLabelValues(_yearAverages);
         }
@@ -340,37 +341,110 @@ export class Controller {
         }
     }
     setLabelValues(_yearAverages) {
-        if (this.labelList.has('en')) {
-            let content = this.labelList.get('en').content;
-            content.find('#canvas-label-text-rainfall').text(_yearAverages.en.rainfall + "mm/yr");
-            content.find('#canvas-label-text-sunshine').text(_yearAverages.en.sunshine);
-            content.find('#canvas-label-text-lowTemp').text(_yearAverages.en.lowTemp + "°");
-            content.find('#canvas-label-text-highTemp').text(_yearAverages.en.highTemp + "°");
+        if (this.labelList.has("en")) {
+            let content = this.labelList.get("en").content;
+            content
+                .find("#canvas-label-text-rainfall")
+                .text(_yearAverages.en.rainfall + "mm/yr");
+            content
+                .find("#canvas-label-text-sunshine")
+                .text(_yearAverages.en.sunshine);
+            content
+                .find("#canvas-label-text-lowTemp")
+                .text(_yearAverages.en.lowTemp + "°");
+            content
+                .find("#canvas-label-text-highTemp")
+                .text(_yearAverages.en.highTemp + "°");
         }
-        if (this.labelList.has('sc')) {
-            let content = this.labelList.get('sc').content;
-            content.find('#canvas-label-text-rainfall').text(_yearAverages.sc.rainfall + "mm/yr");
-            content.find('#canvas-label-text-sunshine').text(_yearAverages.sc.sunshine);
-            content.find('#canvas-label-text-lowTemp').text(_yearAverages.sc.lowTemp + "°");
-            content.find('#canvas-label-text-highTemp').text(_yearAverages.sc.highTemp + "°");
+        if (this.labelList.has("sc")) {
+            let content = this.labelList.get("sc").content;
+            content
+                .find("#canvas-label-text-rainfall")
+                .text(_yearAverages.sc.rainfall + "mm/yr");
+            content
+                .find("#canvas-label-text-sunshine")
+                .text(_yearAverages.sc.sunshine);
+            content
+                .find("#canvas-label-text-lowTemp")
+                .text(_yearAverages.sc.lowTemp + "°");
+            content
+                .find("#canvas-label-text-highTemp")
+                .text(_yearAverages.sc.highTemp + "°");
         }
-        if (this.labelList.has('wa')) {
-            let content = this.labelList.get('wa').content;
-            content.find('#canvas-label-text-rainfall').text(_yearAverages.wa.rainfall + "mm/yr");
-            content.find('#canvas-label-text-sunshine').text(_yearAverages.wa.sunshine);
-            content.find('#canvas-label-text-lowTemp').text(_yearAverages.wa.lowTemp + "°");
-            content.find('#canvas-label-text-highTemp').text(_yearAverages.wa.highTemp + "°");
+        if (this.labelList.has("wa")) {
+            let content = this.labelList.get("wa").content;
+            content
+                .find("#canvas-label-text-rainfall")
+                .text(_yearAverages.wa.rainfall + "mm/yr");
+            content
+                .find("#canvas-label-text-sunshine")
+                .text(_yearAverages.wa.sunshine);
+            content
+                .find("#canvas-label-text-lowTemp")
+                .text(_yearAverages.wa.lowTemp + "°");
+            content
+                .find("#canvas-label-text-highTemp")
+                .text(_yearAverages.wa.highTemp + "°");
         }
-        if (this.labelList.has('ni')) {
-            let content = this.labelList.get('ni').content;
-            content.find('#canvas-label-text-rainfall').text(_yearAverages.ni.rainfall + "mm/yr");
-            content.find('#canvas-label-text-sunshine').text(_yearAverages.ni.sunshine);
-            content.find('#canvas-label-text-lowTemp').text(_yearAverages.ni.lowTemp + "°");
-            content.find('#canvas-label-text-highTemp').text(_yearAverages.ni.highTemp + "°");
+        if (this.labelList.has("ni")) {
+            let content = this.labelList.get("ni").content;
+            content
+                .find("#canvas-label-text-rainfall")
+                .text(_yearAverages.ni.rainfall + "mm/yr");
+            content
+                .find("#canvas-label-text-sunshine")
+                .text(_yearAverages.ni.sunshine);
+            content
+                .find("#canvas-label-text-lowTemp")
+                .text(_yearAverages.ni.lowTemp + "°");
+            content
+                .find("#canvas-label-text-highTemp")
+                .text(_yearAverages.ni.highTemp + "°");
         }
     }
+    collectLabels(_list) {
+        return _list.map((subList) => {
+            return subList[subList.length - 1];
+        });
+    }
+    collectData(_list) {
+        return _list.map((subList) => {
+            return subList[this.viewActive];
+        });
+    }
     setGraphYearAverages(_dataRange) {
-        console.log(_dataRange);
+        // console.log(_dataRange.en)
+        let typeLabel;
+        switch (this.viewActive) {
+            case ViewTypes.rainfall:
+                typeLabel = "Rainfall";
+                break;
+            case ViewTypes.sunshine:
+                typeLabel = "Sunshine";
+                break;
+            case ViewTypes.lowTemp:
+                typeLabel = "Lowest Temperature";
+                break;
+            case ViewTypes.highTemp:
+                typeLabel = "Highest Temperature";
+                break;
+            default:
+                typeLabel = "Unknown";
+        }
+        // CLEAN GRAPHS
+        Object.entries(GRAPHIDS).forEach(([key, value]) => {
+            let content = $(`#${value}`);
+            content.empty();
+            content.append(`
+        <canvas id = "${key}"></canvas>
+      `);
+        });
+        let labels = this.collectLabels(_dataRange.en);
+        console.log(labels);
+        drawYearAverageGraph(document.getElementById('graph1'), this.collectLabels(_dataRange.en), this.collectData(_dataRange.en), `England ${typeLabel}`);
+        drawYearAverageGraph(document.getElementById('graph2'), this.collectLabels(_dataRange.wa), this.collectData(_dataRange.wa), `Wales ${typeLabel}`);
+        drawYearAverageGraph(document.getElementById('graph3'), this.collectLabels(_dataRange.sc), this.collectData(_dataRange.sc), `Scotland ${typeLabel}`);
+        drawYearAverageGraph(document.getElementById('graph4'), this.collectLabels(_dataRange.ni), this.collectData(_dataRange.ni), `Northern Ireland ${typeLabel}`);
     }
     constructor(_objects, _labelContainer, _scaleFactorX, _scaleFactorY, _widthTranslation, _heightTranslation) {
         this.countryList = _objects.ctryList;
@@ -379,13 +453,16 @@ export class Controller {
         this.labelList = new Map();
         this.lastActive = undefined;
         this.updateCanvasAttributes(_scaleFactorX, _scaleFactorY, _widthTranslation, _heightTranslation);
-        this.graphList = new Map();
-        Object.entries(GRAPHIDS).forEach(([key, value]) => {
-            this.graphList.set(value, document.getElementById(value));
-        });
-        for (let [key, value] of this.graphList.entries()) {
-            drawGraph(value);
-        }
+        // this.graphList = new Map();
+        // Object.entries(GRAPHIDS).forEach(([key, value]) => {
+        //   this.graphList.set(
+        //     value,
+        //     document.getElementById(value) as HTMLCanvasElement
+        //   );
+        // });
+        // for (let [key, value] of this.graphList.entries()) {
+        //   drawGraph(value);
+        // }
         this.viewActive = ViewTypes.highTemp;
     }
 }

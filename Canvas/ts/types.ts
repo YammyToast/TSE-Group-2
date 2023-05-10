@@ -255,3 +255,10 @@ export class HoverAnimation extends Animation {
     }
 }
 
+export type Dataset = {
+    en: number[][],
+    ni: number[][]
+    sc: number[][],
+    wa: number[][]
+}
+

@@ -51,10 +51,10 @@ export const COLOURSLIGHT: ColourScheme = {
 }
 
 export const GRAPHIDS = {
-    graph1: 'graph-1',
-    graph2: 'graph-2',
-    graph3: 'graph-3',
-    graph4: 'graph-4'
+    graph1: 'content1',
+    graph2: 'content2',
+    graph3: 'content3',
+    graph4: 'content4'
 }
 
 function getSVG(_key: string, _colorScheme: ColourScheme): string {

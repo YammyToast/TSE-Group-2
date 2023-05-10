@@ -21,6 +21,7 @@ export const yearAverages1910: DataYearAveragesInstance = {
 
 
 
+
 export const fullYearValues: DataYearMonthValues = {
   country: Country.en,
   highTemp: {

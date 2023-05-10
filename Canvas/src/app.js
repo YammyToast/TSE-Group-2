@@ -42,7 +42,7 @@ let app = Promise.all([setupApp()])
     manager.controller.positionLabels();
     manager.controller.renderLabels();
     manager.controller.renderSelectBarLabels();
-    manager.handleYearSelection(2010);
+    manager.handleYearSelection(1981);
     return manager;
 })
     .catch((error) => {
