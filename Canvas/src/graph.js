@@ -8,6 +8,10 @@ export function drawYearAverageGraph(_canvas, _dataLabels, _data, _typeLabel) {
                     data: _data,
                     borderColor: '#FAB162'
                 }]
+        },
+        options: {
+            responsive: true,
+            aspectRatio: 4
         }
     });
 }

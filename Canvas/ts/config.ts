@@ -21,7 +21,7 @@ export const ViewTypes = {
 export const SCALINGCONSTANTS = {
     heightTranslation: 0.7,
     widthTranslation: 0.65,
-    scaleX: 0.002,
+    scaleX: 0.0015,
     scaleY: 0.0018
 } as const
 
@@ -49,6 +49,8 @@ export const COLOURSLIGHT: ColourScheme = {
     labelBackground: "#242124",
     labelText: "#FCFCFC"
 }
+
+
 
 export const GRAPHIDS = {
     graph1: 'content1',

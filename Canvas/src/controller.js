@@ -7,6 +7,10 @@ import { drawYearAverageGraph } from "./graph.js";
  * Provides an API to a single canvas instance.
  */
 export class Controller {
+    // Callback function through which the Manager object
+    // can be made aware of the selected country changing.
+    // Defined without a body, as it is bound by the manager.
+    // The manager cannot be known beforehand due to hierarchy.
     /**
      * Callback function for the canvas renderer when a change,
      * in the active country is detected by the canvas renderer.
@@ -20,7 +24,7 @@ export class Controller {
         // Set the last selected country to the newly selected.
         this.lastActive = _active;
         // Access the manager through the bound callback function.
-        this.managerChangeCallback(_active);
+        this.manager.handleCountrySelection(document.getElementById("yearslider").value, _active);
     }
     /**
      * Process the animation map of the provided country.
@@ -348,7 +352,7 @@ export class Controller {
                 .text(_yearAverages.en.rainfall + "mm/yr");
             content
                 .find("#canvas-label-text-sunshine")
-                .text(_yearAverages.en.sunshine);
+                .text(_yearAverages.en.sunshine + "hrs/month");
             content
                 .find("#canvas-label-text-lowTemp")
                 .text(_yearAverages.en.lowTemp + "°");
@@ -363,7 +367,7 @@ export class Controller {
                 .text(_yearAverages.sc.rainfall + "mm/yr");
             content
                 .find("#canvas-label-text-sunshine")
-                .text(_yearAverages.sc.sunshine);
+                .text(_yearAverages.sc.sunshine + "hrs/month");
             content
                 .find("#canvas-label-text-lowTemp")
                 .text(_yearAverages.sc.lowTemp + "°");
@@ -378,7 +382,7 @@ export class Controller {
                 .text(_yearAverages.wa.rainfall + "mm/yr");
             content
                 .find("#canvas-label-text-sunshine")
-                .text(_yearAverages.wa.sunshine);
+                .text(_yearAverages.wa.sunshine + "hrs/month");
             content
                 .find("#canvas-label-text-lowTemp")
                 .text(_yearAverages.wa.lowTemp + "°");
@@ -393,7 +397,7 @@ export class Controller {
                 .text(_yearAverages.ni.rainfall + "mm/yr");
             content
                 .find("#canvas-label-text-sunshine")
-                .text(_yearAverages.ni.sunshine);
+                .text(_yearAverages.ni.sunshine + "hrs/month");
             content
                 .find("#canvas-label-text-lowTemp")
                 .text(_yearAverages.ni.lowTemp + "°");
@@ -411,6 +415,22 @@ export class Controller {
         return _list.map((subList) => {
             return subList[this.viewActive];
         });
+    }
+    collectMonths(_list) {
+        return [
+            _list.jan,
+            _list.feb,
+            _list.mar,
+            _list.apr,
+            _list.may,
+            _list.jun,
+            _list.jul,
+            _list.aug,
+            _list.sep,
+            _list.oct,
+            _list.nov,
+            _list.dec
+        ];
     }
     setGraphYearAverages(_dataRange) {
         // console.log(_dataRange.en)
@@ -443,6 +463,36 @@ export class Controller {
         drawYearAverageGraph(document.getElementById('graph2'), this.collectLabels(_dataRange.wa), this.collectData(_dataRange.wa), `Wales ${typeLabel}`);
         drawYearAverageGraph(document.getElementById('graph3'), this.collectLabels(_dataRange.sc), this.collectData(_dataRange.sc), `Scotland ${typeLabel}`);
         drawYearAverageGraph(document.getElementById('graph4'), this.collectLabels(_dataRange.ni), this.collectData(_dataRange.ni), `Northern Ireland ${typeLabel}`);
+    }
+    setGraphMonthValues(_dataset, _active) {
+        let typeLabel;
+        console.log(_active);
+        switch (_active) {
+            case "en":
+                typeLabel = "England";
+                break;
+            case "sc":
+                typeLabel = "Scotland";
+                break;
+            case "wa":
+                typeLabel = "Wales";
+                break;
+            case "ni":
+                typeLabel = "Northern Ireland";
+                break;
+        }
+        let labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        Object.entries(GRAPHIDS).forEach(([key, value]) => {
+            let content = $(`#${value}`);
+            content.empty();
+            content.append(`
+        <canvas id = "${key}"></canvas>
+      `);
+        });
+        drawYearAverageGraph(document.getElementById('graph1'), labels, this.collectMonths(_dataset.rainfall), `${typeLabel} ${_dataset.year} Rainfall`);
+        drawYearAverageGraph(document.getElementById('graph2'), labels, this.collectMonths(_dataset.sunshine), `${typeLabel} ${_dataset.year} Sunshine`);
+        drawYearAverageGraph(document.getElementById('graph3'), labels, this.collectMonths(_dataset.lowTemp), `${typeLabel} ${_dataset.year} Low Temperature`);
+        drawYearAverageGraph(document.getElementById('graph4'), labels, this.collectMonths(_dataset.highTemp), `${typeLabel} ${_dataset.year} High Temperature`);
     }
     constructor(_objects, _labelContainer, _scaleFactorX, _scaleFactorY, _widthTranslation, _heightTranslation) {
         this.countryList = _objects.ctryList;

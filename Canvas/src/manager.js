@@ -23,10 +23,10 @@ export class Manager {
     constructor(_controller) {
         this.controller = _controller;
         // Bind callback function for controller instance to a method of this class.
-        this.controller.managerChangeCallback = this.activeChangeCallback;
         this.controller.manager = this;
         // Initialize Cache map.
         this.dataYearAveragesCache = new Map();
+        this.dataFullYearValuesCache = new Map();
         this.dataSelectedYear = 1943;
     }
     parseMaximumValues(_data) {
@@ -151,7 +151,7 @@ export class Manager {
                 _year = Number(_year);
                 let promises = [];
                 // Account for data 5 years either side of the selected year.
-                for (let it = (_year - 5); it < (_year + 5); it++) {
+                for (let it = (_year - 5); it <= (_year + 5); it++) {
                     // If Year is out of bounds for the dataset, skip.
                     // If data for the Year has already been requested, skip.
                     if (it < YEARRANGE.low || it > YEARRANGE.high || this.dataYearAveragesCache.has(it))
@@ -218,11 +218,29 @@ export class Manager {
             }
         });
     }
-    activeChangeCallback(_active) {
-        // Javascript moment not allowing me to access a variable I very much assigned.
-        // if(!this.dataSelectedYear) this.dataSelectedYear = 1943
-        // console.log(_active, this.dataSelectedYear)
-        console.log(document.getElementById("yearslider").value, _active);
+    handleCountrySelection(_year, _active) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                _year = Number(_year);
+                let promises = [];
+                if (_active == "none") {
+                    this.handleYearSelection(_year);
+                    return;
+                }
+                if (_year < YEARRANGE.low || _year > YEARRANGE.high)
+                    throw "Invalid Year";
+                if (!this.dataFullYearValuesCache.has(`${_year}${_active}`)) {
+                    promises.push(yield this.getFullYearValues(_year, _active));
+                }
+                Promise.all(promises).then(() => {
+                    this.controller.setGraphMonthValues(this.dataFullYearValuesCache.get(`${_year}${_active}`), _active);
+                });
+            }
+            catch (error) {
+                console.log(error);
+                return;
+            }
+        });
     }
 }
 //# sourceMappingURL=manager.js.map

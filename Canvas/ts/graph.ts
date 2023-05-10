@@ -1,7 +1,7 @@
 
 
 
-export function drawYearAverageGraph(_canvas: HTMLCanvasElement, _dataLabels: number[], _data: number[], _typeLabel: string) {
+export function drawYearAverageGraph(_canvas: HTMLCanvasElement, _dataLabels: number[] | string[], _data: number[], _typeLabel: string) {
     const chart: Chart = new Chart(_canvas, {
         type: 'line',
         data: {
@@ -11,8 +11,11 @@ export function drawYearAverageGraph(_canvas: HTMLCanvasElement, _dataLabels: nu
                 data: _data,
                 borderColor: '#FAB162'
             }]
+        },
+        options: {
+            responsive: true,
+            aspectRatio: 4
         }
 
     })
-
 }

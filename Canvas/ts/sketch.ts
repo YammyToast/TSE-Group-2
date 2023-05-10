@@ -305,6 +305,9 @@ export async function setupCanvas(_colorScheme: ColourScheme, _labelContainer: J
                 }
 
             })
+            if (seenActive == false) {
+                controller.activeChangeCallback("none")
+            }
         }
     }
     // Helper setup function.

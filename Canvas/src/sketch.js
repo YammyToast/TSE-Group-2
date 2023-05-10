@@ -299,6 +299,9 @@ export function setupCanvas(_colorScheme, _labelContainer) {
                         ctry.active = false;
                     }
                 });
+                if (seenActive == false) {
+                    controller.activeChangeCallback("none");
+                }
             };
         };
         // Helper setup function.
