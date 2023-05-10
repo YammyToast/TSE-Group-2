@@ -206,7 +206,6 @@ export class Manager {
                         graphYear = 1915;
                     if (2022 - graphYear < 5)
                         graphYear = 2015;
-                    console.log(graphYear);
                     this.controller.setGraphYearAverages(dataset);
                 });
             }
@@ -220,7 +219,7 @@ export class Manager {
         // Javascript moment not allowing me to access a variable I very much assigned.
         // if(!this.dataSelectedYear) this.dataSelectedYear = 1943
         // console.log(_active, this.dataSelectedYear)
-        console.log(document.getElementById("yearslider").value);
+        console.log(document.getElementById("yearslider").value, _active);
     }
 }
 //# sourceMappingURL=manager.js.map

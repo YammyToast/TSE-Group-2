@@ -2,7 +2,6 @@ import { setupCanvas } from "./sketch.js";
 import { COLOURSLIGHT, DEFAULTLABELS } from "./config.js";
 import { Manager } from "./manager.js";
 import { Controller } from "./controller.js";
-import { drawGraph } from "./graph.js";
 
 /**
  * Factory for the creation of the object hierarchy.

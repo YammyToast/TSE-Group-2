@@ -439,8 +439,6 @@ export class Controller {
         <canvas id = "${key}"></canvas>
       `);
         });
-        let labels = this.collectLabels(_dataRange.en);
-        console.log(labels);
         drawYearAverageGraph(document.getElementById('graph1'), this.collectLabels(_dataRange.en), this.collectData(_dataRange.en), `England ${typeLabel}`);
         drawYearAverageGraph(document.getElementById('graph2'), this.collectLabels(_dataRange.wa), this.collectData(_dataRange.wa), `Wales ${typeLabel}`);
         drawYearAverageGraph(document.getElementById('graph3'), this.collectLabels(_dataRange.sc), this.collectData(_dataRange.sc), `Scotland ${typeLabel}`);

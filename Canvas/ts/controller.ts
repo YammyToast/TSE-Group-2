@@ -14,10 +14,9 @@ import {
   GRAPHIDS,
 } from "./config.js";
 import { DataYearAverages, DataYearAveragesInstance } from "./api.js";
-import { drawGraph, drawYearAverageGraph } from "./graph.js";
+import { drawYearAverageGraph } from "./graph.js";
 import { Manager } from "./manager.js";
 
-import { yearAverages1910 } from "./tempData.js";
 /**
  * Interface / View-Controller Abstraction layer for the canvas.
  * Controls canvas through access to abstraction objects.
@@ -35,10 +34,10 @@ export class Controller {
   // Identifier of the last selected country.
   lastActive: string;
 
+  manager: Manager;
   // Map of graph element IDs against HTMLCanvasElements.
   graphList: Map<string, HTMLCanvasElement>;
 
-  manager: Manager;
 
   // Root Y offset of the canvas renderer.
   canvasHeightTranslation: number;
@@ -523,8 +522,6 @@ export class Controller {
       `)
     });
     
-    let labels = this.collectLabels(_dataRange.en)
-    console.log(labels)
 
     drawYearAverageGraph(document.getElementById('graph1') as HTMLCanvasElement, 
     this.collectLabels(_dataRange.en),
