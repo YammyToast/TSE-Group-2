@@ -122,19 +122,22 @@ export class Manager {
      * or null if the request failed.
      */
     getFullYearValues(_year, _country) {
-        try {
-            // Make AJAX Request to yearAverages route, passing in the year as a parameter.
-            $.get(`https://harrysmith.dev/api/data_full_year_values?year=${_year}&country=${_country}`, (data) => {
-                // Data validation to check success of request.
-                if (!data || Object.keys(data).length == 0)
-                    return false;
-                // do a bit of parsing.
-                return {};
-            });
-        }
-        catch (error) {
-            return null;
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                // Make AJAX Request to yearAverages route, passing in the year as a parameter.
+                return yield $.get(`https://harrysmith.dev/api/data_full_year_values?year=${_year}&country=${_country}`, (data) => {
+                    // Data validation to check success of request.
+                    if (!data || Object.keys(data).length == 0)
+                        return false;
+                    // do a bit of parsing.
+                    this.dataFullYearValuesCache.set(`${_year}${_country}`, data);
+                });
+            }
+            catch (error) {
+                console.log(error);
+                return null;
+            }
+        });
     }
     /**
      * Handles event of the selected year being changed by the user.

@@ -25,7 +25,7 @@ export class Manager {
     dataYearAveragesCache: Map<number, DataYearAveragesInstance>
     // Storage of requests made for full year-month values.
 
-    dataFullYearValuesCache: Map<[number, Country], DataYearMonthValues>
+    dataFullYearValuesCache: Map<string, DataYearMonthValues>
     /**
      * Constructor for a Manager. Requires dependency injection of a Pre-loaded Controller / Canvas.
      * @param _controller Pre-initalized Controller instance.
@@ -120,18 +120,17 @@ export class Manager {
      * @returns yearAverageInstance, containing parsed data for the year,
      * or null if the request failed.
      */
-    getFullYearValues(_year: number, _country: string): DataYearAveragesInstance | null {
+    async getFullYearValues(_year: number, _country: string): Promise<DataYearAveragesInstance | null> {
         try {
             // Make AJAX Request to yearAverages route, passing in the year as a parameter.
-            $.get(`https://harrysmith.dev/api/data_full_year_values?year=${_year}&country=${_country}`, (data) => {
+            return await $.get(`https://harrysmith.dev/api/data_full_year_values?year=${_year}&country=${_country}`, (data) => {
                 // Data validation to check success of request.
                 if(!data || Object.keys(data).length == 0) return false;
                 // do a bit of parsing.
-                return {
-
-                } as DataYearAverages
+                this.dataFullYearValuesCache.set(`${_year}${_country}`, data)
             })
         } catch(error) {
+            console.log(error)
             return null
         }
     }
@@ -214,6 +213,8 @@ export class Manager {
             return;
         }
     }
+
+    async handleCountrySelection()
 
     activeChangeCallback(_active: string) {
         // Javascript moment not allowing me to access a variable I very much assigned.
