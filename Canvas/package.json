@@ -2,9 +2,10 @@
   "name": "canvas",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
   },
   "author": "James Hardy",
   "license": "ISC",
@@ -19,6 +20,8 @@
     "@types/jquery": "^3.5.16",
     "nodemon": "^2.0.21",
     "ts-loader": "^9.4.2",
-    "typescript": "^5.0.2"
+    "typescript": "^5.0.2",
+    "webpack": "^5.82.1",
+    "webpack-cli": "^5.1.1"
   }
 }

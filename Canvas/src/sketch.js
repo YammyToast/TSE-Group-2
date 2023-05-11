@@ -8,9 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { Country, ContourObject } from './types.js';
-import { DEFAULTFILEPATHS, DEFAULTOFFSETS, SCALINGCONSTANTS } from './config.js';
+import { DEFAULTOFFSETS, SCALINGCONSTANTS } from './config.js';
 import { Controller } from './controller.js';
-import { niPointsF, enPointsF, waPointsF, scPointsF } from './contours.js';
+import { niPointsF, enPointsF, waPointsF, scPointsF, irPointsF } from './contours.js';
 /**
  * Creates an instance of a canvas with a bound controller.
  * @param _colorScheme Colour scheme to use in the canvas.
@@ -52,10 +52,6 @@ export function setupCanvas(_colorScheme, _labelContainer) {
              */
             function loadCountries() {
                 // Parses the requested JSON objects into objects.
-                // let enPoints: any = { pts: (P5.loadJSON(DEFAULTFILEPATHS.enContours)), offset: DEFAULTOFFSETS.en, key: 'en' }
-                // let scPoints: any = { pts: (P5.loadJSON(DEFAULTFILEPATHS.scContours)), offset: DEFAULTOFFSETS.sc, key: 'sc' }
-                // let waPoints: any = { pts: (P5.loadJSON(DEFAULTFILEPATHS.waContours)), offset: DEFAULTOFFSETS.wa, key: 'wa' }
-                // let niPoints: any = { pts: (P5.loadJSON(DEFAULTFILEPATHS.niContours)), offset: DEFAULTOFFSETS.ni, key: 'ni' }
                 let enPoints = { pts: enPointsF, offset: DEFAULTOFFSETS.en, key: 'en' };
                 let scPoints = { pts: scPointsF, offset: DEFAULTOFFSETS.sc, key: 'sc' };
                 let waPoints = { pts: waPointsF, offset: DEFAULTOFFSETS.wa, key: 'wa' };
@@ -68,7 +64,7 @@ export function setupCanvas(_colorScheme, _labelContainer) {
              */
             function loadObjects() {
                 // Parses the requested JSON objects into objects.
-                let irPoints = { pts: (P5.loadJSON(DEFAULTFILEPATHS.irContours)), offset: DEFAULTOFFSETS.ir, key: 'ir' };
+                let irPoints = { pts: irPointsF, offset: DEFAULTOFFSETS.ir, key: 'ir' };
                 return ([irPoints]);
             }
             /**

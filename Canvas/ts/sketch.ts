@@ -45,10 +45,7 @@ export async function setupCanvas(_colorScheme: ColourScheme, _labelContainer: J
          */
         function loadCountries(): Array<any> {
             // Parses the requested JSON objects into objects.
-            // let enPoints: any = { pts: (P5.loadJSON(DEFAULTFILEPATHS.enContours)), offset: DEFAULTOFFSETS.en, key: 'en' }
-            // let scPoints: any = { pts: (P5.loadJSON(DEFAULTFILEPATHS.scContours)), offset: DEFAULTOFFSETS.sc, key: 'sc' }
-            // let waPoints: any = { pts: (P5.loadJSON(DEFAULTFILEPATHS.waContours)), offset: DEFAULTOFFSETS.wa, key: 'wa' }
-            // let niPoints: any = { pts: (P5.loadJSON(DEFAULTFILEPATHS.niContours)), offset: DEFAULTOFFSETS.ni, key: 'ni' }
+
             let enPoints: any = { pts: enPointsF, offset: DEFAULTOFFSETS.en, key: 'en'}
             let scPoints: any = { pts: scPointsF, offset: DEFAULTOFFSETS.sc, key: 'sc'}
             let waPoints: any = { pts: waPointsF, offset: DEFAULTOFFSETS.wa, key: 'wa'}
@@ -61,7 +58,7 @@ export async function setupCanvas(_colorScheme: ColourScheme, _labelContainer: J
          */
         function loadObjects(): Array<any> {
             // Parses the requested JSON objects into objects.
-            let irPoints: any = { pts: (P5.loadJSON(DEFAULTFILEPATHS.irContours)), offset: DEFAULTOFFSETS.ir, key: 'ir' }
+            let irPoints: any = { pts: irPointsF, offset: DEFAULTOFFSETS.ir, key: 'ir'}
             return ([irPoints])
         }
         /**
