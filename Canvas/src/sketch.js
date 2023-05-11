@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { Country, ContourObject } from './types.js';
 import { DEFAULTFILEPATHS, DEFAULTOFFSETS, SCALINGCONSTANTS } from './config.js';
 import { Controller } from './controller.js';
+import { niPointsF, enPointsF, waPointsF, scPointsF } from './contours.js';
 /**
  * Creates an instance of a canvas with a bound controller.
  * @param _colorScheme Colour scheme to use in the canvas.
@@ -51,10 +52,14 @@ export function setupCanvas(_colorScheme, _labelContainer) {
              */
             function loadCountries() {
                 // Parses the requested JSON objects into objects.
-                let enPoints = { pts: (P5.loadJSON(DEFAULTFILEPATHS.enContours)), offset: DEFAULTOFFSETS.en, key: 'en' };
-                let scPoints = { pts: (P5.loadJSON(DEFAULTFILEPATHS.scContours)), offset: DEFAULTOFFSETS.sc, key: 'sc' };
-                let waPoints = { pts: (P5.loadJSON(DEFAULTFILEPATHS.waContours)), offset: DEFAULTOFFSETS.wa, key: 'wa' };
-                let niPoints = { pts: (P5.loadJSON(DEFAULTFILEPATHS.niContours)), offset: DEFAULTOFFSETS.ni, key: 'ni' };
+                // let enPoints: any = { pts: (P5.loadJSON(DEFAULTFILEPATHS.enContours)), offset: DEFAULTOFFSETS.en, key: 'en' }
+                // let scPoints: any = { pts: (P5.loadJSON(DEFAULTFILEPATHS.scContours)), offset: DEFAULTOFFSETS.sc, key: 'sc' }
+                // let waPoints: any = { pts: (P5.loadJSON(DEFAULTFILEPATHS.waContours)), offset: DEFAULTOFFSETS.wa, key: 'wa' }
+                // let niPoints: any = { pts: (P5.loadJSON(DEFAULTFILEPATHS.niContours)), offset: DEFAULTOFFSETS.ni, key: 'ni' }
+                let enPoints = { pts: enPointsF, offset: DEFAULTOFFSETS.en, key: 'en' };
+                let scPoints = { pts: scPointsF, offset: DEFAULTOFFSETS.sc, key: 'sc' };
+                let waPoints = { pts: waPointsF, offset: DEFAULTOFFSETS.wa, key: 'wa' };
+                let niPoints = { pts: niPointsF, offset: DEFAULTOFFSETS.ni, key: 'ni' };
                 return ([enPoints, scPoints, waPoints, niPoints]);
             }
             /**
