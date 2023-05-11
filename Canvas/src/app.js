@@ -54,8 +54,8 @@ let app = Promise.all([setupApp()])
     document.getElementById("yearslider").oninput = function (e) {
         let value = document.getElementById("yearslider").value;
         // at 0%, top -41%
-        let groundedValue = value - 1941;
-        let percentOffset = groundedValue / (2023 - 1941);
+        let groundedValue = value - 1910;
+        let percentOffset = (groundedValue / (2022 - 1910));
         let offsetValue = 50 + -(100 * percentOffset);
         //console.log(offsetValue)
         document.getElementById("sliderlabel").style.top = `${offsetValue}%`;

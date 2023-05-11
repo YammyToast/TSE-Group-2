@@ -349,7 +349,7 @@ export class Controller {
             let content = this.labelList.get("en").content;
             content
                 .find("#canvas-label-text-rainfall")
-                .text(_yearAverages.en.rainfall + "mm/yr");
+                .text(_yearAverages.en.rainfall + "days/month");
             content
                 .find("#canvas-label-text-sunshine")
                 .text(_yearAverages.en.sunshine + "hrs/month");
@@ -364,7 +364,7 @@ export class Controller {
             let content = this.labelList.get("sc").content;
             content
                 .find("#canvas-label-text-rainfall")
-                .text(_yearAverages.sc.rainfall + "mm/yr");
+                .text(_yearAverages.sc.rainfall + "days/month");
             content
                 .find("#canvas-label-text-sunshine")
                 .text(_yearAverages.sc.sunshine + "hrs/month");
@@ -379,7 +379,7 @@ export class Controller {
             let content = this.labelList.get("wa").content;
             content
                 .find("#canvas-label-text-rainfall")
-                .text(_yearAverages.wa.rainfall + "mm/yr");
+                .text(_yearAverages.wa.rainfall + "days/month");
             content
                 .find("#canvas-label-text-sunshine")
                 .text(_yearAverages.wa.sunshine + "hrs/month");
@@ -394,7 +394,7 @@ export class Controller {
             let content = this.labelList.get("ni").content;
             content
                 .find("#canvas-label-text-rainfall")
-                .text(_yearAverages.ni.rainfall + "mm/yr");
+                .text(_yearAverages.ni.rainfall + "days/month");
             content
                 .find("#canvas-label-text-sunshine")
                 .text(_yearAverages.ni.sunshine + "hrs/month");
