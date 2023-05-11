@@ -164,6 +164,7 @@ export class Manager {
                     sc: []
                 };
 
+                
                 for(let it = (_year -5); it < (_year + 5); it++) {
                     let dataInstance = this.dataYearAveragesCache.get(it)
                     if(!dataInstance) continue
